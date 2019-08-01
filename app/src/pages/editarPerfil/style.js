@@ -1,0 +1,70 @@
+import {StyleSheet, Dimensions, Platform} from 'react-native';
+import { MediaQueryStyleSheet } from "react-native-responsive";
+let size = Dimensions.get('window');
+
+export const style = MediaQueryStyleSheet.create({
+	container:{
+		flex:1,
+		backgroundColor:'#ffffff',
+	},
+	perfilContenedor:{
+		alignItems: 'center',
+		padding:22,
+	},
+	avatar:{
+		width:60,
+		height:60,
+		borderRadius:30,
+		marginRight:20
+	},	
+	textTitulo:{
+		fontSize:24,
+		marginTop:35,
+		textAlign:"center"
+	},
+	btnLista:{
+		borderBottomColor:"rgba(0,0,0,.15)",
+		padding:15,
+		borderBottomWidth:1,
+		flexDirection:"row"
+	},
+	input:{
+		width:"100%",
+		backgroundColor:"rgba(200,200,200,.2)",
+		padding:10,
+		marginVertical:10
+	},
+	contenedorPass:{
+		width:"100%",
+		flexDirection:"row"
+	},
+	btnIconPass:{
+		top:15,
+		right:29,
+		width:23,
+		height:23
+	},
+	iconPass:{
+		fontSize:23
+	},	
+	txtLista:{
+		width:"90%",
+		fontSize:17
+	},
+	icon:{
+		fontSize:22
+	},
+	btnEnviar:{
+		backgroundColor:"#00338A",
+		alignItems:"center",
+		justifyContent:"center",
+		textAlign:"center",
+		width:140,
+		padding:10,
+		borderRadius:5,
+		marginTop:10
+	},
+	textEnviar:{
+		color:"#fff"
+	},
+})

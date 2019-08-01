@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ipuc</string>
+    <string name="fb_app_id">343146739877578</string> 
+    <string name="fb_login_protocol_scheme">fb343146739877578</string>
+</resources>
