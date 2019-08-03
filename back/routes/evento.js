@@ -28,20 +28,30 @@ router.get('/cercanos/:lat/:lng', (req, res)=>{
 	eventoServices.getCercanos(req.params.lat, req.params.lng, (err, evento)=>{
 		if (err) {
 			res.json({status:false, err, code:0})    
+			 
 		}else{
 			res.json({status:true, evento, code:1})    
 		}
 	})
 })
 
-router.get('/byCategoria/:idCategoria', (req, res)=>{
+router.get('/byCategoria/:idCategoria/:lat/:lng', (req, res)=>{
+	let {idCategoria, lat, lng} = req.params
 	
-	 
- 
-	eventoServices.getByCategoria(req.params.idCategoria, (err, evento)=>{
+	idCategoria !="undefined"
+	?eventoServices.getByCategoria(lat, lng, idCategoria, (err, evento)=>{
 		if (err) {
 			res.json({status:false, err, code:0})    
 		}else{
+			 
+			res.json({status:true, evento, code:1})    
+		}
+	})
+	:eventoServices.getCercanos(lat, lng, (err, evento)=>{
+		if (err) {
+			res.json({status:false, err, code:0})    
+		}else{
+			 
 			res.json({status:true, evento, code:1})    
 		}
 	})

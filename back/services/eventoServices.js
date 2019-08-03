@@ -2,7 +2,7 @@
 
 let Evento   = require('./../models/eventoModel.js');
 let moment = require('moment');
-let fecha  =  moment().format('YYYY-MM-DD h:mm:ss')
+let mongoose   = require('mongoose')
 class eventoServices {
 	get(callback){
 		Evento.find({}, callback)
@@ -10,16 +10,50 @@ class eventoServices {
 	getById(_id, callback){
 		Evento.find({_id}, callback)
 	}
-	getByCategoria(categoria, callback){
-		Evento.find({categoria}).populate("usuario").populate("categoria").exec(callback)
+	getByCategoria(lat, lng, categoria, callback){
+	
+		categoria = mongoose.Types.ObjectId(categoria);	
+		Evento.aggregate([
+			{
+				$geoNear: {
+						near: { type: "Point", coordinates: [  parseFloat(lng) ,  parseFloat(lat) ] },
+						distanceField: "distancia",
+						query: {  activo:true, eliminado:false, categoria },
+						maxDistance: 300000,
+						num: 1000,
+						spherical: true
+				}
+			},
+			{
+				$sort:{
+					area:-1,
+					createdAt:-1
+				}
+			},
+			{
+			 $lookup: {
+				 from: "users",
+				 localField: "usuario",
+				 foreignField: "_id",
+				 as: "UserData"
+			 }
+		 },
+		 {
+			 $unwind:{
+				 path:'$UserData',
+				 preserveNullAndEmptyArrays: true
+			 }
+		 },
+			
+	], callback)
   }
   getCercanos(lat, lng, callback){
 		Evento.aggregate([
 		    {
 		    	$geoNear: {
 			        near: { type: "Point", coordinates: [  parseFloat(lng) ,  parseFloat(lat) ] },
-			        distanceField: "dist",
-			      	query: {  activo:true },
+							distanceField: "distancia",
+			      	query: {  activo:true, eliminado:false },
 			        maxDistance: 300000,
 			        num: 1000,
 			        spherical: true

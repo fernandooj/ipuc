@@ -43,11 +43,11 @@ import {
     };
   };
 
-  const getEventosCategoria = idCategoria => {
-    console.log(idCategoria)
+  const getEventosCategoria = (idCategoria, x) => {
+    console.log(idCategoria, x)
     return dispatch => {
       return axios
-        .get(`eve/evento/byCategoria/${idCategoria}`)
+        .get(`eve/evento/byCategoria/${idCategoria}/${x.latitude}/${x.longitude}`)
         .then(res => {
           console.log(res.data)
           dispatch({

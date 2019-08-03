@@ -38,7 +38,6 @@ class perfil extends Component{
                     placeholder="Nombre"
                     placeholderTextColor='#8F9093' 
                     autoCapitalize = 'none'
-                     
                 />
                 <TextInput
                     style={style.input}

@@ -12,7 +12,7 @@ YellowBox.ignoreWarnings(['Require cycle:']);
 //////////////////////////////////////////////////////////////////////////////////////////
 //////  RUTA GENERAL DE LA URL PARA EL API
 //////////////////////////////////////////////////////////////////////////////////////////
-export const URL = 'http://192.168.0.6:8080/x/v1/';  //// test imdb
+export const URL = 'http://192.168.0.7:8080/x/v1/';  //// test imdb
 export const VERSION = "1.0.11"
 axios.defaults.baseURL = URL;
 
