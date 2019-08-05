@@ -12,6 +12,7 @@ import perfilComponent 		 from '../pages/perfil/perfil';
 import editarPerfilComponent from '../pages/editarPerfil/editarPerfil';
 import nuevoEventoComponent  from '../pages/nuevoEvento/nuevoEvento';
 import eventoMapaComponent   from '../pages/eventoMapa/eventoMapa';
+import eventosComponent   	 from '../pages/eventos/eventos';
  
 const win = Dimensions.get('window');
  
@@ -32,11 +33,12 @@ class MainRoutes extends Component{
 	}
 	render(){
 		const NavigationApp = createDrawerNavigator({
-			Home:        {screen: eventoMapaComponent},
+			Home:        {screen: eventosComponent},
 			Perfil:      {screen: perfilComponent},
 			editarPerfil:{screen: editarPerfilComponent},
 			nuevoEvento :{screen: nuevoEventoComponent},
 			eventoMapa  :{screen: eventoMapaComponent},
+			eventos 	:{screen: eventosComponent},
 		},{ headerMode: 'none'})
 	     
 		return (

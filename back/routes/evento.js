@@ -23,6 +23,17 @@ router.get('/', (req, res)=>{
 	})
 })
 
+router.get('/byId/:id', (req, res)=>{
+	eventoServices.getById(req.params.id, (err, evento)=>{
+		if (err) {
+			res.json({status:false, err, code:0})    
+		}else{
+			res.json({status:true, evento, code:1})    
+		}
+	})
+})
+
+
 
 router.get('/cercanos/:lat/:lng', (req, res)=>{
 	eventoServices.getCercanos(req.params.lat, req.params.lng, (err, evento)=>{

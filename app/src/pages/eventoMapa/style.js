@@ -25,7 +25,16 @@ export const style = MediaQueryStyleSheet.create({
         width:21,
         height:26
     },
-
+    btnHome:{
+        position:"absolute",
+        // backgroundColor:"red",
+        top:40,
+        left:20
+    },
+    iconHome:{
+        fontSize:30,
+        color:"white"
+    },
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////       CATEGORIAS
     //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -137,6 +146,7 @@ export const style = MediaQueryStyleSheet.create({
     contenedorEvento:{
         position:"absolute",
         justifyContent:"center",  
+        alignItems:"center",
         zIndex:100,
         top:-1000
     },
@@ -155,10 +165,26 @@ export const style = MediaQueryStyleSheet.create({
         padding:10,
         paddingVertical:0,
         width:size.width-80,
-        height:size.height-100,
+        height:size.height-150,
         top:50,
         left:40,
         fontSize:20
+    },
+    triangulo:{       
+        width: 0,
+        height: 0,
+        top:32,
+        left:40,
+        borderTopWidth: 0,
+        borderRightWidth: 30,
+        borderTopWidth: 60,
+        borderLeftWidth: 30,
+        backgroundColor: 'transparent',
+        borderStyle: 'solid',
+        borderTopColor: 'transparent',
+        borderRightColor: 'transparent',
+        borderTopColor: 'white',
+        borderLeftColor: 'transparent',
     },
     btnRegresar:{
         padding:12
@@ -179,11 +205,7 @@ export const style = MediaQueryStyleSheet.create({
         fontFamily: "Roboto-Bold",
         fontSize:20
     },
-    // textoEvento1:{
-    //     fontFamily: "Roboto-Bold",
-    //     color:"rgba(0,0,0,.5)",
-    //     fontSize:18
-    // },
+    
     textoEvento2:{
         fontFamily: "Roboto-Bold",
         color:"rgba(0,0,0,.3)",

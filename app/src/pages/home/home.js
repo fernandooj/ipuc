@@ -95,15 +95,9 @@ class Home extends Component{
 				(error) => this.getPlans(undefined, undefined),
 				{enableHighAccuracy: true, timeout:5000, maximumAge:0})
 	      	)
-			}
+		}
 	}
 	getEventos(lat, lng){
-		// Geocoder.from(lat, lng)
-		// .then(json => {
-    //     	var userDireccion = json.results[4].formatted_address;
-		// 	AsyncStorage.setItem('userDireccion', userDireccion);
-		// })
-		// .catch(error => console.warn(error));
 		axios.get(`eve/evento/cercanos/${lat}/${lng}`)
 		.then(res=>{
 			console.log(res.data)
@@ -131,8 +125,7 @@ class Home extends Component{
 			imagen = `${imagen[0]}Miniatura${imagen[2]}`
 			return (
 				<ImageBackground key={key} style={style.contenedorCategoria} source={{uri: imagen}} imageStyle={{ borderRadius: 10 }}>
-					<TouchableOpacity style={style.subContenedorCategoria} onPress={()=>this.props.navigation.navigate('eventoMapa', {id:e._id})}>
-						{/* <Image  style={style.imagenCategoria}  /> */}
+					<TouchableOpacity style={style.subContenedorCategoria} onPress={()=>this.props.navigation.navigate('eventoMapa', {tipo:"categoria", id:e._id})}>
 						<Text  style={style.textoCategoria}>{e.nombre}</Text>
 						<View style={style.explorarCategoria}>
 							<Text style={style.textExplorarCategoria}>Explorar</Text>
@@ -147,10 +140,10 @@ class Home extends Component{
 			let imagen = e.imagen[0].split("-")
 			imagen = `${imagen[0]}Miniatura${imagen[2]}`
 			return (
-				<View key={key} style={style.contenedorEventos}>
+				<TouchableOpacity key={key} style={style.contenedorEventos} onPress={()=>this.props.navigation.navigate('eventoMapa', {tipo:"evento", id:e._id})}>
 					<Image source={{uri: imagen}} style={style.imagenEventos}  />
 					<Text  style={style.textoEventos}>{e.nombre}</Text>
-				</View>
+				</TouchableOpacity>
 			)
 		})
 	}
@@ -175,13 +168,10 @@ class Home extends Component{
 						{this.renderCercanos()}
 					</ScrollView>
 				</ScrollView>
-				
-
 				<Footer navigation={navigation} />
 			</View>
 		)
 	}
- 
 }
 
 const mapState = state => {
@@ -198,16 +188,16 @@ const mapDispatch = dispatch => {
 	};
 };
   
-  Home.defaultProps = {
+Home.defaultProps = {
 	categorias:[],
-  };
-  
-  Home.propTypes = {
+};
+
+Home.propTypes = {
 	categorias: PropTypes.array.isRequired
-  };
-  
-  export default connect(
-	mapState,
-	mapDispatch
-  )(Home);
+};
+
+export default connect(
+mapState,
+mapDispatch
+)(Home);
   

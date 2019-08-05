@@ -8,10 +8,9 @@ class eventoServices {
 		Evento.find({}, callback)
 	}
 	getById(_id, callback){
-		Evento.find({_id}, callback)
+		Evento.findOne({_id}, callback)
 	}
 	getByCategoria(lat, lng, categoria, callback){
-	
 		categoria = mongoose.Types.ObjectId(categoria);	
 		Evento.aggregate([
 			{
@@ -45,7 +44,7 @@ class eventoServices {
 			 }
 		 },
 			
-	], callback)
+	]	, callback)
   }
   getCercanos(lat, lng, callback){
 		Evento.aggregate([

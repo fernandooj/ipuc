@@ -12,8 +12,9 @@ import {
   const getEvento = id => {
     return dispatch => {
       return axios
-        .get(`eve/evento/${id}`)
+        .get(`eve/evento/byId/${id}`)
         .then(res => {
+          console.log(res.data)
           dispatch({
             type: GET_EVENTO,
             evento: res.data.evento
@@ -31,7 +32,6 @@ import {
       return axios
         .get(`eve/evento/${data}`)
         .then(res => {
-          console.log(res.data)
           dispatch({
             type: GET_EVENTOS,
             eventos 

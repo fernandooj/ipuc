@@ -5,7 +5,7 @@ import Icon 					   from 'react-native-fa-icons'
 import moment 					   from 'moment'
 import { connect }                 from "react-redux";
 import MapView, {  Marker, Circle, ProviderPropType } from 'react-native-maps';
-import { getEventosCategoria } from "../../redux/actions/eventoActions.js";
+import { getEventosCategoria, getEvento } from "../../redux/actions/eventoActions.js";
 import { getCategorias }       from "../../redux/actions/categoriaActions.js";
 import { createFilter }        from 'react-native-search-filter';
 import AutoHeightImage         from 'react-native-auto-height-image';
@@ -44,6 +44,8 @@ class MapaPlanComponent extends Component{
 	async componentWillMount(){
     console.log(this.props.navigation.state)
     const idCategoria =this.props.navigation.state.params ?this.props.navigation.state.params.id :"undefined"
+    const idEvento    =this.props.navigation.state.params ?this.props.navigation.state.params.id :"undefined"
+    const tipo        =this.props.navigation.state.params ?this.props.navigation.state.params.tipo :"undefined"
     // const idCategoria = "5d3cc53173fa792d281ec543"
 
 		this.props.getCategorias();
@@ -60,8 +62,9 @@ class MapaPlanComponent extends Component{
 				longitudeDelta:0.15
       }
 
-			this.setState({x, x2:x, mapaCargado:true, idCategoria})
-      this.props.getEventosCategoria(idCategoria, x)
+      this.setState({x, x2:x, mapaCargado:true, idCategoria})
+      tipo=="categoria" ?this.props.getEventosCategoria(idCategoria, x) :this.props.getEvento(idEvento)
+      
 		}, (error)=>this.watchID = navigator.geolocation.watchPosition(e=>{
 			let lat =parseFloat(e.coords.latitude)
 			let lng = parseFloat(e.coords.longitude)
@@ -93,7 +96,7 @@ class MapaPlanComponent extends Component{
             key={key}
             coordinate={{latitude:e.loc.coordinates[1], longitude:e.loc.coordinates[0]}}
           >
-            <TouchableOpacity onPress={()=>this.animacionEvento(0, height+85, -100, e._id)}>
+            <TouchableOpacity onPress={()=>this.props.getEvento( e._id)}>
                 <Image source={diff<3 ?require("../../assets/img/pin_red.png") :diff<7 ?require("../../assets/img/pin_yellow.png") :require("../../assets/img/pin_blue.png") } style={style.iconoImagen} />
             </TouchableOpacity>
           </Marker>
@@ -111,7 +114,7 @@ class MapaPlanComponent extends Component{
         )
     })
   }
-
+  
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////   MUESTRA EL LISTADO DE EVENTOS,
   //----------------------   DIFF => devuelve la diferencia de dias desde hoy, hasta el dia del comienzo
@@ -128,7 +131,7 @@ class MapaPlanComponent extends Component{
       let data = parseInt(e.distancia/1000);
       data = data.toString()
       return(
-        <TouchableOpacity style={style.subContenedorEventos} key={key} onPress={()=>this.animacionEvento(0, height+85, -100, e._id)} >
+        <TouchableOpacity style={style.subContenedorEventos} key={key} onPress={()=>this.props.getEvento(e._id)} >
             <View style={style.contentIconEvento}>
               <Icon name={'map-marker'} style={[style.iconEvento, {color:diff<3 ?"#bd0909" :diff<7 ?"#ecb338" :"#00338a" }]} />
             </View>
@@ -160,7 +163,7 @@ class MapaPlanComponent extends Component{
     })
     return(
       <View style={style.subContenedorEvento}>
-        <TouchableOpacity style={style.btnRegresar} onPress={()=>this.animacionEvento( -1000, height-85, 100 )} >
+        <TouchableOpacity style={style.btnRegresar} onPress={()=>this.animacionHideEvento()} >
           <Icon name={"arrow-up"} style={style.iconRegresar} />
         </TouchableOpacity>
         <Slideshow  dataSource={img} height={180} />
@@ -197,35 +200,37 @@ class MapaPlanComponent extends Component{
       </View>
     )
   }
-
+  componentWillReceiveProps(props){
+    if(props.evento){
+      this.animacionShowEvento(props.evento)
+    }
+  }
+ 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////   ANIMACION PARA MOSTRAR UN SOLO EVENTO
-  //----------------------   idEvento => traigo el id, para llamar a un solo evento, inicialmente traigo todos los eventos, puedo o hacer un servicio nuevo o filtrar del listado de eventos
-  //----------------------   evento, view, categoria   => animacion que ingresa y saca los elementos del dom
+  //----------------------   evento => trae la inforamcion del evento,  
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  animacionEvento(evento, view, categoria, idEvento){
-    let {eventos} = this.props
-    if(idEvento){
-      let newEvento = eventos.filter(e=>{
-        return e._id==idEvento
-      })
-      let ubicacion ={
-        latitude:newEvento[0].loc.coordinates[1]+0.025,
-        longitude:newEvento[0].loc.coordinates[0],
-        latitudeDelta:0.033850498819819812,
-        longitudeDelta:0.03412317156791687
-      }
-      console.log(ubicacion)
-      this.setState({evento:newEvento[0],  x:ubicacion, buscador:true})
-
-    }else{
-      this.setState({x:this.state.x2, buscador:false})
+ 
+  animacionShowEvento(evento){
+    let ubicacion ={
+      latitude:evento.loc.coordinates[1]+0.025,
+      longitude:evento.loc.coordinates[0],
+      latitudeDelta:0.033850498819819812,
+      longitudeDelta:0.03412317156791687
     }
+    this.props.getEvento()
+    this.props.getEventosCategoria("undefined", this.state.x) 
+    this.setState({evento:evento,  x:ubicacion, buscador:true})
+    this.evento.transitionTo({top:0}, 500,  "ease-in-out-back")
+    this.view.transitionTo({top:height+85}, 500,  "ease-in-out-back")
+    this.categoria.transitionTo({bottom:-100}, 500,  "ease-in-out-back")
+  }
 
-
-    this.evento.transitionTo({top:evento}, 500,  "ease-in-out-back")
-    this.view.transitionTo({top:view}, 500,  "ease-in-out-back")
-    this.categoria.transitionTo({bottom:categoria}, 500,  "ease-in-out-back")
+  animacionHideEvento(){
+    this.setState({x:this.state.x2, buscador:false})
+    this.evento.transitionTo({top:-1000}, 500,  "ease-in-out-back")
+    this.view.transitionTo({top:height-85}, 500,  "ease-in-out-back")
+    this.categoria.transitionTo({bottom:100}, 500,  "ease-in-out-back")
   }
   animacionCategoria = (top) => {
     this.view.transitionTo({top}, 500,  "ease-in-out-back")
@@ -396,6 +401,7 @@ class MapaPlanComponent extends Component{
     console.log({buscador})
     return(
       <View style ={style.containerMap}>
+        
         {
           buscador
           ?<MapView
@@ -429,6 +435,9 @@ class MapaPlanComponent extends Component{
           <Circle center={x} radius={200} fillColor={"rgba(51,162,255,.3)"} strokeColor = { '#1a66ff' } />
           </MapView>
         }
+        <TouchableOpacity onPress={()=>this.props.navigation.navigate("Home") } style={style.btnHome}>
+          <Icon name='home' style={style.iconHome} />
+        </TouchableOpacity>
         <Animatable.View ref={ref=>{this.categoria=ref}} style={style.contenedorCategorias} >
           <ScrollView horizontal>
               {this.renderCategorias()}
@@ -466,9 +475,8 @@ class MapaPlanComponent extends Component{
         <>
            <Animatable.View ref={ref=>{this.evento=ref}} style={style.contenedorEvento}>
               {this.renderEvento()}
+              <View style={style.triangulo}></View>
             </Animatable.View>
-
-
           {this.renderMapa()}
         </>
 			)
@@ -489,7 +497,9 @@ class MapaPlanComponent extends Component{
 const mapState = state => {
   let categorias =  state.categoria.categorias
   categorias = categorias.concat([{nombre:"Todos", _id:"undefined"}])
+   
 	return {
+        evento: state.evento.evento,
         eventos: state.evento.eventoCategoria,
         categorias
 	};
@@ -500,14 +510,20 @@ const mapDispatch = dispatch => {
     getEventosCategoria: (idCategoria, x) => {
 			dispatch(getEventosCategoria(idCategoria, x));
     },
+    getEvento: (idEvento) => {
+			dispatch(getEvento(idEvento));
+    },
     getCategorias: () => {
 			dispatch(getCategorias());
 	  },
 	};
 };
 
+MapaPlanComponent.defaultProps = {
+  evento:null
+}
 MapaPlanComponent.propTypes = {
-	provider: ProviderPropType,
+  provider: ProviderPropType,
 };
 export default connect(
 	mapState,
