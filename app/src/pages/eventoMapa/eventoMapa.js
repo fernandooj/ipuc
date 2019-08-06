@@ -10,7 +10,9 @@ import { getCategorias }       from "../../redux/actions/categoriaActions.js";
 import { createFilter }        from 'react-native-search-filter';
 import AutoHeightImage         from 'react-native-auto-height-image';
 import Slideshow               from 'react-native-image-slider-show';
+import AsyncStorage from '@react-native-community/async-storage';
 import * as Animatable         from 'react-native-animatable';
+import axios from 'axios';
 let fechaActual = moment().format('YYYY/MM/DD h:mm:ss a')
 fechaActual = moment().format('YYYY/MM/DD h:mm')
 const {width, height} = Dimensions.get('window')
@@ -37,17 +39,25 @@ class MapaPlanComponent extends Component{
 		    },
 		    mapaCargado:false,
         terminoBuscador:"",
-        evento:{imagen:[], nombre:"", lugar:"", descripcion:"", fechaInicio:"", fechaFinal:""}
+        eventoGuardado:[],
+        evento:{imagen:[], nombre:"", lugar:"", descripcion:"", fechaInicio:"", fechaFinal:"", meGusta:[]}
 		}
 	}
 
 	async componentWillMount(){
     console.log(this.props.navigation.state)
-    const idCategoria =this.props.navigation.state.params ?this.props.navigation.state.params.id :"undefined"
-    const idEvento    =this.props.navigation.state.params ?this.props.navigation.state.params.id :"undefined"
+    const idCategoria =this.props.navigation.state.params ?this.props.navigation.state.params.id   :"undefined"
+    const idEvento    =this.props.navigation.state.params ?this.props.navigation.state.params.id   :"undefined"
     const tipo        =this.props.navigation.state.params ?this.props.navigation.state.params.tipo :"undefined"
-    // const idCategoria = "5d3cc53173fa792d281ec543"
-
+    const idUsuario = await AsyncStorage.getItem('idUsuario')
+    if(idUsuario){
+      axios.get("user/perfil")
+      .then(e=>{
+        console.log(e.data)
+        this.setState({idUsuario, eventoGuardado:e.data.user.Eventos})  
+      })
+    }
+     
 		this.props.getCategorias();
 		navigator.geolocation.getCurrentPosition(e=>{
 
@@ -153,8 +163,11 @@ class MapaPlanComponent extends Component{
   //----------------------   DIFF => devuelve la diferencia de dias desde hoy, hasta el dia del comienzo
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   renderEvento(){
-    let {imagen, nombre, fechaInicio, descripcion, lugar, fechaFinal} = this.state.evento
-
+    let {imagen, nombre, fechaInicio, descripcion, lugar, fechaFinal, meGusta, _id} = this.state.evento
+    const {idUsuario, eventoGuardado} = this.state
+    let esSeguidor     =  meGusta.includes(idUsuario) 
+    let existeEvento   =  eventoGuardado.includes(_id)
+	  console.log({idUsuario, eventoGuardado, esSeguidor})
     let img = []
     imagen.map(e=>{
       let img2 = e.split("-")
@@ -189,17 +202,57 @@ class MapaPlanComponent extends Component{
           <TouchableOpacity style={style.btnEventoPreguntar} >
             <Text style={style.textPreguntar}>Enviar Mensaje</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={style.btnEvento} >
-            <Icon name={"bookmark-o"} style={style.iconEvento} />
+          <TouchableOpacity style={style.btnEvento} onPress={()=>!idUsuario ?this.props.navigation.navigate("Perfil") :existeEvento ?this.eliminarEvento(_id) :this.guardarEvento(_id)}>
+            <Icon name={existeEvento ?"bookmark" :"bookmark-o"} style={existeEvento ?style.iconEventoActivo :style.iconEvento} />
           </TouchableOpacity>
-          <TouchableOpacity style={style.btnEvento} >
-            <Icon name={"heart-o"} style={style.iconEvento} />
+         
+          <TouchableOpacity style={style.btnEvento} onPress={()=>!idUsuario ?this.props.navigation.navigate("Perfil") :esSeguidor ?this.unLike() :this.like()}>
+            <Icon name={esSeguidor ?"heart" :"heart-o"} style={esSeguidor ?style.iconMeGustaActivo :style.iconMeGusta} />
+            <Text style={{fontSize:10}}>{meGusta.length}</Text>
           </TouchableOpacity>
         </View>
 
       </View>
     )
   }
+  guardarEvento(idEvento){
+    console.log({idEvento})
+    const {eventoGuardado} = this.state
+    axios.post("user/guardarEvento", {idEvento})
+    .then(res=>{
+      console.log(res.data)
+      eventoGuardado.push(idEvento)
+     
+      res.data.status &&this.setState({eventoGuardado})
+    })
+  }
+  eliminarEvento(idEvento){
+    let {eventoGuardado, idUsuario} = this.state
+    axios.post("user/eliminarEvento", {idEvento})
+    .then(res=>{
+      eventoGuardado = eventoGuardado.filter(e=>{return e!=idEvento})
+      res.data.status &&this.setState({eventoGuardado})
+    })
+  }
+
+  like(){
+    const {_id} = this.state.evento
+    console.log({_id})
+    axios.post("eve/evento/like", {id:_id})
+    .then(res=>{
+      console.log(res.data)
+      res.data.status &&this.props.getEvento(_id)
+    })
+  }
+  unLike(){
+    const {_id} = this.state.evento
+    console.log({_id})
+    axios.post("eve/evento/unLike", {id:_id})
+    .then(res=>{
+      res.data.status &&this.props.getEvento(_id)
+    })
+  }
+
   componentWillReceiveProps(props){
     if(props.evento){
       this.animacionShowEvento(props.evento)
@@ -445,25 +498,25 @@ class MapaPlanComponent extends Component{
         </Animatable.View>
         {/* CONTENIDO MODAL */}
         <Animatable.View ref={ref=>{this.view=ref}} style={style.contenedorEventos}>
-            <ScrollView  keyboardDismissMode="on-drag">
-              <TouchableOpacity onPress={()=>this.animacionCategoria(modal ?height-85: 75 )} style={style.contenedorIconEvento}>
-                <Icon name={modal ?'minus' :"plus"} style={style.iconContenedorEvento} />
-                <View style={style.contenedorBuscador}>
-                  <Icon name={"search"} style={style.iconSearch} />
-                  <TextInput
-                    style={style.inputBuscador}
-                    onChangeText={(terminoBuscador) => this.setState({terminoBuscador}) }
-                    value={terminoBuscador}
-                    underlineColorAndroid='transparent'
-                    placeholder="Buscar Evento"
-                    placeholderTextColor='#8F9093'
-                    autoCapitalize = 'none'
-                    onFocus={()=>this.animacionCategoria(75)}
-                  />
-                </View>
-              </TouchableOpacity>
-                {this.renderEventos()}
-            </ScrollView>
+          <ScrollView  keyboardDismissMode="on-drag">
+            <TouchableOpacity onPress={()=>this.animacionCategoria(modal ?height-85: 75 )} style={style.contenedorIconEvento}>
+              <Icon name={modal ?'minus' :"plus"} style={style.iconContenedorEvento} />
+              <View style={style.contenedorBuscador}>
+                <Icon name={"search"} style={style.iconSearch} />
+                <TextInput
+                  style={style.inputBuscador}
+                  onChangeText={(terminoBuscador) => this.setState({terminoBuscador}) }
+                  value={terminoBuscador}
+                  underlineColorAndroid='transparent'
+                  placeholder="Buscar Evento"
+                  placeholderTextColor='#8F9093'
+                  autoCapitalize = 'none'
+                  onFocus={()=>this.animacionCategoria(75)}
+                />
+              </View>
+            </TouchableOpacity>
+              {this.renderEventos()}
+          </ScrollView>
         </Animatable.View>
       </View>
     )

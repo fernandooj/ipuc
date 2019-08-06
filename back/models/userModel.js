@@ -7,7 +7,7 @@
 let mongoose = require('mongoose');
 let bcrypt   = require('bcrypt-nodejs');
 let moment   = require('moment');
-let fecha  =  moment().format('YYYY-MM-DD h:mm:ss')
+let Schema = mongoose.Schema
 /////////////////////////////////////////////////////////////////////////
 /********** genero la base la coleccion llamada users   ****************/
 /////////////////////////////////////////////////////////////////////////
@@ -27,6 +27,7 @@ let UserSchema = mongoose.Schema({
 	password:    String,
 	token:       String,
 	acceso:      String,
+	Eventos: 	[{ type: Schema.Types.ObjectId, ref:'Evento'}],	//// Ids de los eventos guardados
 });
 
  

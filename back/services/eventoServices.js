@@ -95,6 +95,23 @@ class eventoServices {
 		newEvento.usuario     =  usuario;
 		newEvento.save(callback);	
 	}
+	like(_id, idUsuario, callback){
+		console.log({_id, idUsuario})
+		Evento.update(
+			{ _id: _id }, 
+			{ $push: { meGusta: idUsuario } },
+			callback
+		);
+	}
+	unLike(_id, idUsuario, callback){
+		console.log({_id, idUsuario})
+		Evento.update(
+			{ _id: _id }, 
+			{ $pull: { meGusta: idUsuario } },
+			callback
+		);
+	}
+
 }
 
 module.exports = new eventoServices()

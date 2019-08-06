@@ -59,13 +59,10 @@ export const style = MediaQueryStyleSheet.create({
         paddingHorizontal:12,
         borderRadius:30
     },
-
     textCategoria:{
         fontFamily: "Roboto-Regular",
         marginHorizontal:8
     },
-
- 
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////       EVENTOS
@@ -118,9 +115,7 @@ export const style = MediaQueryStyleSheet.create({
         color:"rgba(0,0,0,.5)",
         fontSize:13
     },
-    iconEvento:{
-        fontSize:24
-    },
+
     
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////       BUSCADOR
@@ -244,6 +239,7 @@ export const style = MediaQueryStyleSheet.create({
         fontFamily: "Roboto-regular",
     },
     btnEvento:{
+        justifyContent:"center",
         backgroundColor:"#fff",
         shadowColor: 'rgba(0,0,0, .4)', // IOS
 		borderColor:"rgba(0,0,0,0)",
@@ -251,16 +247,26 @@ export const style = MediaQueryStyleSheet.create({
 		shadowOpacity: .5, // IOS
 		shadowRadius: 5, //IOS
 		elevation: 7, // Android
-		paddingLeft:10,
+		paddingHorizontal:10,
 		marginBottom:15,
 		borderRadius:5,
 		backgroundColor:'#ffffff',
-        padding:10,
+        paddingVertical:5,
         marginRight:10,
         alignItems: 'center',
     },
+     
+    iconMeGusta:{
+        fontSize:24
+    },
+    iconMeGustaActivo:{
+        fontSize:24,
+        color:"#ed4956",
+    },
     iconEvento:{
-        color:"rgba(0,0,0,.5)",
-        fontSize:22
-    }
+        fontSize:24
+    },
+    iconEventoActivo:{
+        fontSize:24
+    },
 })

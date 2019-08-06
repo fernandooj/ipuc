@@ -11,7 +11,7 @@ class userServices {
 		User.findOne({username}, callback)
 	}
 	getById(_id, callback){
-		User.find({_id}, callback)
+		User.findOne({_id}, callback)
 	}
 	create(user, token, callback){ 
 		var newUsuario = new User() 
@@ -80,16 +80,7 @@ class userServices {
 	// }
 
 
-	// login(user, callback){
-	// 	console.log(user)
-	// 	User.findOne({ 'username' :  user.username }, callback)
-	// }
-	// editaPuntaje(idUser, puntos, callback){
-	// 	let newUsuario = new User();
-	// 	User.findByIdAndUpdate(idUser, {$set:{
-	// 		'puntaje' : puntos
-	// 	}}, callback)
-	// }
+ 
 	 
 
 	// estadoUsuario(user, activo, callback){
@@ -105,6 +96,23 @@ class userServices {
             'updatedAt': moment(fecha)
         }}, callback)
 	}
+	guardarEvento(_id, idEvento, callback){
+		console.log({_id, idEvento})
+		User.update(
+			{ _id: _id }, 
+			{ $push: { Eventos: idEvento } },
+			callback
+		);
+	}
+	eliminarEvento(_id, idEvento, callback){
+		console.log({_id, idEvento})
+		User.update(
+			{ _id: _id }, 
+			{ $pull: { Eventos: idEvento } },
+			callback
+		);
+	}
+
 
 }
 

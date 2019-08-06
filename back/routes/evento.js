@@ -68,7 +68,54 @@ router.get('/byCategoria/:idCategoria/:lat/:lng', (req, res)=>{
 	})
 })
 
+///////////////////////////////////////////////////////////////////////////
+/*
+cuando un usuario le gustas un evento agrego su id
+*/
+///////////////////////////////////////////////////////////////////////////
+router.post('/like', (req,res)=>{
+	if(req.session.usuario){
+		eventoServices.getById(req.body.id, (err, evento)=>{
+			 console.log(req.session.usuario)
+			if(evento){
+				let esSeguidor = isInArray(req.session.usuario._id, evento.meGusta)
+				if(!esSeguidor){
+					eventoServices.like(req.body.id, req.session.usuario._id, (err, eventos)=>{
+						if(!err){
+							res.json({status:true, evento})
+						}else{
+							res.json({ status: false, err}) 
+						}
+					})
+				}else{
+					res.json({ status: false, err:"ya es seguidor"}) 
+				}
+			}
+		})
+	}else{
+		res.json({ status: false, message:'usuario no logueado'})  
+	}
+})
 
+///////////////////////////////////////////////////////////////////////////
+/*
+eliminar un usuario que le gusta un evento
+*/
+///////////////////////////////////////////////////////////////////////////
+router.post('/unLike', (req,res)=>{
+	if(req.session.usuario){
+		eventoServices.unLike(req.body.id, req.session.usuario._id, (err, evento)=>{
+			if(!err){
+				res.json({status:true, evento})
+			}else{
+				res.json({ status: false, err}) 
+			}
+		})
+	}else{
+		res.json({ status: false, message:'usuario no logueado'})  
+	}
+})
+	
 const ubicacionJimp =  '../front/docs/uploads/eventos/'
 router.post('/', (req, res)=>{
 	if (!req.session.usuario) {
@@ -146,6 +193,10 @@ const resizeImagenes = (ruta, randonNumber, extension, res) =>{
 		})
 	.catch(err => console.error(err));
 	},2000)
+}
+
+const isInArray=(value, array)=> {
+	return array.indexOf(value) > -1;
 }
 
 module.exports = router

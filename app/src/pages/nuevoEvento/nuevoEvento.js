@@ -1,28 +1,30 @@
 import React, {Component} from 'react'
 import {View, Text, ScrollView, Image, Platform, TextInput, TouchableOpacity} from 'react-native'
-import PropTypes from "prop-types";
-import Footer   from '../components/footer'
-import axios    from 'axios'
-import MapaPlanComponent from '../components/mapa.js'
-import Icon 					   from 'react-native-fa-icons' 
-import TomarFoto 				 from "../components/tomarFoto";
-import { getCategorias } from "../../redux/actions/categoriaActions.js";
-import { connect } 			 from "react-redux";
-import DatePicker 			 from 'react-native-datepicker'
-import moment 					 from 'moment'
-import Toast 						 from 'react-native-simple-toast';
-import {style} 					 from './style'
- 
+import PropTypes 			from "prop-types";
+import Footer   			from '../components/footer'
+import axios    			from 'axios'	
+import MapaPlanComponent 	from '../components/mapa.js'
+import Icon 				from 'react-native-fa-icons' 
+import TomarFoto 			from "../components/tomarFoto";
+import { getCategorias } 	from "../../redux/actions/categoriaActions.js";
+import { connect } 			from "react-redux";
+import DatePicker 			from 'react-native-datepicker'
+import moment 				from 'moment'
+import Toast 				from 'react-native-simple-toast';
+import {style} 				from './style'
+import AsyncStorage from '@react-native-community/async-storage';
  
 class NuevoEvento extends Component{
 	constructor(props) {
-	  super(props);
-	  this.state={
+		super(props);
+		this.state={
 			fechaHoy:moment().format('DD-MMM-YYYY h:mm a'),
-	  }
+		}
 	}
-	componentWillMount(){
+	async componentWillMount(){
 		this.props.getCategorias()
+		const idUsuario = await AsyncStorage.getItem('idUsuario')
+		idUsuario ?this.setState({idUsuario})  :this.props.navigation.navigate("Perfil")
 	}
 	renderCategorias(){
 		const {categoria} = this.state

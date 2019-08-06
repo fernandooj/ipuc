@@ -24,7 +24,7 @@ class eventosComponent extends Component{
 		this.state={
             terminoBuscador:"",
             inicio:0,
-			final:6,
+			final:3,
             eventos:[]
 		}
 	}
@@ -142,10 +142,10 @@ class eventosComponent extends Component{
                 <View style={{alignItems: 'center'}}>
                     <Cabezera navigation={navigation} />
                 </View>
-                <ScrollView onScroll={(e)=>this.onScroll(e)} >
+                <ScrollView onScroll={(e)=>this.onScroll(e)} style={{marginBottom:60}} >
                     {this.renderEventos()}
+                    {this.state.showSpin &&<ActivityIndicator color="#0071bb" style={style.preload}/> }
                 </ScrollView>
-                {this.state.showSpin &&<ActivityIndicator color="#0071bb" style={style.preload}/> }
                 <Footer navigation={navigation} />
             </View>
         )

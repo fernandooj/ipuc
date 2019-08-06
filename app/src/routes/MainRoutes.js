@@ -33,7 +33,7 @@ class MainRoutes extends Component{
 	}
 	render(){
 		const NavigationApp = createDrawerNavigator({
-			Home:        {screen: eventosComponent},
+			Home:        {screen: homeComponent},
 			Perfil:      {screen: perfilComponent},
 			editarPerfil:{screen: editarPerfilComponent},
 			nuevoEvento :{screen: nuevoEventoComponent},

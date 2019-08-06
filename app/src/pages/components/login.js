@@ -127,7 +127,6 @@ const {
 						keyboardType='email-address'
 						onFocus={() => {
 							this.setState({ alertErrorLogin:false, usuarioNoExiste:false }); 
-						
 						}}
 					/>
 				</Animated.View>
@@ -172,11 +171,16 @@ const {
 	}
 	login(){
 		const { email, password, tokenPhone } = this.state;
-		const {navigation} = this.props	
 		axios.post("user/login", { username:email, password, tokenPhone })
     .then(e => {		 
-      e.data.code==1 ?navigation("Home") :Toast.show("Datos Incorrectos")
+			e.data.code==1 ?this.loginExitoso(e.data.user._id) :Toast.show("Datos Incorrectos")
 		})
+	}
+	async loginExitoso(idUsuario){
+		console.log(idUsuario)
+		AsyncStorage.setItem('idUsuario', idUsuario)
+		const {navigation} = this.props	
+		navigation("Home")
 	}
 	handleSubmit(e){
 		this.setState({loading:true})

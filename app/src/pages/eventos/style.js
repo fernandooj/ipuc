@@ -45,8 +45,9 @@ export const style = MediaQueryStyleSheet.create({
         paddingVertical:5
     },
     preload:{
-		position:"absolute",
-		bottom:0,
+        position:"absolute",
+        zIndex:100,
+		bottom:-1,
 		left:(size.width/2)-5
 	}
 })

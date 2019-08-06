@@ -24,19 +24,20 @@ const geoSchema = mongoose.Schema({
 
 
 let eventoSchema = mongoose.Schema({
-	createdAt	   :  { type: String },
-	updatedAt	   :  { type: String },
+	createdAt	   : { type: String },
+	updatedAt	   : { type: String },
 	imagen         : [{ type : String }],
-	nombre         :  { type : String },
-	descripcion    :  { type : String },
-	fechaInicio    :  { type: Number}, 
-	fechaFinal     :  { type: Number}, 
-	lugar          :  { type: String},
-	loc 		   :  geoSchema,
+	nombre         : { type : String },
+	descripcion    : { type : String },
+	fechaInicio    : { type: Number}, 
+	fechaFinal     : { type: Number}, 
+	lugar          : { type: String},
+	loc 		   : geoSchema,
 	categoria      : { type: Schema.Types.ObjectId, ref:'Categoria'},
-	usuario        :  { type: Schema.Types.ObjectId, ref:'User'},
-	activo		   :  { type : Boolean, default:true},
-	eliminado	   :  { type : Boolean, default:false},
+	usuario        : { type: Schema.Types.ObjectId, ref:'User'},
+	meGusta		   : [{ type: Schema.Types.ObjectId, ref:'User'}],
+	activo		   : { type : Boolean, default:true},
+	eliminado	   : { type : Boolean, default:false},
 });
 
 module.exports =  mongoose.model('Evento', eventoSchema) 

@@ -8,7 +8,7 @@ import axios    from 'axios'
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import { getCategorias } from "../../redux/actions/categoriaActions.js";
 import { connect } from "react-redux";
-
+import Toast from 'react-native-simple-toast';
  
 import {style} from './style'
  
@@ -92,7 +92,7 @@ class Home extends Component{
 				this.setState({lat, lng})
 				this.getEventos(lat, lng)
 			},
-				(error) => this.getPlans(undefined, undefined),
+				(error) => this.getEventos(undefined, undefined),
 				{enableHighAccuracy: true, timeout:5000, maximumAge:0})
 	      	)
 		}

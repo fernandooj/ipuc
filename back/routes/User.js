@@ -19,11 +19,7 @@ const htmlTemplate = require('../notificaciones/template-email.js')
     CONFIGURACION DATOS TWILIO
 */
 ///////////////////////////////////////////////////////////////////////////
-// client = require('twilio')( 
-//     'ACc03f66d892097da6c1f148866c57c8ef', //TWILIO_ACCOUNT_SID
-//     '55f8fa1132e0671bcc3576ab3f3500b3'//TWILIO_AUTH_TOKEN
-// ); 
-
+ 
 ///////////////////////////////////////////////////////////////////////////
 /*
     CONFIGURACION DEL CORREO
@@ -228,8 +224,6 @@ module.exports = function(app, passport){
         })
     }
 
-
-
     ///////////////////////////////////////////////////////////////////////////
     /*
     Accedo al perfil
@@ -241,7 +235,69 @@ module.exports = function(app, passport){
         :res.json({status:true,  user: req.session.usuario, code:1})  
     })
 
-    
+    app.get('/x/v1/user/perfil/:idUser', function(req, res){
+	    userServices.getById(req.params.idUser, (err, usuario)=>{
+            if(err){
+                res.json({ status: false, err });	
+                console.log(err)
+            }else{
+                if(!usuario){
+                    res.json({ status: false, err:"no existe usuario" });	
+                }else{                
+                    req.session.usuario=usuario
+                    res.json({status:true, usuario})
+                    // puntoServices.getByUser(usuario._id, (err2, ubicaciones)=>{
+                    //     let nUbicaciones = ubicaciones.map(e=>{
+                    //         let data = e.data[0] 
+                    //         if(data.idCliente==usuario._id){
+                    //             return {
+                    //                 direccion: data.direccion,
+                    //                 email: undefined,
+                    //                 idCliente: undefined,
+                    //                 idZona: data.idZona,
+                    //                 nombre: undefined,
+                    //                 nombreZona: data.nombreZona,
+                    //                 observacion: data.observacion,
+                    //                 _id: data._id
+                    //             }
+                    //         }else{
+                    //             return {
+                    //                 direccion: data.direccion,
+                    //                 email: data.email,
+                    //                 idCliente: data.idCliente,
+                    //                 idZona: data.idZona,
+                    //                 nombre: data.nombre,
+                    //                 nombreZona: data.nombreZona,
+                    //                 observacion: data.observacion,
+                    //                 _id: data._id
+                    //             }
+                    //         }
+                    //     })  
+                    //     if (!err2) {
+                    //         let user = {
+                    //             _id:          usuario._id, 
+                    //             razon_social: usuario.razon_social,
+                    //             cedula:       usuario.cedula, 
+                    //             direccion:    usuario.direccion, 
+                    //             email:        usuario.email, 
+                    //             nombre:       usuario.nombre,
+                    //             celular:      usuario.celular,
+                    //             tipo:         usuario.tipo, 
+                    //             acceso:       usuario.acceso, 
+                    //             avatar:       usuario.avatar, 
+                    //             ubicaciones:  nUbicaciones
+                    //         }
+                    //         res.json({status:true, user})
+                    //     }else{
+                    //         res.json({ status: false, err2 });
+                    //         console.log(err2)	    
+                    //     }
+                    // })
+                }
+            }
+        })
+    })
+
 
     ///////////////////////////////////////////////////////////////////////////
     /*
@@ -433,7 +489,7 @@ module.exports = function(app, passport){
                 resizeImagenes(rutaJim, randonNumber, "jpg", res)
                 
             }else{
-                res.json({ status: 'FAIL', message: err }); 
+                res.json({ status: 'FAIL', message: err });  
             }
         })
     })
@@ -500,7 +556,60 @@ module.exports = function(app, passport){
         })
     })
 
+    ///////////////////////////////////////////////////////////////////////////
+    /*
+    agrego un usuario como seguidor de otro usuario, primero verifico que el usuario no sea seguidor
+    */
+    ///////////////////////////////////////////////////////////////////////////
+    app.post('/x/v1/user/guardarEvento', (req,res)=>{
+        if(req.session.usuario){
+            userServices.getById(req.session.usuario._id, (err, user)=>{
+                if(user){
+                    let eventoGuardado = isInArray(req.body.idEvento, user.Eventos)
+                    console.log("fer")
+                    if(!eventoGuardado){
+                        userServices.guardarEvento(req.session.usuario._id, req.body.idEvento, (err, usuario)=>{
+                            if(!err){
+                                userServices.getById(req.session.usuario._id, (err, usuario2)=>{
+                                    req.session.usuario=usuario2
+                                    res.json({status:true, usuario})
+                                })
+                            }else{
+                                res.json({ status: false, err}) 
+                            }
+                        })
+                    }else{
+                        res.json({ status: false, err:"ya es seguidor"}) 
+                    }
+                }
+            })
+        }else{
+            res.json({ status: false, message:'usuario no logueado'})  
+        }
+    })
 
+    const isInArray=(value, array)=> {
+        return array.indexOf(value) > -1;
+    }
+    ///////////////////////////////////////////////////////////////////////////
+    /*
+    eliminar un usuario como seguidor de otro usuario
+    */
+    ///////////////////////////////////////////////////////////////////////////
+    app.post('/x/v1/user/eliminarEvento', (req,res)=>{
+        if(req.session.usuario){
+            console.log({bodyEvento:req.body.idEvento})
+            userServices.eliminarEvento(req.session.usuario._id, req.body.idEvento,  (err, user)=>{
+                if(!err){
+                    res.json({status:true, user})
+                }else{
+                    res.json({ status: false, err}) 
+                }
+            })
+        }else{
+            res.json({ status: false, message:'usuario no logueado'})  
+        }
+    })
       
     // =====================================
     // LOGOUT ==============================
@@ -512,57 +621,56 @@ module.exports = function(app, passport){
         res.json({status: true, message:'sesion terminada', code:1})
     });
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////// CAMBIO LOS TAMAÑOS DE LAS IMAGENES
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-const ubicacionJimp =  '../front/docs/uploads/avatar/'
-const resizeImagenes = (ruta, randonNumber, extension, res) =>{
-	Jimp.read(ruta, (err, imagen)=> {
-		if(err){
-			return err
-		}else{
-			imagen.resize(500, Jimp.AUTO)             
-			.quality(90)                          
-			.write(`${ubicacionJimp}Resize${fecha}_${randonNumber}.${extension}`);
-			res.json({status:'SUCCESS',  code:1})    
-		}
-	});	
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////// CAMBIO LOS TAMAÑOS DE LAS IMAGENES
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    const ubicacionJimp =  '../front/docs/uploads/avatar/'
+    const resizeImagenes = (ruta, randonNumber, extension, res) =>{
+        Jimp.read(ruta, (err, imagen)=> {
+            if(err){
+                return err
+            }else{
+                imagen.resize(500, Jimp.AUTO)             
+                .quality(90)                          
+                .write(`${ubicacionJimp}Resize${fecha}_${randonNumber}.${extension}`);
+                res.json({status:'SUCCESS',  code:1})    
+            }
+        });	
 
-	setTimeout(function(){
-		sizeOf(`${ubicacionJimp}Resize${fecha}_${randonNumber}.${extension}`)
-	    .then(dimensions => { 
-		  	let width  = dimensions.width
-		  	let height = dimensions.height
-		  	let x; 
-		  	let y; 
-		  	let w; 
-		  	let h; 
+        setTimeout(function(){
+            sizeOf(`${ubicacionJimp}Resize${fecha}_${randonNumber}.${extension}`)
+            .then(dimensions => { 
+                let width  = dimensions.width
+                let height = dimensions.height
+                let x; 
+                let y; 
+                let w; 
+                let h; 
 
-		  	if (width>height) {
-		  		console.log(1)
-		  		x = (width*10)/100
-			  	y = (width*10)/100
-			  	w = (((height*100)/100)-y)
-			  	h = (((height*100)/100)-y)
-		  	}else{
-				x = (height*10)/100
-			  	y = (height*10)/100
-			  	w = (width*90)/100
-			  	h = (width*90)/100
-		  	}
-		  	
-			Jimp.read(ruta, function (err, imagen) {
-			    if (err) throw err;
-			    imagen.resize(800, Jimp.AUTO)             
-				.quality(90)                 
-				.crop(x,y,w,h)                
-				.write(`${ubicacionJimp}Miniatura${fecha}_${randonNumber}.${extension}`);
-			});	
-		})
-	.catch(err => console.error(err));
-	},2000)
-}
-
+                if (width>height) {
+                    console.log(1)
+                    x = (width*10)/100
+                    y = (width*10)/100
+                    w = (((height*100)/100)-y)
+                    h = (((height*100)/100)-y)
+                }else{
+                    x = (height*10)/100
+                    y = (height*10)/100
+                    w = (width*90)/100
+                    h = (width*90)/100
+                }
+                
+                Jimp.read(ruta, function (err, imagen) {
+                    if (err) throw err;
+                    imagen.resize(800, Jimp.AUTO)             
+                    .quality(90)                 
+                    .crop(x,y,w,h)                
+                    .write(`${ubicacionJimp}Miniatura${fecha}_${randonNumber}.${extension}`);
+                });	
+            })
+        .catch(err => console.error(err));
+        },2000)
+    }
 
 
 }
