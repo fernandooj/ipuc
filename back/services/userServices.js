@@ -13,6 +13,9 @@ class userServices {
 	getById(_id, callback){
 		User.findOne({_id}, callback)
 	}
+	getEventos(_id, callback){
+		User.findOne({_id}).populate("Eventos").exec(callback)
+	}
 	create(user, token, callback){ 
 		var newUsuario = new User() 
 		newUsuario.username  = user.username,

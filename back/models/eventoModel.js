@@ -35,9 +35,12 @@ let eventoSchema = mongoose.Schema({
 	loc 		   : geoSchema,
 	categoria      : { type: Schema.Types.ObjectId, ref:'Categoria'},
 	usuario        : { type: Schema.Types.ObjectId, ref:'User'},
+	mensajes       : [{ type: Schema.Types.ObjectId, ref:'User'}],
 	meGusta		   : [{ type: Schema.Types.ObjectId, ref:'User'}],
 	activo		   : { type : Boolean, default:true},
 	eliminado	   : { type : Boolean, default:false},
 });
 
 module.exports =  mongoose.model('Evento', eventoSchema) 
+
+// mensajes	son los id de los usuarios que han hecho preguntas

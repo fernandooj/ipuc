@@ -1,20 +1,24 @@
 package com.ipuc;
 
 import android.app.Application;
-
 import com.facebook.react.ReactApplication;
+import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
+import com.reactnative.ivpusic.imagepicker.PickerPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
 import io.invertase.firebase.RNFirebasePackage;
+import co.apptailor.googlesignin.RNGoogleSigninPackage;
+import com.facebook.reactnative.androidsdk.FBSDKPackage;
+import com.evollu.react.fcm.FIRMessagingPackage;
+import com.airbnb.android.react.maps.MapsPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
+import com.facebook.CallbackManager;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookSdk;
-import com.facebook.reactnative.androidsdk.FBSDKPackage;
-import io.invertase.firebase.messaging.RNFirebaseMessagingPackage; 
-import com.facebook.appevents.AppEventsLogger;
+import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 import java.util.Arrays;
 import java.util.List;
+import com.heanoria.library.reactnative.locationenabler.RNAndroidLocationEnablerPackage;
 
 public class MainApplication extends Application implements ReactApplication {
   private static CallbackManager mCallbackManager = CallbackManager.Factory.create();
@@ -33,10 +37,16 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-          new RNGoogleSigninPackage(),
+          new AsyncStoragePackage(),
+          new PickerPackage(),
+          new FIRMessagingPackage(),
+          new VectorIconsPackage(),
           new RNFirebasePackage(),
+          new RNGoogleSigninPackage(),
+          new FBSDKPackage(mCallbackManager),
           new RNFirebaseMessagingPackage(),
-          new FBSDKPackage(mCallbackManager)
+          new RNAndroidLocationEnablerPackage(),
+          new MapsPackage()
       );
     }
 

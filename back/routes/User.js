@@ -455,10 +455,10 @@ module.exports = function(app, passport){
             if(err){
                 res.json({ status: 'FAIL', message: err}) 
             } else{
-                userServices.getByUsername(user1.username, (err, user)=>{
+                userServices.getByUsername(user1.username, (err, usuario)=>{
                     if (!err) {
-                        req.session.usuario = user
-                        res.json({ status: 'SUCCESS', message: 'Usuario Activado', user });    
+                        req.session.usuario = usuario
+                        res.json({ status: 'SUCCESS', message: 'Usuario Activado', usuario });    
                     }
                 })       
             }
@@ -474,20 +474,20 @@ module.exports = function(app, passport){
         let randonNumber = Math.floor(90000000 + Math.random() * 1000000)
 		
 		////////////////////    ruta que se va a guardar en el folder
-		let fullUrlimagenOriginal = '../front/docs/uploads/avatar/Original'+fecha+'_'+randonNumber+'.jpg'
+		let fullUrlimagenOriginal = '../front/docs/uploads/avatar/'+fecha+'_'+randonNumber+'.jpg'
 	 
 		////////////////////    ruta que se va a guardar en la base de datos
-		let ruta  = req.protocol+'://'+req.get('Host') + '/uploads/avatar/--'+fecha+'_'+randonNumber+'.jpg'
+		let ruta  = req.protocol+'://'+req.get('Host') + '/uploads/avatar/'+fecha+'_'+randonNumber+'.jpg'
 		
 		///////////////////     envio la imagen al nuevo path
-		let rutaJim  = req.protocol+'://'+req.get('Host') + '/uploads/avatar/Original'+fecha+'_'+randonNumber+'.jpg'
+		let rutaJim  = req.protocol+'://'+req.get('Host') + '/uploads/avatar/'+fecha+'_'+randonNumber+'.jpg'
         fs.rename(req.files.imagen.path, fullUrlimagenOriginal, (err)=>{console.log(err)})
         
 
         userServices.avatar(req.session.usuario._id, ruta, (err, categoria)=>{
             if (!err) {
-                resizeImagenes(rutaJim, randonNumber, "jpg", res)
-                
+                // resizeImagenes(rutaJim, randonNumber, "jpg", res)
+                res.json({status:true,  code:1})  
             }else{
                 res.json({ status: 'FAIL', message: err });  
             }
@@ -566,7 +566,6 @@ module.exports = function(app, passport){
             userServices.getById(req.session.usuario._id, (err, user)=>{
                 if(user){
                     let eventoGuardado = isInArray(req.body.idEvento, user.Eventos)
-                    console.log("fer")
                     if(!eventoGuardado){
                         userServices.guardarEvento(req.session.usuario._id, req.body.idEvento, (err, usuario)=>{
                             if(!err){
@@ -598,7 +597,7 @@ module.exports = function(app, passport){
     ///////////////////////////////////////////////////////////////////////////
     app.post('/x/v1/user/eliminarEvento', (req,res)=>{
         if(req.session.usuario){
-            console.log({bodyEvento:req.body.idEvento})
+            
             userServices.eliminarEvento(req.session.usuario._id, req.body.idEvento,  (err, user)=>{
                 if(!err){
                     res.json({status:true, user})
@@ -611,6 +610,26 @@ module.exports = function(app, passport){
         }
     })
       
+    ///////////////////////////////////////////////////////////////////////////
+    /*
+    Llamo a los eventos que tenga guardado un usuario
+    */
+    ///////////////////////////////////////////////////////////////////////////
+    app.get('/x/v1/user/eventosGuardados', (req, res)=>{
+        if(req.session.usuario){
+            userServices.getEventos(req.session.usuario._id, (err, usuario)=>{
+                if (err) {
+                    res.json({status:false, err, code:0})    
+                }else{
+                    res.json({status:true, eventos:usuario.Eventos, code:1})    
+                }
+            })
+        }else{
+            res.json({ status: false, message:'usuario no logueado'})  
+        }
+    })
+
+
     // =====================================
     // LOGOUT ==============================
     // =====================================

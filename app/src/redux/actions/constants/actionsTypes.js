@@ -10,6 +10,9 @@ export const EDITAR_EVENTO          = "EDITAR_EVENTO";
 export const ELIMINAR_EVENTO        = "ELIMINAR_EVENTO";
 export const CAMBIAR_ESTADO_EVENTO  = "CAMBIAR_ESTADO_EVENTO";
 export const GET_EVENTOS_CATEGORIA  = "GET_EVENTOS_CATEGORIA";
+export const GET_EVENTOS_GUARDADOS  = "GET_EVENTOS_GUARDADOS";
+export const GET_EVENTOS_MENSAJES   = "GET_EVENTOS_MENSAJES";
+export const GET_MENSAJES           = "GET_MENSAJES";
 
 ///////////////////////////////////////////////////////////////////////////
 /*

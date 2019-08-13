@@ -34,8 +34,7 @@ class perfil extends Component{
     renderPerfil(){
         let {nombre, idUsuario, avatar, email, err, user} = this.state
         console.log(user.nombre)
-        avatar = user ?user.avatar.split("-") :""
-        avatar = `${avatar[0]}Miniatura${avatar[2]}`
+       
         return (
             <View style={style.containerRegistro}>
                 <View style={style.perfilContenedor}>
@@ -43,7 +42,7 @@ class perfil extends Component{
                         {
                             avatar=="null"
                             ?<Icon name={'user-circle'} style={style.iconAvatar} />
-                            :<Image source={{uri:avatar}} style={style.avatar} />
+                            :<Image source={{uri:user.avatar}} style={style.avatar} />
                         } 
                     </View>
                     <View style={style.columna2}>
@@ -82,7 +81,7 @@ class perfil extends Component{
     cerrarSesion(){
         axios.get(`user/logout`)
         .then(res => {
-            AsyncStorage.removeItem('userId')
+            AsyncStorage.removeItem('idUsuario')
             this.setState({userId:null, status:false})
         })
         .catch(err => {

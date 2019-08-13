@@ -27,10 +27,12 @@ class NuevoEvento extends Component{
 		idUsuario ?this.setState({idUsuario})  :this.props.navigation.navigate("Perfil")
 	}
 	renderCategorias(){
+		console.log(this.props.categorias)
 		const {categoria} = this.state
-		return this.props.categorias.map(e=>{
+		return this.props.categorias.map((e, key)=>{
 				return(
 					<TouchableOpacity 
+						key={key}
 						onPress={()=> this.setState({categoria:e.nombre, idCategoria:e._id}) }
 						style={[{backgroundColor:e.color}, categoria==e.nombre ?style.subContenedorCategoriaSelect :style.subContenedorCategoria ]}
 					>

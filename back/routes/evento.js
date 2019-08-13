@@ -11,7 +11,7 @@ let fecha 	   	   = moment().format('YYYY_MM_DD_h_mm')
 
 let sizeOf    	   = promisify(require('image-size'));
 let eventoServices = require('./../services/eventoServices.js') 
- 
+let mensajeServices = require('../services/mensajeServices.js') 
 
 router.get('/', (req, res)=>{
 	eventoServices.get((err, evento)=>{
@@ -33,8 +33,32 @@ router.get('/byId/:id', (req, res)=>{
 	})
 })
 
+///////////////////////////////////////////////////////////////////////////
+/*
+Llamo a los eventos con chats de cada usuario
+*/
+///////////////////////////////////////////////////////////////////////////
+router.get('/getEventosMensajes', (req, res)=>{
+	if(req.session.usuario){
+		eventoServices.getEventosMensajes(req.session.usuario._id, (err, evento)=>{
+			if (err) {
+				res.json({status:false, err, code:0})    
+				
+			}else{
+				res.json({status:true, total: evento.length, id:req.session.usuario._id, evento, code:1})    
+			}
+		})
+	}else{
+		res.json({status:false, mensaje:"sin Login", evento:[], code:0})    
+	}
+})
 
 
+///////////////////////////////////////////////////////////////////////////
+/*
+Llamo a los eventos mas cercanos
+*/
+///////////////////////////////////////////////////////////////////////////
 router.get('/cercanos/:lat/:lng', (req, res)=>{
 	eventoServices.getCercanos(req.params.lat, req.params.lng, (err, evento)=>{
 		if (err) {
@@ -46,6 +70,11 @@ router.get('/cercanos/:lat/:lng', (req, res)=>{
 	})
 })
 
+///////////////////////////////////////////////////////////////////////////
+/*
+Llamo a los eventos por categoria, con orden de los mas cercanos
+*/
+///////////////////////////////////////////////////////////////////////////
 router.get('/byCategoria/:idCategoria/:lat/:lng', (req, res)=>{
 	let {idCategoria, lat, lng} = req.params
 	
@@ -115,6 +144,45 @@ router.post('/unLike', (req,res)=>{
 		res.json({ status: false, message:'usuario no logueado'})  
 	}
 })
+
+///////////////////////////////////////////////////////////////////////////
+/*
+eliminar un usuario que le gusta un evento
+*/
+///////////////////////////////////////////////////////////////////////////
+router.post('/agregarComentario', (req,res)=>{
+	if(req.session.usuario){
+		eventoServices.getById(req.body.idEvento, (err, evento)=>{
+			if(evento){
+				
+				let yaEnvioMensaje = isInArray(req.session.usuario._id, evento.mensajes) /// esto verifica si ya ha enviado un mensaje
+				
+				if(!yaEnvioMensaje){
+					eventoServices.agregarUsuarioComentario(req.body.idEvento, req.session.usuario._id, (err2, evento)=>{
+						if(!err2){
+							mensajeServices.create(req.body, req.session.usuario._id, req.body.idEvento, (err3, titulo)=>{
+								if(!err3){
+									res.json({ status: true, err}) 
+								}
+							})
+						}
+					})
+				}else{
+					mensajeServices.create(req.body, req.session.usuario._id, req.body.idEvento, (err3, titulo)=>{
+						if(!err3){
+							res.json({ status: true, err}) 
+						}
+					})
+				}
+				
+			}
+		})
+	}else{
+		res.json({ status: false, message:'usuario no logueado'})  
+	}
+})
+
+
 	
 const ubicacionJimp =  '../front/docs/uploads/eventos/'
 router.post('/', (req, res)=>{

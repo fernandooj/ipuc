@@ -56,17 +56,20 @@ class Home extends Component{
 		if (Platform.OS==='android') {
 			RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({interval: 10000, fastInterval: 5000})
 		   .then(data => {
+			   	console.log({data})
 		    	navigator.geolocation.getCurrentPosition(e=>{
 				let lat =parseFloat(e.coords.latitude)
 				let lng = parseFloat(e.coords.longitude)
 				this.setState({lat, lng})
 				this.getEventos(lat, lng)
+				console.log("{data}")
 			}, 
 				(error)=>this.watchID = navigator.geolocation.watchPosition(e=>{
 				let lat =parseFloat(e.coords.latitude)
 				let lng = parseFloat(e.coords.longitude)
 				this.setState({lat, lng})
 				this.getEventos(lat, lng)
+				
 			},
 				(error) => this.getEventos(undefined, undefined),
 				{enableHighAccuracy: true, timeout:5000, maximumAge:0})
@@ -98,6 +101,7 @@ class Home extends Component{
 		}
 	}
 	getEventos(lat, lng){
+		console.log({lat, lng})
 		axios.get(`eve/evento/cercanos/${lat}/${lng}`)
 		.then(res=>{
 			console.log(res.data)
@@ -154,17 +158,20 @@ class Home extends Component{
 				<Cabezera navigation={navigation} />
 				<ScrollView style={style.subContainerMenu}>
 					<Text style={style.titulo}>Explora ipuc</Text>
-					<ScrollView  horizontal={true}>
+					<ScrollView horizontal={true}>
 						{this.renderCategorias()}
 					</ScrollView>
-				 
-					<Text style={style.titulo2}>Cercanos a ti</Text>
-					<ScrollView  horizontal={true}>
+				 	<TouchableOpacity style={{flexDirection:"row"}} onPress={()=>navigation.navigate("eventos")}>
+						<Text style={style.titulo2}>Cercanos a ti</Text>
+						<Text style={style.titulo3}>Todos ></Text>
+
+					 </TouchableOpacity>
+					<ScrollView horizontal={true}>
 						{this.renderCercanos()}
 					</ScrollView>
 				 
 					<Text style={style.titulo2}>Proximos</Text>
-					<ScrollView  horizontal={true}>
+					<ScrollView horizontal={true}>
 						{this.renderCercanos()}
 					</ScrollView>
 				</ScrollView>

@@ -5,6 +5,7 @@ import {connect} from 'react-redux'
 import Icon from 'react-native-fa-icons' 
 import axios from 'axios';
 import Toast from 'react-native-simple-toast';
+import AsyncStorage from '@react-native-community/async-storage';
 import TomarFoto from "../components/tomarFoto";
 import Footer    from '../components/footer'
 import { getPerfil, getCerrarSesion } from "../../redux/actions/usuarioActions"; 
@@ -18,7 +19,6 @@ class perfil extends Component{
 	  }
     }
     componentWillMount(){
-         
         axios.get("user/perfil")
         .then(res=>{
             console.log(res.data.user)
@@ -70,6 +70,7 @@ class perfil extends Component{
                 <TomarFoto 
                     source={avatar}
                     avatar
+                    width={120}
                     limiteImagenes={1}
                     imagenes={(imagen) => {  this.setState({imagen, showLoading:false}) }}
                 /> 
@@ -106,14 +107,21 @@ class perfil extends Component{
                     if(imagen){
                         this.avatar(imagen, id)
                     }
-                    Toast.show("Datos Actualizados")
-                    this.props.navigation.navigate("Perfil")
+                    console.log(res.data)
+                    this.edicionExitoso(res.data.usuario._id) 
                 }else{
                     Toast.show("Tenemos un problema intentalo mas tarde")
                 }
             })
         }
     }
+    async edicionExitoso(idUsuario){
+		console.log(idUsuario)
+		AsyncStorage.setItem('idUsuario', idUsuario)
+        Toast.show("Datos Actualizados")
+        this.props.navigation.navigate("Perfil")
+    }
+    
     password(password){
         axios.put("user/password", {password})
         .then(res=>{
@@ -140,7 +148,6 @@ class perfil extends Component{
             this.setState({cargando:false})
         })
     }
-
 }
 const mapState = state => {
 	return {

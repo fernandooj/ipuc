@@ -4,16 +4,16 @@ import {style}              from './style'
 import Icon 				from 'react-native-fa-icons'
 import moment 				from 'moment'
 import { connect }          from "react-redux";
-import { getCategorias }    from "../../redux/actions/categoriaActions.js";
+import { getEventosMensajes } from "../../redux/actions/eventoActions.js";
 import { createFilter }     from 'react-native-search-filter';
-import axios                from 'axios';
+ 
 import Lightbox 		    from 'react-native-lightbox';
 import FastImage 		    from 'react-native-fast-image';
 import { createImageProgress } from 'react-native-image-progress';
 import AutoHeightImage         from 'react-native-auto-height-image';
+import AsyncStorage from '@react-native-community/async-storage';
 import Cabezera from '../components/cabezera'
 import Footer   from '../components/footer'
-import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 const ImageProgress = createImageProgress(FastImage);
 const {width, height} = Dimensions.get('window')
 const KEYS_TO_FILTERS = ["nombre", "lugar"]
@@ -25,71 +25,19 @@ class eventosComponent extends Component{
 		this.state={
             terminoBuscador:"",
             inicio:0,
-			final:3,
+			final:10,
             eventos:[]
 		}
 	}
 
 	async componentWillMount(){
-		this.props.getCategorias();
-		//////////////////////////////////////////////////////////////////////////////////////////////////  		ACCESO GEOLOCALIZACION
-		if (Platform.OS==='android') {
-			RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({interval: 10000, fastInterval: 5000})
-		   .then(data => {
-		    	navigator.geolocation.getCurrentPosition(e=>{
-				let lat =parseFloat(e.coords.latitude)
-				let lng = parseFloat(e.coords.longitude)
-				this.setState({lat, lng})
-				this.getEventos(lat, lng)
-			}, 
-				(error)=>this.watchID = navigator.geolocation.watchPosition(e=>{
-				let lat =parseFloat(e.coords.latitude)
-				let lng = parseFloat(e.coords.longitude)
-				this.setState({lat, lng})
-				this.getEventos(lat, lng)
-			},
-				(error) => this.getEventos(undefined, undefined),
-				{enableHighAccuracy: true, timeout:5000, maximumAge:0})
-	      	)
-		  	}).catch(err => {
-			  	axios.get(`eve/evento/cercanos/${undefined}/${undefined}`)
-					.then(e=>{
-						if (e.data.code===1) {
-							this.setState({filteredData: e.data.planes, cargado:true})
-						}
-					})
-		  	});
-		  }else{
-		  	navigator.geolocation.getCurrentPosition(e=>{
-				let lat =parseFloat(e.coords.latitude)
-				let lng = parseFloat(e.coords.longitude)
-				this.setState({lat, lng})
-				this.getEventos(lat, lng)
-			}, 
-				(error)=>this.watchID = navigator.geolocation.watchPosition(e=>{
-				let lat =parseFloat(e.coords.latitude)
-				let lng = parseFloat(e.coords.longitude)
-				this.setState({lat, lng})
-				this.getEventos(lat, lng)
-			},
-				(error) => this.getPlans(undefined, undefined),
-				{enableHighAccuracy: true, timeout:5000, maximumAge:0})
-	      	)
-		}
-	}
-	getEventos(lat, lng){
-		axios.get(`eve/evento/cercanos/${lat}/${lng}`)
-		.then(res=>{
-			console.log(res.data)
-			res.data.status 
-				?this.setState({filteredData: res.data.eventos, eventos:res.data.evento, cargado:true})  
-				:Toast.show('Houston tenemos un problema, reinicia la app')
-		})
-		.catch(err=>{
-			console.log(err)
-		})
+		this.props.getEventosMensajes();
+		const idUsuario = await AsyncStorage.getItem('idUsuario')
+		idUsuario ?this.setState({idUsuario})  :this.props.navigation.navigate("Perfil")
     }
-  
+	componentWillReceiveProps(props){
+		this.setState({eventos:props.eventos})
+	}
     onScroll(e) {
 		const {final} =  this.state
 		let paddingToBottom = 10;
@@ -104,33 +52,39 @@ class eventosComponent extends Component{
         return s[0].toUpperCase() + s.slice(1);
     }
     renderEventos(){
-        const {terminoBuscador, eventos, inicio, final} = this.state
+        const {terminoBuscador, eventos, inicio, final, idUsuario} = this.state
+        console.log(eventos)
         const filtros = eventos.filter(createFilter(terminoBuscador, KEYS_TO_FILTERS))
 		let newFiltro = filtros.slice(inicio, final)
         return newFiltro.map((e, key)=>{
-            let imagen = e.imagen[0].split("-")
-			imagen = `${imagen[0]}Miniatura${imagen[2]}`
+            const data = e.data[0]
+            let imagen = data.imagen[0].split("-")
+            imagen = `${imagen[0]}Miniatura${imagen[2]}`
             return(
-                <TouchableOpacity style={style.contenedorEvento} key={key} onPress={()=>this.props.navigation.navigate('eventoMapa', {tipo:"evento", id:e._id})}>
+                <TouchableOpacity style={style.contenedorEvento} key={key} onPress={()=>this.props.navigation.navigate('mensaje', {id:e._id})}>
                     <View style={style.subContenedorEvento}>
                         <Lightbox 
                             renderContent={() => (
                                 <AutoHeightImage
                                     width={width}
                                     source={{uri: imagen}}
-                                    
                                 />
                             )}
                         >
-                            <Image
-                                width={width-30}
+                            <AutoHeightImage
+                                width={80}
                                 source={{uri: imagen}}
                                 style={style.imagen}
                             /> 
                         </Lightbox>	
-                        <Text style={style.texto1}>{this.capitalize(e.nombre)}</Text>
-                        <Text style={style.texto2}>{moment(e.fechaInicio).format("YYYY-MM-DD hh:mm a")}</Text>
-                        
+                        <View style={style.cajaTexto}>
+                            <Text style={style.texto1}>{this.capitalize(data.nombre)}</Text>
+                            <Text style={style.texto2}>{moment(data.fechaInicio).format("YYYY-MM-DD hh:mm a")}</Text>
+                            <Text style={style.texto2}>{data.idUsuario2==idUsuario ?data.nombre1 :data.nombre2}</Text>
+                        </View>
+                        <View style={style.cajaTexto2}>
+                            <Icon name={'angle-right'} allowFontScaling style={style.iconFooter} />
+                        </View>
                     </View>
                 </TouchableOpacity>
             )
@@ -153,19 +107,15 @@ class eventosComponent extends Component{
 	}
 }
 const mapState = state => {
-    let categorias =  state.categoria.categorias
-    categorias = categorias.concat([{nombre:"Todos", _id:"undefined"}])
-
     return {
-        eventos: state.evento.eventos,
-        categorias
+        eventos: state.evento.eventosMensajes
     };
 };
 
 const mapDispatch = dispatch => {
 	return {
-        getCategorias: () => {
-			dispatch(getCategorias());
+        getEventosMensajes: () => {
+			dispatch(getEventosMensajes());
 	  },
 	};
 };

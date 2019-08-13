@@ -16,6 +16,7 @@ let fs = require('fs');
 // importo las rutas
 let categoriaRutas = require('./routes/categoria.js');
 let eventoRutas = require('./routes/evento.js');
+let mensajeRutas = require('./routes/mensaje.js');
 
 
 let SocketIO = require('./socket.js')
@@ -42,16 +43,10 @@ let flash    = require('connect-flash');
 let port = process.env.port || 8080;
 
 
-
-
-
 /////////////////////////////////////////////////////////////////////////
 /********* importo el archivo de configuracion de passport   ***********/
 /////////////////////////////////////////////////////////////////////////
-require('./config/passport')(passport); // pass passport for configuration
-
-
-    
+require('./config/passport')(passport); // pass passport for configuration    
 
 
 // da acceso para los servicios
@@ -103,7 +98,8 @@ app.use(flash());
 
 // creo la ruta de las categorias
 app.use('/x/v1/cat/categoria', categoriaRutas) 
-app.use('/x/v1/eve/evento', eventoRutas) 
+app.use('/x/v1/eve/evento',    eventoRutas) 
+app.use('/x/v1/men/mensaje',   mensajeRutas) 
 require('./routes/User.js')(app, passport);
 
 server.listen(port)

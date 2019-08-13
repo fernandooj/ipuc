@@ -17,7 +17,7 @@ export default class FooterComponent extends Component{
 							<Icon name={'search'} allowFontScaling style={style.iconFooter} />
 							<Text style={style.textFooter}>EXPLORAR</Text>
 						</TouchableOpacity>
-						<TouchableOpacity style={style.subContenedorFooter} onPress={()=>navigation.navigate('Catalogo')}>
+						<TouchableOpacity style={style.subContenedorFooter} onPress={()=>navigation.navigate('eventosGuardados')}>
 							{/* <Image source={require("../../assets/img/bookmark.svg")} style={style.imagen}/> */}
 							<Icon name={'bookmark-o'} allowFontScaling style={style.iconFooter} />
 							<Text style={style.textFooter}>EVENTOS</Text>
@@ -27,7 +27,7 @@ export default class FooterComponent extends Component{
 							<Icon name={'plus-square-o'} allowFontScaling style={style.iconFooter} />
 							<Text style={style.textFooter}>NUEVO</Text>
 						</TouchableOpacity>
-						<TouchableOpacity style={style.subContenedorFooter}  onPress={()=>navigation.navigate('GanaMas')}>
+						<TouchableOpacity style={style.subContenedorFooter}  onPress={()=>navigation.navigate('eventoMensajes')}>
 							{/* <Image source={require("../../assets/img/mensaje.png")} style={style.imagen} /> */}
 							<Icon name={'commenting-o'} allowFontScaling style={style.iconFooter} />
 							<Text style={style.textFooter}>MENSAJES</Text>

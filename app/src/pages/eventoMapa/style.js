@@ -236,7 +236,7 @@ export const style = MediaQueryStyleSheet.create({
     },
     textPreguntar:{
         color:"white",
-        fontFamily: "Roboto-regular",
+        fontFamily: "Roboto-Regular",
     },
     btnEvento:{
         justifyContent:"center",
@@ -269,4 +269,59 @@ export const style = MediaQueryStyleSheet.create({
     iconEventoActivo:{
         fontSize:24
     },
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////       MODAL ENVIAR EVENTO
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
+    modalEnviar:{
+        position:"absolute",
+        alignItems:"center",
+       
+        backgroundColor:"rgba(0,0,0,.2)",
+        width:size.width-80,
+        height:"100%",
+       
+        left:0
+    },
+    subModalEnviar:{
+        backgroundColor:"white",
+        alignItems:"center",
+        width:300,
+        paddingTop:10,
+        borderBottomLeftRadius:10,
+        borderBottomRightRadius:10,
+    },
+    inputMensaje:{
+        marginTop:100,
+        width:300,
+        backgroundColor:"white",
+        borderColor:"rgba(0,0,0,.2)",
+        height:150,
+        padding:10,
+        borderTopLeftRadius:10,
+        borderTopRightRadius:10,
+        borderWidth:1,
+    },
+    btnClose:{
+        position:"absolute",
+        right:22,
+        top:100,
+        zIndex:100
+    },
+    iconClose:{
+        fontSize:22
+    },
+    btnEnviar:{
+		flexDirection:"row",
+		backgroundColor:"#00338A",
+		justifyContent:"center",
+        textAlign:"center",
+		width:100,
+		padding:10,
+		borderRadius:5,
+	},
+	textEnviar:{
+        color:"#fff",
+        fontFamily: "Roboto-Bold",
+	},       
 })

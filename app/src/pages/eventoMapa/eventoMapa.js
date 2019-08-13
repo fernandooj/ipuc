@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {View, Text, Animated, TouchableOpacity, Dimensions,  Image, ScrollView, TextInput} from 'react-native'
+import {View, Text, Animated, TouchableOpacity, Dimensions,  Image, ScrollView, TextInput, Platform} from 'react-native'
 import {style} from './style'
 import Icon 					   from 'react-native-fa-icons'
 import moment 					   from 'moment'
@@ -8,7 +8,7 @@ import MapView, {  Marker, Circle, ProviderPropType } from 'react-native-maps';
 import { getEventosCategoria, getEvento } from "../../redux/actions/eventoActions.js";
 import { getCategorias }       from "../../redux/actions/categoriaActions.js";
 import { createFilter }        from 'react-native-search-filter';
-import AutoHeightImage         from 'react-native-auto-height-image';
+import Toast from 'react-native-simple-toast';
 import Slideshow               from 'react-native-image-slider-show';
 import AsyncStorage from '@react-native-community/async-storage';
 import * as Animatable         from 'react-native-animatable';
@@ -36,7 +36,8 @@ class MapaPlanComponent extends Component{
 		    marker: {
 					latitude: 4.597825,
 					longitude: -74.0755723,
-		    },
+        },
+        mensaje:"",
 		    mapaCargado:false,
         terminoBuscador:"",
         eventoGuardado:[],
@@ -101,18 +102,18 @@ class MapaPlanComponent extends Component{
       let a = moment(fechaActual,'YYYY/MM/DD h:mm');
       let b = moment(fechaI,'YYYY/MM/DD h:mm');
       let diff = b.diff(a, 'days');
-        return(
-          <Marker
-            key={key}
-            coordinate={{latitude:e.loc.coordinates[1], longitude:e.loc.coordinates[0]}}
-          >
-            <TouchableOpacity onPress={()=>this.props.getEvento( e._id)}>
-                <Image source={diff<3 ?require("../../assets/img/pin_red.png") :diff<7 ?require("../../assets/img/pin_yellow.png") :require("../../assets/img/pin_blue.png") } style={style.iconoImagen} />
-            </TouchableOpacity>
-          </Marker>
-        )
-      })
-    }
+      return(
+        <Marker
+          key={key}
+          coordinate={{latitude:e.loc.coordinates[1], longitude:e.loc.coordinates[0]}}
+        >
+          <TouchableOpacity onPress={()=>this.props.getEvento( e._id)}>
+              <Image source={diff<3 ?require("../../assets/img/pin_red.png") :diff<7 ?require("../../assets/img/pin_yellow.png") :require("../../assets/img/pin_blue.png") } style={style.iconoImagen} />
+          </TouchableOpacity>
+        </Marker>
+      )
+    })
+  }
   renderCategorias(){
     const {x, idCategoria} = this.state
       return this.props.categorias.map((e, key)=>{
@@ -157,14 +158,49 @@ class MapaPlanComponent extends Component{
       )
     })
   }
-
+  renderModalMensaje(){
+    const {mensaje} = this.state
+    return(
+      <View style={style.modalEnviar}>
+          <TouchableOpacity style={style.btnClose} onPress={()=>this.setState({mostrarMensaje:false})}>
+            <Icon name='close' style={style.iconClose} />
+          </TouchableOpacity>
+          <TextInput
+            style={style.inputMensaje}
+            onChangeText={(mensaje) => this.setState({mensaje}) }
+            value={mensaje}
+            underlineColorAndroid='transparent'
+            placeholder="Si tienes dudas sobre este evento, envia un mensaje al creador del evento"
+            placeholderTextColor='#8F9093'
+            autoCapitalize = 'none'
+            multiline
+          />
+        <View style={style.subModalEnviar}>
+          <TouchableOpacity onPress={()=>mensaje.length<5 ?alert("Ingresa algun mensaje") :this.enviarMensaje()} style={style.btnEnviar}>
+            <Text style={style.textEnviar}>Enviar</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    )
+  }
+  enviarMensaje(){
+    const {_id} =this.state.evento
+    axios.post(`eve/evento/agregarComentario`, {idEvento:_id, mensaje:this.state.mensaje})
+    .then(res=>{
+      console.log(res.data)
+      if(res.data.status){
+        Toast.show("Mensaje Enviado")
+        this.setState({mostrarMensaje:false})
+      }
+    })
+  }
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////   MUESTRA SOLO UN EVENTO CON TODOS SUS DETALLES,
   //----------------------   DIFF => devuelve la diferencia de dias desde hoy, hasta el dia del comienzo
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   renderEvento(){
     let {imagen, nombre, fechaInicio, descripcion, lugar, fechaFinal, meGusta, _id} = this.state.evento
-    const {idUsuario, eventoGuardado} = this.state
+    const {idUsuario, eventoGuardado, mostrarMensaje} = this.state
     let esSeguidor     =  meGusta.includes(idUsuario) 
     let existeEvento   =  eventoGuardado.includes(_id)
 	  console.log({idUsuario, eventoGuardado, esSeguidor})
@@ -199,7 +235,7 @@ class MapaPlanComponent extends Component{
         <Text style={style.separador}></Text>
         <Text style={style.textoEvento3}>{descripcion}</Text>
         <View style={{flexDirection:"row"}}>
-          <TouchableOpacity style={style.btnEventoPreguntar} >
+          <TouchableOpacity style={style.btnEventoPreguntar} onPress={()=>this.setState({mostrarMensaje:true, mensaje:""})} >
             <Text style={style.textPreguntar}>Enviar Mensaje</Text>
           </TouchableOpacity>
           <TouchableOpacity style={style.btnEvento} onPress={()=>!idUsuario ?this.props.navigation.navigate("Perfil") :existeEvento ?this.eliminarEvento(_id) :this.guardarEvento(_id)}>
@@ -211,7 +247,7 @@ class MapaPlanComponent extends Component{
             <Text style={{fontSize:10}}>{meGusta.length}</Text>
           </TouchableOpacity>
         </View>
-
+        {mostrarMensaje &&this.renderModalMensaje()}
       </View>
     )
   }
@@ -265,8 +301,9 @@ class MapaPlanComponent extends Component{
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  
   animacionShowEvento(evento){
+    let zoom = Platform.OS=='android'?0.033 :0.25
     let ubicacion ={
-      latitude:evento.loc.coordinates[1]+0.025,
+      latitude:evento.loc.coordinates[1]+zoom,
       longitude:evento.loc.coordinates[0],
       latitudeDelta:0.033850498819819812,
       longitudeDelta:0.03412317156791687
@@ -458,17 +495,15 @@ class MapaPlanComponent extends Component{
         {
           buscador
           ?<MapView
-            showsMyLocationButton={false}
+            customMapStyle={estiloMapa}
             provider={this.props.provider}
             style={style.map}
             region={{
-                latitude:  x.latitude,
-                longitude: x.longitude,
-                latitudeDelta: x.latitudeDelta,
-                longitudeDelta: x.longitudeDelta,
+              latitude: x.latitude,
+              longitude: x.longitude,
+              latitudeDelta: x.latitudeDelta,
+              longitudeDelta: x.longitudeDelta,
             }}
-            minZoomLevel={20}
-            customMapStyle={estiloMapa}
             onPress={()=>this.setState({buscador:true})}
           >
             {this.renderMarkers()}

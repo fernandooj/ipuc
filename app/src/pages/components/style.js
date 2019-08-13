@@ -207,7 +207,7 @@ export const style = MediaQueryStyleSheet.create({
 		alignItems:"center",
 		justifyContent:"center",
 		textAlign:"center",
-		width:size.width,
+		width:size.width/2,
 		padding:10,
 		borderRadius:5,
 		marginTop:-50

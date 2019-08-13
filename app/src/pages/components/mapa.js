@@ -175,7 +175,7 @@ class MapaPlanComponent extends Component{
 	constructor(props){
 		super(props);
 		this.state={
-			top:new Animated.Value(-100),
+			top:new Animated.Value(-130),
  			x: {
 				latitude: 4.597825,
 				longitude: -74.0755723,
