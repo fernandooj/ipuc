@@ -41,8 +41,11 @@
 		50E1D259EBCE48D0B7E10D30 /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E8E451A7AB1C4C4C8F3AABC8 /* libRNFirebase.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		A090122FAC0F442183445465 /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 55E5507CFC374025B4FB90FC /* Roboto-Light.ttf */; };
-		AD21157A2221DBFD0031BACD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AD2115542221DBFD0031BACD /* GoogleService-Info.plist */; };
 		AD69E29122E8308A0073159E /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD69E28E22E830780073159E /* libRNSVG.a */; };
+		ADA904ED232DE1AB0007013B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = ADA904EC232DE1AB0007013B /* GoogleService-Info.plist */; };
+		ADA904F4232DE9B50007013B /* libRNShare.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADA904F3232DE98F0007013B /* libRNShare.a */; };
+		ADA904F6232DE9CC0007013B /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADA904F5232DE9CC0007013B /* Social.framework */; };
+		ADA904F8232DE9D30007013B /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADA904F7232DE9D30007013B /* MessageUI.framework */; };
 		ADB9AB5122D83D4400D3334C /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADB9AB5022D83D4400D3334C /* AddressBook.framework */; };
 		ADB9AB5322D83D4900D3334C /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADB9AB5222D83D4900D3334C /* SafariServices.framework */; };
 		ADB9AB5522D83D5100D3334C /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADB9AB5422D83D5100D3334C /* SystemConfiguration.framework */; };
@@ -353,6 +356,13 @@
 			remoteGlobalIDString = ED296FEE214C9CF800B7C4FE;
 			remoteInfo = "jsiexecutor-tvOS";
 		};
+		ADA904F2232DE98F0007013B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = ADA904EE232DE98E0007013B /* RNShare.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNShare;
+		};
 		ADB9ABAB22D8405900D3334C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = ADB9AB8122D8405900D3334C /* RNGoogleSignin.xcodeproj */;
@@ -418,8 +428,11 @@
 		9B05251E39794B522834C762 /* Pods-ipuc.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ipuc.release.xcconfig"; path = "Target Support Files/Pods-ipuc/Pods-ipuc.release.xcconfig"; sourceTree = "<group>"; };
 		9C0D963B4ECB5F5337FB760F /* Pods-ipuc.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ipuc.debug.xcconfig"; path = "Target Support Files/Pods-ipuc/Pods-ipuc.debug.xcconfig"; sourceTree = "<group>"; };
 		AD045A9C22EE8A32004CE73F /* LRDRCTSimpleToast.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LRDRCTSimpleToast.xcodeproj; path = "../node_modules/react-native-simple-toast/ios/LRDRCTSimpleToast.xcodeproj"; sourceTree = "<group>"; };
-		AD2115542221DBFD0031BACD /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		AD69E25F22E830770073159E /* RNSVG.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNSVG.xcodeproj; path = "../node_modules/react-native-svg/ios/RNSVG.xcodeproj"; sourceTree = "<group>"; };
+		ADA904EC232DE1AB0007013B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		ADA904EE232DE98E0007013B /* RNShare.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNShare.xcodeproj; path = "../node_modules/react-native-share/ios/RNShare.xcodeproj"; sourceTree = "<group>"; };
+		ADA904F5232DE9CC0007013B /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		ADA904F7232DE9D30007013B /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		ADB9AB5022D83D4400D3334C /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		ADB9AB5222D83D4900D3334C /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
 		ADB9AB5422D83D5100D3334C /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -448,6 +461,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ADA904F8232DE9D30007013B /* MessageUI.framework in Frameworks */,
+				ADA904F6232DE9CC0007013B /* Social.framework in Frameworks */,
+				ADA904F4232DE9B50007013B /* libRNShare.a in Frameworks */,
+				ADB9AB5122D83D4400D3334C /* AddressBook.framework in Frameworks */,
 				AD69E29122E8308A0073159E /* libRNSVG.a in Frameworks */,
 				ADCF67EC22D85C6400D6FDCB /* libRNFIRMessaging.a in Frameworks */,
 				ADCF67E522D858FD00D6FDCB /* libRCTFBSDK.a in Frameworks */,
@@ -455,7 +472,6 @@
 				ADB9AB5722D83D6300D3334C /* libz.tbd in Frameworks */,
 				ADB9AB5522D83D5100D3334C /* SystemConfiguration.framework in Frameworks */,
 				ADB9AB5322D83D4900D3334C /* SafariServices.framework in Frameworks */,
-				ADB9AB5122D83D4400D3334C /* AddressBook.framework in Frameworks */,
 				ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				11D1A2F320CAFA9E000508D9 /* libRCTAnimation.a in Frameworks */,
@@ -583,9 +599,9 @@
 		13B07FAE1A68108700A75B9A /* ipuc */ = {
 			isa = PBXGroup;
 			children = (
+				ADA904EC232DE1AB0007013B /* GoogleService-Info.plist */,
 				ADCF67ED22D85C7300D6FDCB /* ipuc.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
-				AD2115542221DBFD0031BACD /* GoogleService-Info.plist */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -622,6 +638,8 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				ADA904F7232DE9D30007013B /* MessageUI.framework */,
+				ADA904F5232DE9CC0007013B /* Social.framework */,
 				ADB9AB5622D83D6300D3334C /* libz.tbd */,
 				ADB9AB5422D83D5100D3334C /* SystemConfiguration.framework */,
 				ADB9AB5222D83D4900D3334C /* SafariServices.framework */,
@@ -664,6 +682,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				ADA904EE232DE98E0007013B /* RNShare.xcodeproj */,
 				AD045A9C22EE8A32004CE73F /* LRDRCTSimpleToast.xcodeproj */,
 				AD69E25F22E830770073159E /* RNSVG.xcodeproj */,
 				ADCF67E622D85C5400D6FDCB /* RNFIRMessaging.xcodeproj */,
@@ -764,6 +783,14 @@
 			children = (
 				AD69E28E22E830780073159E /* libRNSVG.a */,
 				AD69E29022E830780073159E /* libRNSVG-tvOS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		ADA904EF232DE98E0007013B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				ADA904F3232DE98F0007013B /* libRNShare.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -993,6 +1020,10 @@
 				{
 					ProductGroup = ADB9AB8222D8405900D3334C /* Products */;
 					ProjectRef = ADB9AB8122D8405900D3334C /* RNGoogleSignin.xcodeproj */;
+				},
+				{
+					ProductGroup = ADA904EF232DE98E0007013B /* Products */;
+					ProjectRef = ADA904EE232DE98E0007013B /* RNShare.xcodeproj */;
 				},
 				{
 					ProductGroup = AD69E26022E830770073159E /* Products */;
@@ -1290,6 +1321,13 @@
 			remoteRef = AD725EAE2221C4F20091A4D9 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		ADA904F3232DE98F0007013B /* libRNShare.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNShare.a;
+			remoteRef = ADA904F2232DE98F0007013B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		ADB9ABAC22D8405900D3334C /* libRNGoogleSignin.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1333,8 +1371,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				ADA904ED232DE1AB0007013B /* GoogleService-Info.plist in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
-				AD21157A2221DBFD0031BACD /* GoogleService-Info.plist in Resources */,
 				B04A435863074D8489BE253F /* FontAwesome.ttf in Resources */,
 				E6EB499E56A8429DA1BA01CA /* Roboto-Black.ttf in Resources */,
 				17E0426A77AC4934BE9E1CBF /* Roboto-Bold.ttf in Resources */,
@@ -1573,7 +1611,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ipuc.ipuc;
+				PRODUCT_BUNDLE_IDENTIFIER = com.picpuc.picpuc;
 				PRODUCT_NAME = ipuc;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1600,7 +1638,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ipuc.ipuc;
+				PRODUCT_BUNDLE_IDENTIFIER = com.picpuc.picpuc;
 				PRODUCT_NAME = ipuc;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

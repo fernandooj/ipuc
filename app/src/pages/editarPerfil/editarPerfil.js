@@ -8,26 +8,38 @@ import Toast from 'react-native-simple-toast';
 import AsyncStorage from '@react-native-community/async-storage';
 import TomarFoto from "../components/tomarFoto";
 import Footer    from '../components/footer'
-import { getPerfil, getCerrarSesion } from "../../redux/actions/usuarioActions"; 
+
  
  
 class perfil extends Component{
 	constructor(props) {
 	  super(props);
 	  this.state={
-	   
+        user:{},
+        imagenes:[]
 	  }
     }
     componentWillMount(){
+       
         axios.get("user/perfil")
         .then(res=>{
             console.log(res.data.user)
-            this.setState({id:res.data.user._id})
+            let imagenes = []
+            imagenes.push({uri:res.data.user.avatar})
+            this.setState({
+                id      :res.data.user._id, 
+                nombre  :res.data.user.nombre, 
+                apellido:res.data.user.apellido, 
+                tipo    :res.data.user.tipo, 
+                imagenes
+            })
         })
     }
      
     renderPerfil(){
-        const {nombre, apellido, password, avatar, showPassword } = this.props
+        const {nombre, apellido, avatar, showPassword, tipo } = this.state
+        const {password, imagenes} = this.state
+        console.log({tipo})
         return (
             <View style={style.perfilContenedor}>
                 <TextInput
@@ -48,31 +60,37 @@ class perfil extends Component{
                     placeholderTextColor='#8F9093' 
                     autoCapitalize = 'none'
                 />
-                <View style={style.contenedorPass}> 
-					<TextInput 
-						style={style.input}
-						onChangeText={(password) => this.setState({password})}
-						value={password}
-						underlineColorAndroid='transparent'
-						placeholder="Contraseña"
-						placeholderTextColor="#8F9093" 
-						secureTextEntry={showPassword ?false :true}
-						autoCapitalize = 'none'
-						onFocus={() => {
-							this.setState({ alertErrorLogin:false, usuarioNoExiste:false }); 
-						}}
-					/>
-					<TouchableOpacity onPress={()=>this.setState({showPassword:!showPassword})} style={style.btnIconPass} > 
-						<Icon name={showPassword ?'eye-slash' :'eye'} allowFontScaling style={style.iconPass} />
-					</TouchableOpacity>
-				</View>
+                {
+                    (tipo=="google" || tipo=="facebook")
+                    ?<Text></Text>
+                    :<View style={style.contenedorPass}> 
+                        <TextInput 
+                            style={style.input}
+                            onChangeText={(password) => this.setState({password})}
+                            value={password}
+                            underlineColorAndroid='transparent'
+                            placeholder="Contraseña"
+                            placeholderTextColor="#8F9093" 
+                            secureTextEntry={showPassword ?false :true}
+                            autoCapitalize = 'none'
+                            onFocus={() => {
+                                this.setState({ alertErrorLogin:false, usuarioNoExiste:false }); 
+                            }}
+                        />
+                        <TouchableOpacity onPress={()=>this.setState({showPassword:!showPassword})} style={style.btnIconPass} > 
+                            <Icon name={showPassword ?'eye-slash' :'eye'} allowFontScaling style={style.iconPass} />
+                        </TouchableOpacity>
+                    </View>
+                }
+              
 
                 <TomarFoto 
                     source={avatar}
                     avatar
                     width={120}
                     limiteImagenes={1}
-                    imagenes={(imagen) => {  this.setState({imagen, showLoading:false}) }}
+                    imagen={imagenes}
+                    imagenes={(imagenes) => {  this.setState({imagenes, showLoading:false}) }}
                 /> 
                 <TouchableOpacity style={style.btnEnviar} onPress={()=>this.guardarPerfil()} >
                     <Text style={style.textEnviar}>Editar perfil</Text> 
@@ -82,20 +100,23 @@ class perfil extends Component{
     }
 	render(){
         const {statusPerfil} = this.props
-        const {navigate} = this.props.navigation
+        const {navigation} = this.props
        
         return (
             <View style={style.container}>
                 <Text style={style.textTitulo}>Completa tu perfil</Text>
                 {this.renderPerfil() }
-                <Footer navigation={navigate} />
+                <Footer navigation={navigation} />
             </View>
             
         )
     }	 
     guardarPerfil(){
-        const {nombre, password, apellido, imagen, id} = this.state
-        if(!nombre || !password || !apellido || !imagen || !id){
+        const {nombre, password, apellido, imagenes, tipo, id} = this.state
+        const {editar} = this.props.navigation.state.params
+        let contraseña =  editar ?true :false
+        console.log({nombre, password, apellido, imagenes, tipo, id, contraseña})
+        if(nombre.length<3 || !contraseña || apellido.length<3 || imagenes.length<1 || !id){
             Toast.show("Todos los campos son obligatorios")
         }else{
             axios.put(`user/update/${id}`, {nombre, apellido})
@@ -104,8 +125,8 @@ class perfil extends Component{
                     if(password){
                         this.password(password)
                     } 
-                    if(imagen){
-                        this.avatar(imagen, id)
+                    if(imagenes){
+                        this.avatar(imagenes, id)
                     }
                     console.log(res.data)
                     this.edicionExitoso(res.data.usuario._id) 
@@ -119,7 +140,7 @@ class perfil extends Component{
 		console.log(idUsuario)
 		AsyncStorage.setItem('idUsuario', idUsuario)
         Toast.show("Datos Actualizados")
-        this.props.navigation.navigate("Perfil")
+        this.props.navigation.navigate("Home")
     }
     
     password(password){
@@ -150,6 +171,7 @@ class perfil extends Component{
     }
 }
 const mapState = state => {
+    console.log(state)
 	return {
         perfil:state.usuario.perfil.user,
         cerrarSesiones:state.usuario.cerrarSesion,

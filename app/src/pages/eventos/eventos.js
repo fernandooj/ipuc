@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {View, Text, Animated, TouchableOpacity, Dimensions,  Image, ScrollView, ActivityIndicator, Platform} from 'react-native'
+import {View, Text, Animated, TouchableOpacity, Dimensions,  Image, ScrollView, ActivityIndicator, Platform, Keyboard} from 'react-native'
 import {style}              from './style'
 import Icon 				from 'react-native-fa-icons'
 import moment 				from 'moment'
@@ -14,11 +14,13 @@ import AutoHeightImage         from 'react-native-auto-height-image';
 import Cabezera from '../components/cabezera'
 import Footer   from '../components/footer'
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
+import { getEventosProximos } from "../../redux/actions/eventoActions.js";
 const ImageProgress = createImageProgress(FastImage);
 const {width, height} = Dimensions.get('window')
-const KEYS_TO_FILTERS = ["nombre", "lugar"]
+ 
 moment.locale('es');
-
+ 
+const KEYS_TO_FILTERS = ['descripcion', 'nombre', 'categoria._id']
 class eventosComponent extends Component{
 	constructor(props){
 		super(props);
@@ -26,61 +28,71 @@ class eventosComponent extends Component{
             terminoBuscador:"",
             inicio:0,
 			final:3,
-            eventos:[]
+			eventos:[],
+			terminoBuscador:""
 		}
 	}
 
 	async componentWillMount(){
 		this.props.getCategorias();
-		//////////////////////////////////////////////////////////////////////////////////////////////////  		ACCESO GEOLOCALIZACION
-		if (Platform.OS==='android') {
-			RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({interval: 10000, fastInterval: 5000})
-		   .then(data => {
-		    	navigator.geolocation.getCurrentPosition(e=>{
-				let lat =parseFloat(e.coords.latitude)
-				let lng = parseFloat(e.coords.longitude)
-				this.setState({lat, lng})
-				this.getEventos(lat, lng)
-			}, 
-				(error)=>this.watchID = navigator.geolocation.watchPosition(e=>{
-				let lat =parseFloat(e.coords.latitude)
-				let lng = parseFloat(e.coords.longitude)
-				this.setState({lat, lng})
-				this.getEventos(lat, lng)
-			},
-				(error) => this.getEventos(undefined, undefined),
-				{enableHighAccuracy: true, timeout:5000, maximumAge:0})
-	      	)
-		  	}).catch(err => {
-			  	axios.get(`eve/evento/cercanos/${undefined}/${undefined}`)
-					.then(e=>{
-						if (e.data.code===1) {
-							this.setState({filteredData: e.data.planes, cargado:true})
-						}
-					})
-		  	});
-		  }else{
-		  	navigator.geolocation.getCurrentPosition(e=>{
-				let lat =parseFloat(e.coords.latitude)
-				let lng = parseFloat(e.coords.longitude)
-				this.setState({lat, lng})
-				this.getEventos(lat, lng)
-			}, 
-				(error)=>this.watchID = navigator.geolocation.watchPosition(e=>{
-				let lat =parseFloat(e.coords.latitude)
-				let lng = parseFloat(e.coords.longitude)
-				this.setState({lat, lng})
-				this.getEventos(lat, lng)
-			},
-				(error) => this.getPlans(undefined, undefined),
-				{enableHighAccuracy: true, timeout:5000, maximumAge:0})
-	      	)
+		console.log(this.props.navigation.state.params)
+		const {tipo} = this.props.navigation.state.params
+		if(tipo=="cercanos"){
+			//////////////////////////////////////////////////////////////////////////////////////////////////  		ACCESO GEOLOCALIZACION
+			if (Platform.OS==='android') {
+				RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({interval: 10000, fastInterval: 5000})
+			.then(data => {
+					navigator.geolocation.getCurrentPosition(e=>{
+					let lat =parseFloat(e.coords.latitude)
+					let lng = parseFloat(e.coords.longitude)
+					this.setState({lat, lng})
+					this.getEventos(lat, lng)
+				}, 
+					(error)=>this.watchID = navigator.geolocation.watchPosition(e=>{
+					let lat =parseFloat(e.coords.latitude)
+					let lng = parseFloat(e.coords.longitude)
+					this.setState({lat, lng})
+					this.getEventos(lat, lng)
+				},
+					(error) => this.getEventos(undefined, undefined),
+					{enableHighAccuracy: true, timeout:5000, maximumAge:0})
+				)
+				}).catch(err => {
+					axios.get(`eve/evento/cercanos/${undefined}/${undefined}`)
+						.then(e=>{
+							if (e.data.code===1) {
+								this.setState({filteredData: e.data.planes, cargado:true})
+							}
+						})
+				});
+			}else{
+				navigator.geolocation.getCurrentPosition(e=>{
+					let lat =parseFloat(e.coords.latitude)
+					let lng = parseFloat(e.coords.longitude)
+					this.setState({lat, lng})
+					this.getEventos(lat, lng)
+				}, 
+					(error)=>this.watchID = navigator.geolocation.watchPosition(e=>{
+					let lat =parseFloat(e.coords.latitude)
+					let lng = parseFloat(e.coords.longitude)
+					this.setState({lat, lng})
+					this.getEventos(lat, lng)
+				},
+					(error) => this.getPlans(undefined, undefined),
+					{enableHighAccuracy: true, timeout:5000, maximumAge:0})
+				)
+			}
+		}else if(tipo=="proximos"){
+			this.props.getEventosProximos();
+		}else{
+			this.props.getEventosProximos();
+			this.setState({terminoBuscador:this.props.navigation.state.params.id})
 		}
+		
 	}
 	getEventos(lat, lng){
 		axios.get(`eve/evento/cercanos/${lat}/${lng}`)
 		.then(res=>{
-			console.log(res.data)
 			res.data.status 
 				?this.setState({filteredData: res.data.eventos, eventos:res.data.evento, cargado:true})  
 				:Toast.show('Houston tenemos un problema, reinicia la app')
@@ -95,18 +107,44 @@ class eventosComponent extends Component{
 		let paddingToBottom = 10;
         paddingToBottom += e.nativeEvent.layoutMeasurement.height;
         if(e.nativeEvent.contentOffset.y >= e.nativeEvent.contentSize.height - paddingToBottom) {
-        	console.log(final)
             this.setState({final:final+5, showSpin:true})
-            this.myInterval = setInterval(()=>this.setState({showSpin:false}), 2000)
+            this.myInterval = setInterval(()=>this.setState({showSpin:false}), 1000)
         }
 	}
     capitalize=(s)=>{
         return s[0].toUpperCase() + s.slice(1);
-    }
+	}
+	renderCategoriasFiltros(){
+		const {terminoBuscador} = this.state
+		return this.props.categorias.map((e, key)=>{
+			return (
+				<TouchableOpacity style={[style.contenedorCategoriaFiltro, {backgroundColor: terminoBuscador==e._id &&"#00338A" }]} key={key} 
+					// onPress={()=>{this.props.navigation.navigate('eventos', {tipo:"buscador", id:e._id}); this.setState({focus:false}); Keyboard.dismiss() }}>
+					onPress={()=>{ this.setState({focus:false, terminoBuscador:e._id=="undefined" ?"" :e._id, actualiza:true}); Keyboard.dismiss() }}>
+					<Text style={[style.textoCategoriaFiltro, {color: terminoBuscador==e._id &&"#fff" }]}>{e.nombre}</Text>
+				</TouchableOpacity>
+			)
+		})
+	}
+	renderEventosFiltros(){
+		const {terminoBuscador, filteredData} = this.state
+		let eventos = this.props.eventosProximos.filter(createFilter(terminoBuscador, KEYS_TO_FILTERS))
+		return eventos.map((e, key)=>{
+			return (
+				<TouchableOpacity style={style.contenedorEventoFiltro} key={key} onPress={()=>this.props.navigation.navigate('eventoMapa', {tipo:"evento", id:e._id})}>
+					<Icon name={'compass'} allowFontScaling style={style.iconEvento} />
+					<Text style={style.textoEventoFiltro}>{e.nombre}</Text>
+				</TouchableOpacity>
+			)
+		})
+	}
     renderEventos(){
-        const {terminoBuscador, eventos, inicio, final} = this.state
-        const filtros = eventos.filter(createFilter(terminoBuscador, KEYS_TO_FILTERS))
-		let newFiltro = filtros.slice(inicio, final)
+		const {terminoBuscador, eventos, inicio, final, actualiza} = this.state
+		const {tipo} = this.props.navigation.state.params
+		let data =  tipo=="cercanos" ?eventos :tipo=="proximos" ?this.props.eventosProximos  :this.props.eventosProximos.filter(createFilter(terminoBuscador, KEYS_TO_FILTERS))
+		data = actualiza ?this.props.eventosProximos.filter(createFilter(terminoBuscador, KEYS_TO_FILTERS)) :data
+		console.log({data, terminoBuscador, tipo})
+		let newFiltro = data.slice(inicio, final)
         return newFiltro.map((e, key)=>{
             let imagen = e.imagen[0].split("-")
 			imagen = `${imagen[0]}Miniatura${imagen[2]}`
@@ -129,6 +167,7 @@ class eventosComponent extends Component{
                             /> 
                         </Lightbox>	
                         <Text style={style.texto1}>{this.capitalize(e.nombre)}</Text>
+                        <Text style={style.texto1}>{e.categoria.nombre}</Text>
                         <Text style={style.texto2}>{moment(e.fechaInicio).format("YYYY-MM-DD hh:mm a")}</Text>
                         
                     </View>
@@ -137,12 +176,34 @@ class eventosComponent extends Component{
         })
     }
 	render(){
-        const {navigation} = this.props
+		const {navigation} = this.props
+		const {focus, terminoBuscador} = this.state
         return(
             <View style={style.container}>
                 <View style={{alignItems: 'center'}}>
-                    <Cabezera navigation={navigation} />
+					<Cabezera 
+						navigation={navigation} 
+						focus={(focus)=>{this.setState({focus}) }} 
+						texto={(terminoBuscador)=>this.setState({terminoBuscador})}
+					/>
                 </View>
+				{
+					focus
+					?<View style={style.fondo}>
+						<View style={style.contenedorFiltros}  >
+							{this.renderCategoriasFiltros()}
+						</View>
+						<View style={style.separador}></View>
+						{
+							terminoBuscador.length>1
+							&&<ScrollView style={style.contenedorFiltrosEventos}>
+								{this.renderEventosFiltros()}
+							</ScrollView>
+						}
+						
+					</View>
+					:null
+				}
                 <ScrollView onScroll={(e)=>this.onScroll(e)} style={{marginBottom:60}} >
                     {this.renderEventos()}
                     {this.state.showSpin &&<ActivityIndicator color="#0071bb" style={style.preload}/> }
@@ -157,7 +218,8 @@ const mapState = state => {
     categorias = categorias.concat([{nombre:"Todos", _id:"undefined"}])
 
     return {
-        eventos: state.evento.eventos,
+		eventos: state.evento.eventos,
+		eventosProximos: state.evento.eventosProximos,
         categorias
     };
 };
@@ -166,7 +228,10 @@ const mapDispatch = dispatch => {
 	return {
         getCategorias: () => {
 			dispatch(getCategorias());
-	  },
+		},
+		getEventosProximos: () => {
+			dispatch(getEventosProximos());
+	  	},
 	};
 };
 

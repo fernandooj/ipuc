@@ -17,7 +17,7 @@ let fs = require('fs');
 let categoriaRutas = require('./routes/categoria.js');
 let eventoRutas = require('./routes/evento.js');
 let mensajeRutas = require('./routes/mensaje.js');
-
+let tokenPhoneRutas   = require('./routes/TokenPhone.js');
 
 let SocketIO = require('./socket.js')
 const path   = require('path');
@@ -100,6 +100,7 @@ app.use(flash());
 app.use('/x/v1/cat/categoria', categoriaRutas) 
 app.use('/x/v1/eve/evento',    eventoRutas) 
 app.use('/x/v1/men/mensaje',   mensajeRutas) 
+app.use('/x/v1/tok/tokenPhone',   tokenPhoneRutas)
 require('./routes/User.js')(app, passport);
 
 server.listen(port)

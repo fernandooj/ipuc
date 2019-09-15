@@ -5,6 +5,7 @@
 ///////////////////////////////////////////////////////////////////////////
 export const GET_EVENTOS            = "GET_EVENTOS";
 export const GET_EVENTO             = "GET_EVENTO";
+export const GET_EVENTOS_PROXIMOS   = "GET_EVENTOS_PROXIMOS";
 export const INSERTAR_EVENTO        = "INSERTAR_EVENTO";
 export const EDITAR_EVENTO          = "EDITAR_EVENTO";
 export const ELIMINAR_EVENTO        = "ELIMINAR_EVENTO";

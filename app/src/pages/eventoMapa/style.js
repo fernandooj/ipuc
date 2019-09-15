@@ -33,7 +33,7 @@ export const style = MediaQueryStyleSheet.create({
     },
     iconHome:{
         fontSize:30,
-        color:"white"
+        color:"#33A2FF"
     },
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////       CATEGORIAS
@@ -41,7 +41,7 @@ export const style = MediaQueryStyleSheet.create({
     contenedorCategorias:{
         position:"absolute",
         flexDirection:"row",
-        bottom:100
+        bottom:Platform.OS === 'android' ?130 :100
     },
     cajaCategoria:{
         flexDirection:"row",
@@ -72,7 +72,7 @@ export const style = MediaQueryStyleSheet.create({
         backgroundColor:"#fff",
         borderTopLeftRadius:55,
         borderTopRightRadius:55,
-        top:size.height-85,
+        top:Platform.OS === 'android' ?size.height-115 :size.height-85,
         left:0,
         padding:5,
         width:size.width,

@@ -27,11 +27,11 @@ export default class FooterComponent extends Component{
 							<Icon name={'plus-square-o'} allowFontScaling style={style.iconFooter} />
 							<Text style={style.textFooter}>NUEVO</Text>
 						</TouchableOpacity>
-						<TouchableOpacity style={style.subContenedorFooter}  onPress={()=>navigation.navigate('eventoMensajes')}>
-							{/* <Image source={require("../../assets/img/mensaje.png")} style={style.imagen} /> */}
+						{/* <TouchableOpacity style={style.subContenedorFooter}  onPress={()=>navigation.navigate('eventoMensajes')}>
+						 
 							<Icon name={'commenting-o'} allowFontScaling style={style.iconFooter} />
 							<Text style={style.textFooter}>MENSAJES</Text>
-						</TouchableOpacity>
+						</TouchableOpacity> */}
 						<TouchableOpacity style={style.subContenedorFooter} onPress={()=>navigation.navigate('Perfil')}>
 							{/* <Image source={require("../../assets/img/perfil.png")} style={style.imagen} /> */}
 							<Icon name={'user-o'} allowFontScaling style={style.iconFooter} />

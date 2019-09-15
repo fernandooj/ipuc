@@ -26,6 +26,9 @@ class userServices {
 		newUsuario.activo 	 = user.tipo ?true :false,  /// si el tipo es facebook/google se activa automaticamente
 		newUsuario.acceso    = 'suscriptor';
 		newUsuario.tipo      = user.tipo
+		newUsuario.nombre    = user.nombre
+		newUsuario.apellido  = user.apellido
+		newUsuario.avatar    = user.avatar
 		newUsuario.save(callback);	 
 	}
 	modificaToken(data, code, callback){
@@ -64,6 +67,7 @@ class userServices {
 		User.findByIdAndUpdate(_id, {$set:{
 			'tokenPhone':data.tokenPhone,
 			'nombre':data.nombre,
+			'apellido':data.apellido,
 			'avatar':data.avatar,
 			'token':data.token,
 		}}, callback );	

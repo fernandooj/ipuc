@@ -35,7 +35,7 @@ export const style = MediaQueryStyleSheet.create({
         fontFamily: "Roboto-Bold",
         paddingHorizontal:10,
         fontSize:15,
-        paddingVertical:5
+        paddingTop:3
     },
     texto2:{
         fontFamily: "Roboto-Regular",
@@ -49,5 +49,56 @@ export const style = MediaQueryStyleSheet.create({
         zIndex:100,
 		bottom:-1,
 		left:(size.width/2)-5
-	}
+    },
+    
+	////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////	 FILTROS 
+	////////////////////////////////////////////////////////////////////////////////////////
+	fondo:{
+		flex:1,
+		height:size.height,
+		width:size.width,
+		backgroundColor:"rgba(255,255,255,.95)",
+		position:"absolute",
+		top:0,
+		left:0,
+		// paddingTop:120,
+		zIndex:500
+	},
+	contenedorFiltros:{
+		marginTop:80,
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+		alignItems:"center"
+	},	
+	contenedorCategoriaFiltro:{
+		borderWidth:1,
+		borderColor:"rgba(0,0,0,.3)",
+		alignItems:"center",
+		margin:5,
+		paddingHorizontal:5,
+        height:28,
+        fontSize:13
+	},
+	textoCategoriaFiltro:{
+        color:"#000",
+		top:3
+	},
+	iconEvento:{
+        top:4,
+        paddingHorizontal:5,
+        color:"#000",
+	},
+	contenedorEventoFiltro:{
+        flexDirection: 'row',
+       
+		marginVertical:5,
+		padding:5
+    },
+    separador:{
+        width:size.width,
+        height:1,
+        marginVertical:20,
+        backgroundColor:"rgba(0,0,0,.1)"
+    }
 })

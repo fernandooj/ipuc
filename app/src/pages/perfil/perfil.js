@@ -25,16 +25,17 @@ class perfil extends Component{
         })
     }
     renderLogin(){
-        const {navigate} = this.props.navigation
+        const {navigation} = this.props
+        const {navigate}   = this.props.navigation
         return <View style={style.container}>
-            <Login navigation={navigate} login={()=>this.props.getPerfil()} />
-            <Footer navigation={navigate} />
-        </View>	 
+                    <Login navigation={navigate} login={()=>this.props.getPerfil()} />
+                    <Footer navigation={navigation} />
+                </View>	 
     }
     renderPerfil(){
         let {nombre, idUsuario, avatar, email, err, user} = this.state
         console.log(user.nombre)
-       
+        const {navigate} = this.props.navigation
         return (
             <View style={style.containerRegistro}>
                 <View style={style.perfilContenedor}>
@@ -51,7 +52,7 @@ class perfil extends Component{
                     </View>
                 </View>	 
                 <View>
-                    <TouchableOpacity style={style.btnLista} onPress={()=>navigation.navigate("editarPerfil", {tipoAcceso:null})} >
+                    <TouchableOpacity style={style.btnLista} onPress={()=>navigate("editarPerfil", {editar:true})} >
                         <Text style={style.txtLista}>Editar perfil</Text> 
                         <Icon name={'user-o'} style={style.icon} />
                     </TouchableOpacity>

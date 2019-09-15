@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>ipuc</string>
+	<string>Picpuc</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -23,26 +23,26 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb766187960466049</string>
+			</array>
+		</dict>
+		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.1081623523159-smq68u7hsng2g96tdekb7t57lh32hltl</string>
+				<string>com.googleusercontent.apps.743312881993-5smd23gidrghfdgsir0akf6n6vf0bhsr</string>
 			</array>
 		</dict>
 	</array>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Queremos acceder a tu camara para editar tu avatar</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
-	<key>NSCameraUsageDescription</key>
-	<string>Queremos acceder a tu camara para editar tu avatar</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>FacebookAppID</key>
-	<string>343146739877578</string>
+	<string>766187960466049</string>
 	<key>FacebookDisplayName</key>
-	<string>Ipuc</string>
+	<string>picpuc</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
@@ -50,6 +50,7 @@
 		<string>fbauth2</string>
 		<string>fbshareextension</string>
 	</array>
+  
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -65,6 +66,29 @@
 			</dict>
 		</dict>
 	</dict>
+  <key>LSApplicationQueriesSchemes</key>
+  <array>
+    <string>comgooglemaps</string>
+    <string>citymapper</string>
+    <string>uber</string>
+    <string>lyft</string>
+    <string>transit</string>
+    <string>waze</string>
+    <string>yandexnavi</string>
+    <string>moovit</string>
+    <string>yandexmaps</string>
+  </array>
+  <key>LSApplicationQueriesSchemes</key>
+  <array>
+    <string>whatsapp</string>
+    <string>mailto</string>
+  </array>
+	<key>NSCameraUsageDescription</key>
+	<string>Queremos acceder a tu camara para editar tu avatar</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string></string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Queremos acceder a tu camara para editar tu avatar</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>FontAwesome.ttf</string>

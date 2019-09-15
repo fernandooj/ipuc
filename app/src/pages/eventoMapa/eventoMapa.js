@@ -12,7 +12,9 @@ import Toast from 'react-native-simple-toast';
 import Slideshow               from 'react-native-image-slider-show';
 import AsyncStorage from '@react-native-community/async-storage';
 import * as Animatable         from 'react-native-animatable';
+import { showLocation } from 'react-native-map-link'
 import axios from 'axios';
+import Share from 'react-native-share';
 let fechaActual = moment().format('YYYY/MM/DD h:mm:ss a')
 fechaActual = moment().format('YYYY/MM/DD h:mm')
 const {width, height} = Dimensions.get('window')
@@ -55,7 +57,8 @@ class MapaPlanComponent extends Component{
       axios.get("user/perfil")
       .then(e=>{
         console.log(e.data)
-        this.setState({idUsuario, eventoGuardado:e.data.user.Eventos})  
+        let eventoGuardado = e.data.status ?e.data.user.Eventos :[]
+        this.setState({idUsuario, eventoGuardado})  
       })
     }
      
@@ -94,7 +97,25 @@ class MapaPlanComponent extends Component{
 		{enableHighAccuracy: true, timeout:5000, maximumAge:0})
     )
 	}
-
+  comoLlegar(lat, lng){
+    const {imagen, nombre, descripcion, lugar, fechaFinal, loc, _id} = this.state.evento
+    const {x} = this.state
+    showLocation({
+      latitude: loc.coordinates[1],
+      longitude: loc.coordinates[0],
+      sourceLatitude: x.latitude,  // optionally specify starting location for directions
+      sourceLongitude: x.longitude,  // not optional if sourceLatitude is specified
+      title: lugar,  // optional
+      googleForceLatLon: false,  // optionally force GoogleMaps to use the latlon for the query instead of the title
+      googlePlaceId: 'ChIJGVtI4by3t4kRr51d_Qm_x58',  // optionally specify the google-place-id
+      alwaysIncludeGoogle: true, // optional, true will always add Google Maps to iOS and open in Safari, even if app is not installed (default: false)
+      dialogTitle: nombre, // optional (default: 'Open in Maps')
+      dialogMessage: descripcion, // optional (default: 'What app would you like to use?')
+      cancelText: 'Cancelar', // optional (default: 'Cancel')
+      appsWhiteList: ['google-maps'] // optionally you can set which apps to show (default: will show all supported apps installed on device)
+      // app: 'uber'  // optionally specify specific app to use
+  })
+  }
 
   renderMarkers(){
     return this.props.eventos.map((e, key)=>{
@@ -106,6 +127,7 @@ class MapaPlanComponent extends Component{
         <Marker
           key={key}
           coordinate={{latitude:e.loc.coordinates[1], longitude:e.loc.coordinates[0]}}
+          onPress={()=>this.props.getEvento( e._id)}
         >
           <TouchableOpacity onPress={()=>this.props.getEvento( e._id)}>
               <Image source={diff<3 ?require("../../assets/img/pin_red.png") :diff<7 ?require("../../assets/img/pin_yellow.png") :require("../../assets/img/pin_blue.png") } style={style.iconoImagen} />
@@ -203,7 +225,7 @@ class MapaPlanComponent extends Component{
     const {idUsuario, eventoGuardado, mostrarMensaje} = this.state
     let esSeguidor     =  meGusta.includes(idUsuario) 
     let existeEvento   =  eventoGuardado.includes(_id)
-	  console.log({idUsuario, eventoGuardado, esSeguidor})
+	  console.log({idUsuario, eventoGuardado, lugar})
     let img = []
     imagen.map(e=>{
       let img2 = e.split("-")
@@ -222,7 +244,7 @@ class MapaPlanComponent extends Component{
         </View>
         <View style={style.conTextoEvento}>
           <Icon name={"circle"} style={[style.iconCircle, {color:"#33FF61"}]} />
-          <Text style={style.textoEvento2}>{moment(fechaInicio).locale("es").format("YYYY-MMM-DD HH-MM a")}</Text>
+          <Text style={style.textoEvento2}>{moment(fechaInicio).format("YYYY-MMM-DD HH-MM a")}</Text>
         </View>
         <View style={style.conTextoEvento}>
           <Icon name={"circle"} style={[style.iconCircle, {color:"#FF33DA"}]} />
@@ -235,8 +257,11 @@ class MapaPlanComponent extends Component{
         <Text style={style.separador}></Text>
         <Text style={style.textoEvento3}>{descripcion}</Text>
         <View style={{flexDirection:"row"}}>
-          <TouchableOpacity style={style.btnEventoPreguntar} onPress={()=>this.setState({mostrarMensaje:true, mensaje:""})} >
+          {/* <TouchableOpacity style={style.btnEventoPreguntar} onPress={()=>this.setState({mostrarMensaje:true, mensaje:""})} >
             <Text style={style.textPreguntar}>Enviar Mensaje</Text>
+          </TouchableOpacity> */}
+          <TouchableOpacity style={style.btnEventoPreguntar} onPress={()=>this.comoLlegar()} >
+            <Text style={style.textPreguntar}>COMO LLEGAR</Text>
           </TouchableOpacity>
           <TouchableOpacity style={style.btnEvento} onPress={()=>!idUsuario ?this.props.navigation.navigate("Perfil") :existeEvento ?this.eliminarEvento(_id) :this.guardarEvento(_id)}>
             <Icon name={existeEvento ?"bookmark" :"bookmark-o"} style={existeEvento ?style.iconEventoActivo :style.iconEvento} />
@@ -245,6 +270,9 @@ class MapaPlanComponent extends Component{
           <TouchableOpacity style={style.btnEvento} onPress={()=>!idUsuario ?this.props.navigation.navigate("Perfil") :esSeguidor ?this.unLike() :this.like()}>
             <Icon name={esSeguidor ?"heart" :"heart-o"} style={esSeguidor ?style.iconMeGustaActivo :style.iconMeGusta} />
             <Text style={{fontSize:10}}>{meGusta.length}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={style.btnEvento} onPress={()=>this.share() }>
+            <Icon name={"share-alt"} style={style.iconMeGusta} />
           </TouchableOpacity>
         </View>
         {mostrarMensaje &&this.renderModalMensaje()}
@@ -302,6 +330,7 @@ class MapaPlanComponent extends Component{
  
   animacionShowEvento(evento){
     let zoom = Platform.OS=='android'?0.033 :0.25
+    let bottom=Platform.OS === 'android' ?130 :100
     let ubicacion ={
       latitude:evento.loc.coordinates[1]+zoom,
       longitude:evento.loc.coordinates[0],
@@ -313,14 +342,16 @@ class MapaPlanComponent extends Component{
     this.setState({evento:evento,  x:ubicacion, buscador:true})
     this.evento.transitionTo({top:0}, 500,  "ease-in-out-back")
     this.view.transitionTo({top:height+85}, 500,  "ease-in-out-back")
-    this.categoria.transitionTo({bottom:-100}, 500,  "ease-in-out-back")
+    this.categoria.transitionTo({bottom}, 500,  "ease-in-out-back")
   }
 
   animacionHideEvento(){
+    const top    = Platform.OS=='android' ?height-145 :height-85
+    const bottom = Platform.OS=='android' ?190 :100
     this.setState({x:this.state.x2, buscador:false})
     this.evento.transitionTo({top:-1000}, 500,  "ease-in-out-back")
-    this.view.transitionTo({top:height-85}, 500,  "ease-in-out-back")
-    this.categoria.transitionTo({bottom:100}, 500,  "ease-in-out-back")
+    this.view.transitionTo({top}, 500,  "ease-in-out-back")
+    this.categoria.transitionTo({bottom}, 500,  "ease-in-out-back")
   }
   animacionCategoria = (top) => {
     this.view.transitionTo({top}, 500,  "ease-in-out-back")
@@ -491,7 +522,6 @@ class MapaPlanComponent extends Component{
     console.log({buscador})
     return(
       <View style ={style.containerMap}>
-        
         {
           buscador
           ?<MapView
@@ -534,7 +564,7 @@ class MapaPlanComponent extends Component{
         {/* CONTENIDO MODAL */}
         <Animatable.View ref={ref=>{this.view=ref}} style={style.contenedorEventos}>
           <ScrollView  keyboardDismissMode="on-drag">
-            <TouchableOpacity onPress={()=>this.animacionCategoria(modal ?height-85: 75 )} style={style.contenedorIconEvento}>
+            <TouchableOpacity onPress={()=>this.animacionCategoria(modal ?Platform.OS == 'android' ?height-115 :height-85 : 75 )} style={style.contenedorIconEvento}>
               <Icon name={modal ?'minus' :"plus"} style={style.iconContenedorEvento} />
               <View style={style.contenedorBuscador}>
                 <Icon name={"search"} style={style.iconSearch} />
@@ -572,7 +602,21 @@ class MapaPlanComponent extends Component{
 			return(<Text></Text>)
 		}
 	}
-
+  share(){
+    const {nombre} = this.state.evento
+		let url = Platform.OS==='android' ?'https://play.app.goo.gl/?link=https://play.google.com/store/apps/details?id=com.weplan&ddl=1&pcampaignid=web_ddl_1' :"https://itunes.apple.com/us/app/we-plan/id1421335318?ls=1&mt=8"
+		const shareOptions = {
+      title: "", 
+      message: `Hey mira este plan de la ipuc: ${nombre}, Para verlo descarga Picpuc`,
+      url,
+      social: Share.Social.FACEBOOK,
+      social: Share.Social.MESSENGER,
+      social: Share.Social.WHATSAPP
+		};
+		 Share.open(shareOptions)
+		.then((res) => { console.log(res) })
+		.catch((err) => { err && console.log(err); });
+	}
 	showInput(){
 		Animated.timing(this.state.top,{
 			toValue:100,

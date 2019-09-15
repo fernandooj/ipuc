@@ -12,15 +12,28 @@
 #import <React/RCTRootView.h>
 #import <Firebase.h>
 #import <GoogleMaps/GoogleMaps.h>
+#import <RNGoogleSignin/RNGoogleSignin.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 @implementation AppDelegate
+
+- (BOOL)application:(UIApplication *)application openURL:(nonnull NSURL *)url options:(nonnull NSDictionary<NSString *,id> *)options {
+  return [RNGoogleSignin application:application
+                             openURL:url
+                   sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
+                          annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
+}
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   [FIRApp configure];
+  [[FBSDKApplicationDelegate sharedInstance] application:application
+    didFinishLaunchingWithOptions:launchOptions];
+
   [GMSServices provideAPIKey:@"AIzaSyBMW85F6kiI1-dXkBDxRIgHWgXTr8vEnmM"];
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
-                                                   moduleName:@"ipuc"
+                                                   moduleName:@"picpuc"
                                             initialProperties:nil];
   
   rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
@@ -33,6 +46,8 @@
   [[UNUserNotificationCenter currentNotificationCenter] setDelegate:self];
   return YES;
 }
+
+// firebase fcm
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler
 {

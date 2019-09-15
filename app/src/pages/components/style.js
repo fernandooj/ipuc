@@ -9,8 +9,9 @@ export const style = MediaQueryStyleSheet.create({
 	cabezera:{
 		width:"90%",
 		height:55,
-		// borderWidth:1,
-		marginTop:40,
+		position:"relative",
+		zIndex:1000,
+		marginTop:Platform.OS === 'android' ?10 :40,
 	},
 	subCabezera:{
  		flexDirection: 'row',
@@ -41,6 +42,15 @@ export const style = MediaQueryStyleSheet.create({
 		width:30,
 		height: 30,
 	},
+	btnClose:{
+		right:30,
+		top:5,
+		padding:5
+	},
+	iconClose:{
+		fontSize:20,
+		color:"#000000"
+	},
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////			FOOTER
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -60,7 +70,7 @@ export const style = MediaQueryStyleSheet.create({
 	},
 	 
 	subContenedorFooter:{
-		width:size.width/5,
+		width:size.width/4,
 		alignItems:"center",
 	},
 	iconFooter:{
@@ -208,9 +218,9 @@ export const style = MediaQueryStyleSheet.create({
 		justifyContent:"center",
 		textAlign:"center",
 		width:size.width/2,
-		padding:10,
+		padding:12,
 		borderRadius:5,
-		marginTop:-50
+		bottom:25
 	},
 	textEnviar:{
 		color:"#fff"
@@ -307,7 +317,7 @@ export const style = MediaQueryStyleSheet.create({
 		height:(size.height)-70,
 	},
 	map:{
-		height:(size.height)-120,
+		height:(size.height)-140,
 		...StyleSheet.absoluteFillObject,
 	},
 	btnIconVolver:{

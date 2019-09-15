@@ -42,9 +42,8 @@ const {
 	signIn(e){
 		const {tokenPhone} = this.state
 		if (e===1) {
-			LoginManager.logInWithReadPermissions(['email']).then((result)=> {
-				console.log("e")
-				console.log(result)
+			LoginManager.logInWithPermissions(['email']).then((result)=> {
+			
 				AccessToken.getCurrentAccessToken().then((token) => {
 					const responseCallback = ((error, res) => {
 						if (error) {
@@ -52,9 +51,11 @@ const {
 						} else {
 							res.ok = true
 							res.json = result
+							console.log("e")
+							console.log(res)
 							if(!res.json.isCancelled){
-								axios.post("user/redes", {tokenPhone, token: token.accessToken, username:res.email, email:res.email, tipo:"facebook", nombre:res.name, avatar:res.picture.data.url}).then(e=>{
-									e.data.status ?this.props.login() :alert("Intenta Nuevamente")
+								axios.post("user/redes", {tokenPhone, token: token.accessToken, username:res.email, email:res.email, tipo:"facebook", nombre:res.first_name, apellido:res.last_name, avatar:res.picture.data.url}).then(e=>{
+									this.loginRedesExitoso(e.data.code, e.data.user._id)
 								})	
 							}
 						}
@@ -77,11 +78,11 @@ const {
 		}else{
 			GoogleSignin.signIn()
 			.then((result) => {
-				let {name, photo, email} = result.user
-				axios.post("user/redes", {tokenPhone, token:result.accessToken, username:email, email, tipo:'google', nombre:name, avatar:photo}).then((e)=>{
-				 
-						e.data.status ?this.props.login() :alert("Intenta Nuevamente")
-					 
+				console.log({result})
+				let {name, photo, email, givenName, familyName} = result.user
+				axios.post("user/redes", {tokenPhone, token:result.accessToken, username:email, email, tipo:'google', nombre:givenName, apellido:familyName, avatar:photo}).then((e)=>{
+					// e.data.code==1 ?this.props.navigation("editarPerfil") :e.data.code==2 ?this.props.navigation("Home") :alert("Intenta Nuevamente")
+					this.loginRedesExitoso(e.data.code, e.data.user._id)
 				})
 				.catch((err)=>{
 					console.log(err)
@@ -99,7 +100,7 @@ const {
 		console.log({iniciarSesion})
 		return(
 			<View style={style.contenedorForm}>
-				<Text style={style.titulo}>UNETE A IPUC</Text>
+				<Text style={style.titulo}>UNETE A PICPUC</Text>
 				<View style={style.contenedorRedes}>
 					<TouchableOpacity style={style.btnFacebook} onPress={()=>this.signIn(1)}>
 						<Text style={style.textBtn}>FACEBOOK</Text>
@@ -126,6 +127,7 @@ const {
 						autoCapitalize = 'none'
 						keyboardType='email-address'
 						onFocus={() => {
+							 
 							this.setState({ alertErrorLogin:false, usuarioNoExiste:false }); 
 						}}
 					/>
@@ -175,6 +177,12 @@ const {
     .then(e => {		 
 			e.data.code==1 ?this.loginExitoso(e.data.user._id) :Toast.show("Datos Incorrectos")
 		})
+	}
+	async loginRedesExitoso(code, idUsuario){
+		console.log(idUsuario)
+		AsyncStorage.setItem('idUsuario', idUsuario)
+		const {navigation} = this.props	
+		code==1 ?navigation("editarPerfil", {editar:false}) :code==2 ?navigation("Home") :alert("Intenta Nuevamente")
 	}
 	async loginExitoso(idUsuario){
 		console.log(idUsuario)
@@ -316,12 +324,10 @@ const {
 	olvidoContrasena(){
 		const { email, password } = this.state;
 		axios.post("user/recover/", { username:email })
-        .then(e => {
-			console.log(e.data)
-        	if(e.data.code==1){
+		.then(e => {
+			if(e.data.code==1){
 				Toast.show('Hemos enviado un codigo a este email.', Toast.LONG);
-				 
-				this.setState({tokenEnviado:true, showInsertarCodigo:true, recuperar:true, recuperarContrasena:false,  token:e.data.token.toString() })
+			this.setState({tokenEnviado:true, showInsertarCodigo:true, recuperar:true, recuperarContrasena:false,  token:e.data.token.toString() })
 			}else{
 				this.setState({usuarioNoExiste:true})
 				Toast.show('Este Usuario no existe.', Toast.LONG);
@@ -344,9 +350,9 @@ const mapStatetoPros =(state) =>{
 const mapDispatch = dispatch => {
 	return {
 	  loginRequest: (email, password) => {
-		dispatch(loginRequest(email, password));
+			dispatch(loginRequest(email, password));
 	  }
 	};
-  };
+};
 	   
 export default connect(mapStatetoPros, mapDispatch)(Login) 

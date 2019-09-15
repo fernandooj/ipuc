@@ -87,7 +87,7 @@ const cambiarContrasena = (state = null, action) => {
 const getPerfil = (state = {}, action) => {
   switch (action.type) {
     case GET_PERFIL:
-      return action.usuario;
+      return action.perfil;
     default:
       return state;
   }

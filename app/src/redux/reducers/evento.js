@@ -1,6 +1,7 @@
 import {
   GET_EVENTOS,
   GET_EVENTO,
+  GET_EVENTOS_PROXIMOS,
   GET_EVENTOS_CATEGORIA,
   GET_EVENTOS_GUARDADOS,
   GET_EVENTOS_MENSAJES,
@@ -21,6 +22,15 @@ const getEventos = (state = [], action) => {
   switch (action.type) {
     case GET_EVENTOS:
       return action.eventos;
+    default:
+      return state;
+  }
+};
+
+const getEventosProximos = (state = [], action) => {
+  switch (action.type) {
+    case GET_EVENTOS_PROXIMOS:
+      return action.eventosProximos;
     default:
       return state;
   }
@@ -68,6 +78,7 @@ export default function reducer(state = {}, action) {
   return {
     evento:           getEvento(state.evento, action),
     eventos:          getEventos(state.eventos, action),
+    eventosProximos:  getEventosProximos(state.eventosProximos, action),
     eventoCategoria:  getEventosCategoria(state.eventoCategoria, action),
     eventosGuardados: getEventosGuardados(state.eventosGuardados, action),
     eventosMensajes:  getEventosMensajes(state.eventosMensajes, action),

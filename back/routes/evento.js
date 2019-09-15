@@ -97,6 +97,23 @@ router.get('/byCategoria/:idCategoria/:lat/:lng', (req, res)=>{
 	})
 })
 
+
+///////////////////////////////////////////////////////////////////////////
+/*
+Llamo a los cercanos por fecha
+*/
+///////////////////////////////////////////////////////////////////////////
+router.get('/proximos', (req, res)=>{ 
+	eventoServices.getProximos((err, eventos)=>{
+		if (err) {
+			res.json({status:false, err, code:0})    
+		}else{
+			res.json({status:true, eventos, code:1})    
+		}
+	})
+})
+
+
 ///////////////////////////////////////////////////////////////////////////
 /*
 cuando un usuario le gustas un evento agrego su id

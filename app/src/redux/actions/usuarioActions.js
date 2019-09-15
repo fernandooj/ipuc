@@ -39,11 +39,13 @@ const cambiar_contrasena = code =>{
 const getPerfil = data => {
   return dispatch => {
     return axios
-      .get(`user/perfil/`)
+      .get(`user/perfil`)
       .then(res => {
+        console.log("perfil")
+        console.log(res.data)
         dispatch({
           type: GET_PERFIL,
-          usuario: res.data
+          perfil: res.data.user
         });
       })
       .catch(err => {

@@ -22,13 +22,14 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.ipuc"
+        applicationId "com.picpuc"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
     }
     signingConfigs {
+        
         release {
             if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
                 storeFile file(MYAPP_RELEASE_STORE_FILE)

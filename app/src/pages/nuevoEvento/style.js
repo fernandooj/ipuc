@@ -78,8 +78,9 @@ export const style = MediaQueryStyleSheet.create({
 		width:size.width,
 		padding:10,
 		borderRadius:5,
-		position:"absolute",
-		bottom:50
+		marginVertical:10
+		// position:"absolute",
+		// bottom:50
 	},
 	textEnviar:{
 		color:"#fff"

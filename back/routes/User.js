@@ -220,7 +220,7 @@ module.exports = function(app, passport){
     ///////////////////////////////////////////////////////////////////////////
     const modificaUsuario = (req, res)=>{
         userServices.modificaUsuarioRedes(req.session.usuario._id, req.body, (err, user)=>{
-            err ?res.json({status:false, err, code:0}) :res.json({status:true, user, code:1})
+            err ?res.json({status:false, err, code:0}) :res.json({status:true, user, code:2})
         })
     }
 

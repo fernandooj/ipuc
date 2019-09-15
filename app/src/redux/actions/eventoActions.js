@@ -8,7 +8,8 @@ import {
     GET_EVENTOS_CATEGORIA,
     GET_EVENTOS_GUARDADOS,
     GET_EVENTOS_MENSAJES,
-    GET_MENSAJES
+    GET_MENSAJES,
+    GET_EVENTOS_PROXIMOS
   } from "./constants/actionsTypes";
   import axios from "axios";
   
@@ -38,6 +39,23 @@ import {
           dispatch({
             type: GET_EVENTOS,
             eventos 
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    };
+  };
+
+  const getEventosProximos = data => {
+    console.log(data)
+    return dispatch => {
+      return axios
+        .get(`eve/evento/proximos`)
+        .then(res => {
+          dispatch({
+            type: GET_EVENTOS_PROXIMOS,
+            eventosProximos:res.data.eventos 
           });
         })
         .catch(err => {
@@ -183,6 +201,7 @@ const cambiarEstadoEvento = id => {
   export {
     getEvento,
     getEventos,
+    getEventosProximos,
     insertarEvento,
     modificarEvento,
     eliminarEvento,

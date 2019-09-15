@@ -13,6 +13,9 @@ class eventoServices {
 	getByIdWidthUsuarios(_id, callback){
 		Evento.findOne({_id}).populate("mensajes").populate("usuario").exec(callback)
 	}
+	getProximos(callback){
+		Evento.find().sort({fechaInicio :1}).populate("categoria").exec(callback)
+	}
 	getByCategoria(lat, lng, categoria, callback){
 		categoria = mongoose.Types.ObjectId(categoria);	
 		Evento.aggregate([

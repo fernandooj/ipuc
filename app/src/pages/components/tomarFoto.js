@@ -4,11 +4,15 @@ import ImagePicker from 'react-native-image-crop-picker';
 import Icon from 'react-native-fa-icons' 
  
 import {style}   from './style'
+ 
+ 
+ 
 
 export default class tomarPhoto extends Component{
     state={
         imagenes:[]
     }
+    
     subirImagen(){
         let {imagenes} = this.state
         const options = {
@@ -65,18 +69,20 @@ export default class tomarPhoto extends Component{
 		
 	}
 	renderImagenes(){
-        return  this.state.imagenes.map((e, key)=>{
+        return  this.props.imagen.map((e, key)=>{
             return(
                 <View key={key}>
                     <Image source={{uri:e.uri}} style={style.imagenesFotos} />
+                    
                     <Icon name={'trash'} style={style.iconTrash} onPress={()=>this.eliminarImagen(key)}/>
                 </View>
             )
         })
     }
     eliminarImagen(keyImagen){
-        let imagenes = this.state.imagenes.filter((e, key)=>{return key!=keyImagen })    
-        this.setState({imagenes})    
+        let imagenes = this.props.imagen.filter((e, key)=>{return key!=keyImagen })    
+        console.log(imagenes)
+  
         this.props.imagenes(imagenes)
     }
     renderModal(){
@@ -110,9 +116,9 @@ export default class tomarPhoto extends Component{
         TIPOMENSAJE == cuando la foto es para el chat, no muestra, la opcion de tomar foto, si no que muestra directamente el modal
     */
     render(){
-        const {imagenes, showModal} = this.state
-        const {width, avatar, limiteImagenes} = this.props
- 
+        const {showModal} = this.state
+        const {width, avatar, limiteImagenes, imagen} = this.props
+        console.log({imagen:imagen.length,limiteImagenes})
         return(
             <View style={style.contenedorPortada}>
                 {
@@ -120,7 +126,7 @@ export default class tomarPhoto extends Component{
                     &&this.renderModal()
                 }
                 {
-                    imagenes.length<limiteImagenes
+                    imagen.length<limiteImagenes
                     &&<TouchableOpacity style={[style.contenedorUploadPortada, {width}]} onPress={() => this.setState({showModal:true, isAndroidShareOpen:true}) }>
                         <Icon name={'camera'} style={style.iconPortada} />
                         <Text style={style.textPortada}> {!avatar ?"Imagen" :"Avatar"}</Text>
