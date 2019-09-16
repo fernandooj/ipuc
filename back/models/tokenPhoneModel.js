@@ -22,6 +22,7 @@ const geoSchema = mongoose.Schema({
 let TokenPhone = new Schema({
 	tokenPhone: String,
 	creado    : String,
+	showNotificacion:{ type : Boolean, default:true},
 	loc 	  : geoSchema,
 });
 

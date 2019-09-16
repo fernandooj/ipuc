@@ -78,25 +78,7 @@ class userServices {
 		}}, callback );	
 	}
 
-	// tipo(user,callback){
-	// 	User.findByIdAndUpdate(user.id, {$set: {
-	// 	    'tipo':       user.tipo,
-	// 	    'estado': 	  user.estado,
-	// 	    'updatedAt':  moment(fecha).valueOf()
-	// 	}}, callback);
-	// }
-
-
  
-	 
-
-	// estadoUsuario(user, activo, callback){
-	// 	User.findOne({ 'username' :  user }, function(error, user) {
-	// 		User.findByIdAndUpdate(user._id, {$set: {
-    //             'activo':activo
-    //         }}, callback);
-	// 	})
-	// }
 	avatar(id, avatar, callback){
 		User.findByIdAndUpdate(id, {$set: {
             avatar     : avatar,

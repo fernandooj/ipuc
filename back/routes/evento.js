@@ -9,9 +9,11 @@ let {promisify} = require('util');
 let moment 		   = require('moment-timezone');
 let fecha 	   	   = moment().format('YYYY_MM_DD_h_mm')
 
-let sizeOf    	   = promisify(require('image-size'));
-let eventoServices = require('./../services/eventoServices.js') 
-let mensajeServices = require('../services/mensajeServices.js') 
+let sizeOf    	    = promisify(require('image-size'));
+const eventoServices  = require('./../services/eventoServices.js') 
+const mensajeServices = require('../services/mensajeServices.js') 
+const tokenPhoneServices = require('../services/tokenPhoneServices.js')
+const notificacionPush 	 = require('../notificaciones/notificacionPush')
 
 router.get('/', (req, res)=>{
 	eventoServices.get((err, evento)=>{
@@ -224,11 +226,23 @@ router.post('/', (req, res)=>{
 			if (err) {
 				res.json({status:false, err, code:0})    
 			}else{
-				resizeImagenes(rutaJim, randonNumber, "jpg", res)    
+				enviaNotificacion(req, res, rutaJim, randonNumber)
+				
 			}
 		})
 	}
 })
+
+const enviaNotificacion=(req, res, rutaJim, randonNumber)=>{
+	tokenPhoneServices.getNear(req.body.lat, req.body.lng, (err, tokens)=>{
+		if(!err){
+			tokens.map(e=>{
+				notificacionPush(e.tokenPhone, "Nuevo evento cerca a ti", req.body.nombre)
+			})
+		}
+		resizeImagenes(rutaJim, randonNumber, "jpg", res)    
+	})
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////// CAMBIO LOS TAMAÑOS DE LAS IMAGENES

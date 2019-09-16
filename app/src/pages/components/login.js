@@ -182,7 +182,7 @@ const {
 		console.log(idUsuario)
 		AsyncStorage.setItem('idUsuario', idUsuario)
 		const {navigation} = this.props	
-		code==1 ?navigation("editarPerfil", {editar:false}) :code==2 ?navigation("Home") :alert("Intenta Nuevamente")
+		code==1 ?navigation("editarPerfil", {editar:true}) :code==2 ?navigation("Home") :alert("Intenta Nuevamente")
 	}
 	async loginExitoso(idUsuario){
 		console.log(idUsuario)
@@ -284,7 +284,7 @@ const {
 					:this.setState({showError:true})
 				}else{
 					e.data.code==1 
-					?navigation("editarPerfil")
+					?navigation("editarPerfil", {editar:true})
 					:this.setState({showError:true})
 				}
 			})

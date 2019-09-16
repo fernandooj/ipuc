@@ -115,7 +115,7 @@ class perfil extends Component{
         const {nombre, password, apellido, imagenes, tipo, id} = this.state
         const {editar} = this.props.navigation.state.params
         let contraseña =  editar ?true :false
-        console.log({nombre, password, apellido, imagenes, tipo, id, contraseña})
+        console.log({nombre, password, apellido, imagenes, tipo, id, contraseña, editar})
         if(nombre.length<3 || !contraseña || apellido.length<3 || imagenes.length<1 || !id){
             Toast.show("Todos los campos son obligatorios")
         }else{

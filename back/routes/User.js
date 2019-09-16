@@ -41,7 +41,7 @@ module.exports = function(app, passport){
             let titulo = `<font size="5">Verificación de Email</font>` 
             let text1  = `Hola Estimado/a: este es el codigo: ${token} para verificar su dirección de correo electrónico y completar el registro de su cuenta en Codegas`
             let text2  = `Este vínculo caducará en 24 horas. Si ha caducado, pruebe a solicitar un nuevo correo electrónico de verificación.` 
-            let asunto =  "Cuenta creada en Ipuc"
+            let asunto =  "Cuenta creada en PICPUC"
             if (users) {
                 if(users.activo){
                     res.json({ status:false, message: 'este email ya existe', code:0 });            
