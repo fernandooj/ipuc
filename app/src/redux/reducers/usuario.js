@@ -13,7 +13,7 @@ import {
   GET_SEGUIDORES,
   GET_NOTIFICACION,
   GET_LIBROS_DESEADOS,
-  GET_LIBROS_PUBLICADOS,
+  GET_TOKENPHONE,
   GET_RESUMEN,
   RECUPERAR_CONTRASENA,
   CAMBIAR_CONTRASENA
@@ -118,6 +118,15 @@ const getNotificacion = (state = [], action) => {
   }
 };
 
+const getInfoToken = (state = [], action) => {
+  switch (action.type) {
+    case GET_TOKENPHONE:
+      return action.tokenPhone;
+    default:
+      return state;
+  }
+};
+
 export default function authServiceReducer(state = {}, action) {
   return {
     loginFailure:       loginFailure(state.loginFailure, action),
@@ -130,6 +139,7 @@ export default function authServiceReducer(state = {}, action) {
     perfil:             getPerfil(state.perfil, action),
     resumen:            getResumen(state.resumen, action),
     notificacion:       getNotificacion(state.notificacion, action),
-    getLibrosDeseados:  getLibrosDeseados(state.getLibrosDeseados, action)
+    getLibrosDeseados:  getLibrosDeseados(state.getLibrosDeseados, action),
+    getInfoToken:       getInfoToken(state.tokenPhone, action)
   };
 }

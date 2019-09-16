@@ -14,6 +14,7 @@ export const GET_EVENTOS_CATEGORIA  = "GET_EVENTOS_CATEGORIA";
 export const GET_EVENTOS_GUARDADOS  = "GET_EVENTOS_GUARDADOS";
 export const GET_EVENTOS_MENSAJES   = "GET_EVENTOS_MENSAJES";
 export const GET_MENSAJES           = "GET_MENSAJES";
+export const GET_TOKENPHONE           = "GET_TOKENPHONE";
 
 ///////////////////////////////////////////////////////////////////////////
 /*

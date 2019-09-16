@@ -14,9 +14,9 @@ YellowBox.ignoreWarnings(['Require cycle:']);
 //////////////////////////////////////////////////////////////////////////////////////////
 //////  RUTA GENERAL DE LA URL PARA EL API
 //////////////////////////////////////////////////////////////////////////////////////////
-// export const URL = 'http://picpuc.co:8080/x/v1/';  //// prod 
+export const URL = 'http://picpuc.co:8080/x/v1/';  //// prod 
 // export const URL = 'http://134.209.147.143:8080/x/v1/';  //// test 
-export const URL = 'http://192.168.0.5:8080/x/v1/';      //// test local
+// export const URL = 'http://192.168.0.5:8080/x/v1/';      //// test local
 export const VERSION = "1.0.11"
 axios.defaults.baseURL = URL;
 

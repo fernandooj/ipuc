@@ -83,7 +83,6 @@ class Home extends Component{
 		}
 	}
 	getEventos(lat, lng){
-		console.log({lat, lng})
 		FCM.getFCMToken().then(token => {
 			console.log("TOKEN (getFCMToken)", token);
 			this.setState({ token: token || "" });

@@ -5,7 +5,7 @@ import {
   LOGOUT_REQUEST,
   REGISTER_REQUEST,
   REGISTER_SUCCEES,
-  REGISTER_FAILURE,
+  GET_TOKENPHONE,
   GET_PERFIL,
   GET_ACTIVIDAD,
   GET_NOVEDADES,
@@ -13,9 +13,6 @@ import {
   GET_NOTIFICACION,
   GET_USUARIOS,
   GET_USUARIO,
-  GET_LIBROS_DESEADOS,
-  GET_LIBROS_PUBLICADOS,
-  GET_RESUMEN,
   RECUPERAR_CONTRASENA,
   CAMBIAR_CONTRASENA
 } from "./constants/actionsTypes";
@@ -122,23 +119,7 @@ const cambiarContrasena = password =>{
     })
   }
 }
-
-const getLibrosDeseados = data => {
-  return dispatch => {
-    return axios
-      .get(`lib/libroDesea`)
-      .then(res => {
-        dispatch({
-          type: GET_LIBROS_DESEADOS,
-          libros: res.data
-        });
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  };
-};
-
+ 
 const getUsuario = userId => {
   return dispatch => {
     return axios
@@ -170,6 +151,24 @@ const getUsuarios = data => {
       });
   };
 };
+
+
+const getInfoToken = data => {
+  return dispatch => {
+    return axios
+      .get(`tok/tokenPhone/byToken/${data}`)
+      .then(res => {
+        console.log(res.data)
+        dispatch({
+          type: GET_TOKENPHONE,
+          tokenPhone: res.data.status
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+};
  
  
 
@@ -177,9 +176,9 @@ export {
   loginRequest,
   getPerfil,
   getCerrarSesion,
-  getLibrosDeseados,
   getUsuarios,
   getUsuario,
   recuperarContrasena,
-  cambiarContrasena
+  cambiarContrasena,
+  getInfoToken
 };

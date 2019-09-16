@@ -12,6 +12,17 @@ router.get('/', (req,res)=>{
     }) 
 })
 
+router.get('/byToken/:token', (req,res)=>{
+    tokenPhoneServices.getByToken(req.params.token, (err, token)=>{
+        if (!err) {
+            res.json({ status: true, token }); 
+        }else{
+            res.json({ status:false, message: err }); 
+        }
+    }) 
+})
+
+
 router.post('/enviar', (req,res)=>{
     tokenPhoneServices.getAll((err, token)=>{
         if (!err) {
@@ -43,6 +54,25 @@ router.post('/', (req, res)=>{
         }
     })	 
 })
+
+router.put('/', (req, res)=>{
+	tokenPhoneServices.getByToken(req.body.token, (err, tokenPhone)=>{
+        if(!err){
+            if(tokenPhone){
+                tokenPhoneServices.updateEstado(tokenPhone._id, req.body.showNotificacion, (err1, token)=>{
+                    if (!err1) {
+                        res.json({ status: true, message: 'Token actualizado', token });
+                    }else{
+                        res.json({ status:false, message: err1 }); 
+                    }
+                })	
+            }else{
+                res.json({ status:false, message: "este token no existe", err }); 
+            }
+        }
+    })	 
+})
+
 
 const editarLoc=(req, res, token)=>{
     tokenPhoneServices.editarLoc(token._id, req.body, (err, tokenPhone)=>{

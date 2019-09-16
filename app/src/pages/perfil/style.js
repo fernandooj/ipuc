@@ -35,5 +35,17 @@ export const style = MediaQueryStyleSheet.create({
 	},
 	icon:{
 		fontSize:22
+	},
+	containerNotificaciones:{
+		justifyContent:"center",
+		position:"absolute",
+		flexDirection:"row",
+		bottom:50
+	},
+	textNotificaciones:{
+		fontFamily: "Roboto-Regular",
+		top:6,
+		fontSize:17,
+		marginHorizontal:13
 	}
 })

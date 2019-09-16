@@ -52,6 +52,13 @@ class tokenPhoneServices {
 			'loc':loc
 		}}, callback) ;
 	}
+	updateEstado(_id, showNotificacion, callback){
+		let update = moment().tz("America/Bogota").format('YYYY-MM-DD h:mm:ss')
+		TokenPhone.findByIdAndUpdate(_id, {$set: {
+			'showNotificacion':showNotificacion,
+			'update':update
+		}}, callback) ;
+	}
 }
 
 module.exports = new tokenPhoneServices()

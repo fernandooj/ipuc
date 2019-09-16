@@ -19,6 +19,8 @@ import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 import java.util.Arrays;
 import java.util.List;
 import com.heanoria.library.reactnative.locationenabler.RNAndroidLocationEnablerPackage;
+import cl.json.RNSharePackage;
+import cl.json.ShareApplication;
 
 public class MainApplication extends Application implements ReactApplication {
   private static CallbackManager mCallbackManager = CallbackManager.Factory.create();
@@ -46,7 +48,8 @@ public class MainApplication extends Application implements ReactApplication {
           new FBSDKPackage(mCallbackManager),
           new RNFirebaseMessagingPackage(),
           new RNAndroidLocationEnablerPackage(),
-          new MapsPackage()
+          new MapsPackage(),
+          new RNSharePackage()
       );
     }
 
