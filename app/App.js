@@ -5,7 +5,7 @@ import {Provider}                  from 'react-redux';
 import MainRoutes                  from './src/routes/MainRoutes'
 import configStore                 from './src/redux/store.js' //redux config
 import AsyncStorage from '@react-native-community/async-storage';
-
+import FCM, { NotificationActionType } from "react-native-fcm";
 const store = configStore();
 // import {searchUser, getCarrito, getCarrito2, getCatalogo, getOrders, getProductos} from './src/redux/actionCreator' 
 YellowBox.ignoreWarnings(['Remote debugger']);
@@ -32,6 +32,15 @@ export default class App extends Component<{}> {
     }
   }
   async componentWillMount(){
+    try {
+		  let result = await FCM.requestPermissions({
+			badge: false,
+			sound: true,
+			alert: true
+		  });
+		} catch (e) {
+		  console.error(e);
+		}
     let userId = await AsyncStorage.getItem('idUsuario');
     console.log({userId})
     if (userId===null || userId==='0') {

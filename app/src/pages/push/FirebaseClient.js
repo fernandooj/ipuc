@@ -1,3 +1,4 @@
+  
 import FirebaseConstants from "./FirebaseConstants";
 import { Alert } from "react-native";
 
@@ -21,12 +22,10 @@ class FirebaseClient {
 			try{
 				response = await response.json();
 				if(!response.success){
-					console.log('Failed to send notification, check error log')
-					console.log(response)
+					Alert.alert('Failed to send notification, check error log')
 				}
 			} catch (err){
-				console.log('Failed to send notification, check error log')
-				console.log(err)
+				Alert.alert('Failed to send notification, check error log')
 			}
 		} catch (err) {
 			Alert.alert(err && err.message)

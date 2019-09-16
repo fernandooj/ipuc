@@ -83,14 +83,14 @@ class Home extends Component{
 		}
 	}
 	getEventos(lat, lng){
-		FCM.getFCMToken().then(token => {
-			console.log("TOKEN (getFCMToken)", token);
-			this.setState({ token: token || "" });
-			axios.post("tok/tokenPhone", {tokenPhone:token, lat, lng})
-			.then(res=>{
-				  console.log(res.data)
-			})
-		});
+		// FCM.getFCMToken().then(token => {
+		// 	console.log("TOKEN (getFCMToken)", token);
+		// 	this.setState({ token: token || "" });
+		// 	axios.post("tok/tokenPhone", {tokenPhone:token, lat, lng})
+		// 	.then(res=>{
+		// 		  console.log(res.data)
+		// 	})
+		// });
 
 		axios.get(`eve/evento/cercanos/${lat}/${lng}`)
 		.then(res=>{
@@ -125,15 +125,7 @@ class Home extends Component{
 		  }
 		});
 	
-		try {
-		  let result = await FCM.requestPermissions({
-			badge: false,
-			sound: true,
-			alert: true
-		  });
-		} catch (e) {
-		  console.error(e);
-		}
+	
 	
 	
 	
@@ -144,9 +136,7 @@ class Home extends Component{
 		}
 	}
 	
-	componentWillUnmount() {
-		 
-	}
+ 
 	renderCategorias(){
 		return this.props.categorias.map((e, key)=>{
 			let imagen = e.imagen.split("-")
