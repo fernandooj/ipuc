@@ -8,7 +8,6 @@ import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
-import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.evollu.react.fcm.FIRMessagingPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -16,9 +15,11 @@ import com.facebook.CallbackManager;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
+import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import cl.json.RNSharePackage;
 import cl.json.ShareApplication;
+// import com.heanoria.library.reactnative.locationenabler.RNAndroidLocationEnablerPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -45,9 +46,10 @@ public class MainApplication extends Application implements ReactApplication {
           new VectorIconsPackage(),
           new RNFirebasePackage(),
           new RNGoogleSigninPackage(),
-          new MapsPackage(),
           new FBSDKPackage(mCallbackManager),
+          new MapsPackage(),
           new RNSharePackage(),
+          // new RNAndroidLocationEnablerPackage()
           new RNFirebaseMessagingPackage()
       );
     }
