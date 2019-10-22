@@ -28,7 +28,7 @@ const getCategorias = data => {
   console.log(data)
   return dispatch => {
     return axios
-      .get(`cat/categoria/`)
+      .get(`http://picpuc.co/x/v1/cat/categoria/`)
       .then(res => {
         console.log(res.data)
          

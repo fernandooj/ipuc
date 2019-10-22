@@ -1,27 +1,30 @@
 import React, {Component} from 'react'
 import {View, Text, Animated, TouchableOpacity, Dimensions,  Image, ScrollView, TextInput, Platform} from 'react-native'
-import {style} from './style'
-import Icon 					   from 'react-native-fa-icons'
-import moment 					   from 'moment'
-import { connect }                 from "react-redux";
 import MapView, {  Marker, Circle, ProviderPropType } from 'react-native-maps';
 import { getEventosCategoria, getEvento } from "../../redux/actions/eventoActions.js";
-import { getCategorias }       from "../../redux/actions/categoriaActions.js";
-import { createFilter }        from 'react-native-search-filter';
-import Toast from 'react-native-simple-toast';
-import Slideshow               from 'react-native-image-slider-show';
-import AsyncStorage from '@react-native-community/async-storage';
-import * as Animatable         from 'react-native-animatable';
+import {style}          from './style'
+import Icon 					  from 'react-native-fa-icons'
+import moment 					from 'moment'
+import { connect }      from "react-redux";
+import { getCategorias }from "../../redux/actions/categoriaActions.js";
+import { createFilter } from 'react-native-search-filter';
+import Toast            from 'react-native-simple-toast';
+import Lightbox 					 from 'react-native-lightbox';
+import AsyncStorage     from '@react-native-community/async-storage';
+import * as Animatable  from 'react-native-animatable';
 import { showLocation } from 'react-native-map-link'
-import axios from 'axios';
-import Share from 'react-native-share';
+import axios            from 'axios';
+import Share            from 'react-native-share';
+import firebase         from 'react-native-firebase';
+
 let fechaActual = moment().format('YYYY/MM/DD h:mm:ss a')
 fechaActual = moment().format('YYYY/MM/DD h:mm')
 const {width, height} = Dimensions.get('window')
 const KEYS_TO_FILTERS = ["nombre", "lugar"]
-
+const size = Dimensions.get('window');
 moment.locale('es');
-
+let Analytics = firebase.analytics();
+ 
 class MapaPlanComponent extends Component{
 	constructor(props){
 		super(props);
@@ -44,19 +47,20 @@ class MapaPlanComponent extends Component{
         terminoBuscador:"",
         eventoGuardado:[],
         evento:{imagen:[], nombre:"", lugar:"", descripcion:"", fechaInicio:"", fechaFinal:"", meGusta:[]}
-		}
+      }
+     
 	}
 
 	async componentWillMount(){
-    console.log(this.props.navigation.state)
     const idCategoria =this.props.navigation.state.params ?this.props.navigation.state.params.id   :"undefined"
     const idEvento    =this.props.navigation.state.params ?this.props.navigation.state.params.id   :"undefined"
     const tipo        =this.props.navigation.state.params ?this.props.navigation.state.params.tipo :"undefined"
     const idUsuario = await AsyncStorage.getItem('idUsuario')
+    Analytics.setCurrentScreen("Eventos Mapa", "Eventos Mapa");
+    Analytics.setUserProperty('EventoDetalle', idEvento)
     if(idUsuario){
       axios.get("user/perfil")
       .then(e=>{
-        console.log(e.data)
         let eventoGuardado = e.data.status ?e.data.user.Eventos :[]
         this.setState({idUsuario, eventoGuardado})  
       })
@@ -128,8 +132,9 @@ class MapaPlanComponent extends Component{
           key={key}
           coordinate={{latitude:e.loc.coordinates[1], longitude:e.loc.coordinates[0]}}
           onPress={()=>this.props.getEvento( e._id)}
+ 
         >
-          <TouchableOpacity onPress={()=>this.props.getEvento( e._id)}>
+          <TouchableOpacity onPress={()=>this.props.getEvento( e._id)} style={style.marker} >
               <Image source={diff<3 ?require("../../assets/img/pin_red.png") :diff<7 ?require("../../assets/img/pin_yellow.png") :require("../../assets/img/pin_blue.png") } style={style.iconoImagen} />
           </TouchableOpacity>
         </Marker>
@@ -225,19 +230,35 @@ class MapaPlanComponent extends Component{
     const {idUsuario, eventoGuardado, mostrarMensaje} = this.state
     let esSeguidor     =  meGusta.includes(idUsuario) 
     let existeEvento   =  eventoGuardado.includes(_id)
-	  console.log({idUsuario, eventoGuardado, lugar})
     let img = []
     imagen.map(e=>{
       let img2 = e.split("-")
       img2 = `${img2[0]}Resize${img2[2]}`
-      img.push({url: img2})
+      img.push(img2)
     })
     return(
       <View style={style.subContenedorEvento}>
         <TouchableOpacity style={style.btnRegresar} onPress={()=>this.animacionHideEvento()} >
           <Icon name={"arrow-up"} style={style.iconRegresar} />
         </TouchableOpacity>
-        <Slideshow  dataSource={img} height={180} />
+        {/* <Slideshow  dataSource={img} height={180} /> */}
+        <Lightbox 
+          backgroundColor="#fff"
+          renderContent={() => (
+            <Image 
+              source={{uri: img[0] }}
+              style={{ width: "100%", height:400, backgrundColor:"white"}}
+              resizeMode="contain"
+            />
+          )}
+        >
+          <Image
+            source={{ uri: img[0]  }}
+            style={style.imagen}
+            resizeMode="cover"
+            // renderError={ (err) => { return (<Image source={require('../../assets/img/launcher.png')} imageStyle={style.imagenError} />) }} 
+          />
+        </Lightbox>	
         <View style={style.conTextoEvento}>
           <Icon name={"circle"} style={[style.iconCircle, {color:"#FFDD33"}]} />
           <Text style={style.textoEvento1}>{nombre}</Text>
@@ -255,7 +276,6 @@ class MapaPlanComponent extends Component{
           <Text style={style.textoEvento2}>{lugar}</Text>
         </View>
         <Text style={style.separador}></Text>
-        <Text style={style.textoEvento3}>{descripcion}</Text>
         <View style={{flexDirection:"row"}}>
           {/* <TouchableOpacity style={style.btnEventoPreguntar} onPress={()=>this.setState({mostrarMensaje:true, mensaje:""})} >
             <Text style={style.textPreguntar}>Enviar Mensaje</Text>
@@ -275,6 +295,7 @@ class MapaPlanComponent extends Component{
             <Icon name={"share-alt"} style={style.iconMeGusta} />
           </TouchableOpacity>
         </View>
+        <Text style={style.textoEvento3}>{descripcion}</Text>
         {mostrarMensaje &&this.renderModalMensaje()}
       </View>
     )
@@ -325,12 +346,14 @@ class MapaPlanComponent extends Component{
  
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////   ANIMACION PARA MOSTRAR UN SOLO EVENTO
-  //----------------------   evento => trae la inforamcion del evento,  
+  //----------------------   evento => trae la informacion de un evento, y adicional muestra el mapa
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  
   animacionShowEvento(evento){
-    let zoom = Platform.OS=='android'?0.033 :0.25
+    let alto = size.height>810 ?0.033 :0.027
+    let zoom = Platform.OS=='android' ?0.028 :alto
     let bottom=Platform.OS === 'android' ?130 :100
+   
     let ubicacion ={
       latitude:evento.loc.coordinates[1]+zoom,
       longitude:evento.loc.coordinates[0],
@@ -519,7 +542,6 @@ class MapaPlanComponent extends Component{
         ]
       }
     ]
-    console.log({buscador})
     return(
       <View style ={style.containerMap}>
         {
@@ -554,7 +576,7 @@ class MapaPlanComponent extends Component{
           </MapView>
         }
         <TouchableOpacity onPress={()=>this.props.navigation.navigate("Home") } style={style.btnHome}>
-          <Icon name='home' style={style.iconHome} />
+          <Icon name='arrow-left' style={style.iconHome} />
         </TouchableOpacity>
         <Animatable.View ref={ref=>{this.categoria=ref}} style={style.contenedorCategorias} >
           <ScrollView horizontal>
@@ -660,4 +682,4 @@ MapaPlanComponent.propTypes = {
 export default connect(
 	mapState,
 	mapDispatch
-  )(MapaPlanComponent);
+)(MapaPlanComponent);

@@ -8,20 +8,23 @@ class eventoServices {
 		Evento.find({}, callback)
 	}
 	getById(_id, callback){
-		Evento.findOne({_id}, callback)
+		Evento.findOne({_id}).populate("categoria").exec(callback)
+	}
+	getByUser(usuario, callback){
+		Evento.find({usuario, eliminado:false}).sort({_id: 'desc'}).populate("categoria").exec(callback)
 	}
 	getByIdWidthUsuarios(_id, callback){
 		Evento.findOne({_id}).populate("mensajes").populate("usuario").exec(callback)
 	}
 	getProximos(callback){
-		Evento.find().sort({fechaInicio :1}).populate("categoria").exec(callback)
+		Evento.find({eliminado:false, activo:true}).sort({fechaInicio :1}).populate("categoria").exec(callback)
 	}
 	getByCategoria(lat, lng, categoria, callback){
 		categoria = mongoose.Types.ObjectId(categoria);	
 		Evento.aggregate([
 			{
 				$geoNear: {
-						near: { type: "Point", coordinates: [  parseFloat(lng) ,  parseFloat(lat) ] },
+						near: { type: "Point", coordinates: [parseFloat(lng),  parseFloat(lat) ] },
 						distanceField: "distancia",
 						query: {  activo:true, eliminado:false, categoria },
 						maxDistance: 300000,
@@ -36,20 +39,26 @@ class eventoServices {
 				}
 			},
 			{
-			 $lookup: {
-				 from: "users",
-				 localField: "usuario",
-				 foreignField: "_id",
-				 as: "UserData"
-			 }
-		 },
-		 {
-			 $unwind:{
-				 path:'$UserData',
-				 preserveNullAndEmptyArrays: true
-			 }
-		 },
-		]	, callback)
+			 	$lookup: {
+				 	from: "users",
+				 	localField: "usuario",
+				 	foreignField: "_id",
+				 	as: "UserData"
+			 	}
+		 	},
+			{
+				$unwind:{
+					path:'$UserData',
+					preserveNullAndEmptyArrays: true
+				}
+		  },
+			{
+				$match:{ 
+					eliminado:false,
+					activo:true
+				},
+			},
+		], callback)
   }
   getCercanos(lat, lng, callback){
 		Evento.aggregate([
@@ -59,7 +68,6 @@ class eventoServices {
 							distanceField: "distancia",
 			      	query: {  activo:true, eliminado:false },
 			        maxDistance: 300000,
-			        num: 1000,
 			        spherical: true
 			    }
 		    },
@@ -82,8 +90,27 @@ class eventoServices {
 	 				path:'$UserData',
 	 				preserveNullAndEmptyArrays: true
 	 			}
-	 		},
-	 		 
+			},
+			{
+				$lookup: {
+					from: "categorias",
+					localField: "categoria",
+					foreignField: "_id",
+					as: "CategoriaData"
+				}
+			},
+			{
+				$unwind:{
+					path:'$CategoriaData',
+					preserveNullAndEmptyArrays: true
+				}
+			},
+			{
+				$match:{ 
+					eliminado:false,
+					activo:true
+				},
+			},
 		], callback)
 	}
 	getEventosMensajes(idUsuario, callback){
@@ -173,13 +200,6 @@ class eventoServices {
 				categoria:'$CategoriaData.nombre',
 			},
 		},
-
-	 
-		// {
-		// 	$sort:{
-		// 		orden:-1
-		// 	}
-		// },
 		{
 				$group:{
 					_id:'$idUsuario2',
@@ -193,6 +213,8 @@ class eventoServices {
 	}
 	
 	create(data, usuario, imagen, lat, lng, callback){ 
+		let creado = moment.tz(moment(), 'America/Bogota|COT|50|0|').format('YYYY/MM/DD h:mm:ss')
+		creado =     moment(creado).subtract(5, 'hours').format('YYYY/MM/DD h:mm:ss a');
   	let loc = {'type':'Point', "coordinates": [parseFloat(lng), parseFloat(lat)] }
 		let newEvento         = new Evento() 
 		newEvento.nombre      =  data.nombre;
@@ -204,10 +226,29 @@ class eventoServices {
 		newEvento.imagen      =  imagen;
 		newEvento.loc         =  loc;
 		newEvento.usuario     =  usuario;
+		newEvento.creado      =  creado;
 		newEvento.save(callback);	
 	}
+	editar(data, imagen, callback){
+		let newImagen = []
+		newImagen.push(imagen)
+		console.log({newImagen})
+		let fechaEditado = moment.tz(moment(), 'America/Bogota|COT|50|0|').format('YYYY/MM/DD h:mm:ss')
+		fechaEditado =     moment(fechaEditado).subtract(5, 'hours').format('YYYY/MM/DD h:mm:ss a');
+		let loc = {'type':'Point', "coordinates": [parseFloat(data.lng), parseFloat(data.lat)] }
+		Evento.findByIdAndUpdate(data._id, {$set: {
+			'nombre'		  :data.nombre,
+			'descripcion' :data.descripcion,
+			'fechaInicio' :moment(data.fechaInicio).valueOf(),
+			'fechaFinal'  :moment(data.fechaFinal).valueOf(),
+			'lugar'			  :data.lugar,
+			'categoria'	  :data.categoria,
+			'imagen'		  :newImagen,
+			'loc'				  :loc,
+			'fechaEditado':fechaEditado
+		}}, callback);
+	}
 	like(_id, idUsuario, callback){
-		console.log({_id, idUsuario})
 		Evento.update(
 			{ _id: _id }, 
 			{ $push: { meGusta: idUsuario } },
@@ -215,7 +256,6 @@ class eventoServices {
 		);
 	}
 	unLike(_id, idUsuario, callback){
-	 
 		Evento.update(
 			{ _id: _id }, 
 			{ $pull: { meGusta: idUsuario } },
@@ -223,12 +263,16 @@ class eventoServices {
 		);
 	}
 	agregarUsuarioComentario(_id, idUsuario, callback){
-		console.log({_id, idUsuario})
 		Evento.update(
 			{ _id: _id }, 
 			{ $push: { mensajes: idUsuario } },
 			callback
 		);
+	}
+	eliminar(_id, callback){
+		Evento.findByIdAndUpdate(_id, {$set: {
+			'eliminado':true
+		}}, callback);
 	}
 
 }

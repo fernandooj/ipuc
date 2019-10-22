@@ -14,9 +14,9 @@ YellowBox.ignoreWarnings(['Require cycle:']);
 //////////////////////////////////////////////////////////////////////////////////////////
 //////  RUTA GENERAL DE LA URL PARA EL API
 //////////////////////////////////////////////////////////////////////////////////////////
-export const URL = 'http://picpuc.co:8080/x/v1/';  //// prod 
+export const URL = 'http://picpuc.co/x/v1/';  //// prod 
 // export const URL = 'http://134.209.147.143:8080/x/v1/';  //// test 
-// export const URL = 'http://192.168.0.5:8080/x/v1/';      //// test local
+// export const URL = 'http://192.168.0.4:3030/x/v1/';      //// test local
 export const VERSION = "1.0.11"
 axios.defaults.baseURL = URL;
 
@@ -28,7 +28,7 @@ export default class App extends Component<{}> {
   constructor(){
     super();
     this.state={
-      connection_Status : ""
+      connection_Status : true
     }
   }
   async componentWillMount(){
@@ -42,7 +42,7 @@ export default class App extends Component<{}> {
 		  console.error(e);
 		}
     let userId = await AsyncStorage.getItem('idUsuario');
-    console.log({userId})
+    
     if (userId===null || userId==='0') {
       axios.get('user/perfil/')
       .then((res)=>{
@@ -57,7 +57,6 @@ export default class App extends Component<{}> {
       axios.get(`user/perfil/${userId}`)
       .then((res)=>{
         if(res.data.status){
-          console.log(res.data)
           AsyncStorage.setItem('idUsuario', res.data.usuario._id)
         }
       })
@@ -72,7 +71,6 @@ export default class App extends Component<{}> {
         this.handleConnectivityChange
     );
     NetInfo.isConnected.fetch().done((isConnected) => {
-      console.log({isConnected})
       isConnected ?this.setState({connection_Status :true}) : this.setState({connection_Status :false})
     });
   }

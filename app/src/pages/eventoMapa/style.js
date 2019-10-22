@@ -21,18 +21,25 @@ export const style = MediaQueryStyleSheet.create({
 		height:size.height,
 		...StyleSheet.absoluteFillObject,
     },
+    marker:{
+        width:35,
+        height:55
+    },
     iconoImagen:{
-        width:21,
-        height:26
+        width:35,
+        height:43
     },
     btnHome:{
         position:"absolute",
-        // backgroundColor:"red",
-        top:40,
-        left:20
+        backgroundColor:"rgba(255,255,255,.7)",
+        padding:10,
+        paddingTop:Platform.OS === 'android' ?5 :25,
+        left:0,
+        top:0,
+        width:size.width
     },
     iconHome:{
-        fontSize:30,
+        fontSize:20,
         color:"#33A2FF"
     },
     //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,15 +56,19 @@ export const style = MediaQueryStyleSheet.create({
         marginHorizontal:5,
         paddingVertical:15,
         paddingHorizontal:12,
-        borderRadius:30
+        borderRadius:30,
+        borderColor:"#33A2FF",
+        borderWidth:1
     },
     cajaCategoriaSeleccionada:{
+        borderColor:"#ffffff",
         flexDirection:"row",
         backgroundColor:"#33A2FF",
         marginHorizontal:5,
         paddingVertical:15,
         paddingHorizontal:12,
-        borderRadius:30
+        borderRadius:30,
+        borderWidth:1
     },
     textCategoria:{
         fontFamily: "Roboto-Regular",
@@ -160,7 +171,7 @@ export const style = MediaQueryStyleSheet.create({
         padding:10,
         paddingVertical:0,
         width:size.width-80,
-        height:size.height-150,
+        minHeight:size.height-150,
         top:50,
         left:40,
         fontSize:20
@@ -168,12 +179,12 @@ export const style = MediaQueryStyleSheet.create({
     triangulo:{       
         width: 0,
         height: 0,
-        top:32,
+        top:30,
         left:40,
         borderTopWidth: 0,
-        borderRightWidth: 30,
-        borderTopWidth: 60,
-        borderLeftWidth: 30,
+        borderRightWidth: 20,
+        borderTopWidth: 40,
+        borderLeftWidth: 20,
         backgroundColor: 'transparent',
         borderStyle: 'solid',
         borderTopColor: 'transparent',
@@ -269,7 +280,10 @@ export const style = MediaQueryStyleSheet.create({
     iconEventoActivo:{
         fontSize:24
     },
-
+    imagen:{
+        width:"100%",
+        height:200
+    },
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////       MODAL ENVIAR EVENTO
     //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -324,4 +338,32 @@ export const style = MediaQueryStyleSheet.create({
         color:"#fff",
         fontFamily: "Roboto-Bold",
 	},       
+},{
+	"@media (max-device-width: 370)": {
+        textPreguntar:{
+            fontSize:12
+        },
+        iconEvento:{
+            fontSize:20
+        },
+        iconEventoActivo:{
+            fontSize:20
+        },
+        btnEvento:{
+            elevation: 5, // Android
+            paddingHorizontal:10,
+            paddingVertical:3,
+        },
+        cajaCategoria:{
+            paddingVertical:12,
+            paddingHorizontal:10,
+        },
+        cajaCategoriaSeleccionada:{
+            paddingVertical:12,
+            paddingHorizontal:10,
+        },
+        textCategoria:{
+            top:-2
+        },
+	}
 })

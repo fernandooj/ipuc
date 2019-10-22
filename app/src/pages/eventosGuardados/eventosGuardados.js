@@ -11,7 +11,7 @@ import Lightbox 		    from 'react-native-lightbox';
 import FastImage 		    from 'react-native-fast-image';
 import { createImageProgress } from 'react-native-image-progress';
 import AutoHeightImage         from 'react-native-auto-height-image';
-import AsyncStorage from '@react-native-community/async-storage';
+
 import Cabezera from '../components/cabezera'
 import Footer   from '../components/footer'
 const ImageProgress = createImageProgress(FastImage);
@@ -30,10 +30,8 @@ class eventosComponent extends Component{
 		}
 	}
 
-	async componentWillMount(){
+	componentWillMount(){
 		this.props.getEventosGuardados();
-		const idUsuario = await AsyncStorage.getItem('idUsuario')
-		idUsuario ?this.setState({idUsuario})  :this.props.navigation.navigate("Perfil")
     }
 	componentWillReceiveProps(props){
 		this.setState({eventos:props.eventos})

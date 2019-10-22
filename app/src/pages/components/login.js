@@ -102,9 +102,9 @@ const {
 			<View style={style.contenedorForm}>
 				<Text style={style.titulo}>UNETE A PICPUC</Text>
 				<View style={style.contenedorRedes}>
-					<TouchableOpacity style={style.btnFacebook} onPress={()=>this.signIn(1)}>
+					{/* <TouchableOpacity style={style.btnFacebook} onPress={()=>this.signIn(1)}>
 						<Text style={style.textBtn}>FACEBOOK</Text>
-					</TouchableOpacity> 
+					</TouchableOpacity>  */}
 					<TouchableOpacity style={style.btnGoogle}  onPress={()=>this.signIn(2)}>
 						<Text style={style.textBtn}>GOOGLE</Text>
 					</TouchableOpacity>
@@ -214,6 +214,9 @@ const {
 				this.setState({showInsertarCodigo:true, token:res.data.token.toString()}) 
 			}
 		})
+		.catch(err=>{
+			this.setState({loading:false})
+		})
 	}
 
 	renderRecuperarContrasena(){
@@ -284,7 +287,7 @@ const {
 					:this.setState({showError:true})
 				}else{
 					e.data.code==1 
-					?navigation("editarPerfil", {editar:true})
+					?navigation("editarPerfil", {editar:false})
 					:this.setState({showError:true})
 				}
 			})

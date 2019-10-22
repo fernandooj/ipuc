@@ -8,6 +8,7 @@ pod 'FBSDKLoginKit'
 pod 'FBSDKShareKit'
  
 pod 'GoogleSignIn', '~> 4.4.0'
+pod 'GoogleTagManager' 
 target 'ipuc' do
 
   rn_path = '../node_modules/react-native'

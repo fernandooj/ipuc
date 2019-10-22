@@ -48,7 +48,7 @@ export const style = MediaQueryStyleSheet.create({
 		marginRight:0,
 		marginLeft:15,
 		height:170,
-		borderRadius:80,
+		borderRadius:10,
 		marginBottom:25
 	},
 	subContenedorCategoria:{
@@ -95,7 +95,7 @@ export const style = MediaQueryStyleSheet.create({
 		borderColor:"rgba(0,0,0,0)",
 		marginRight:0,
 		marginLeft:15,
-		height:170,
+		height:198,
 		borderRadius:7,
 		marginBottom:10
 	},
@@ -128,7 +128,7 @@ export const style = MediaQueryStyleSheet.create({
 		zIndex:500
 	},
 	contenedorFiltros:{
-		marginTop:80,
+		marginTop:100,
 		flexDirection: 'row',
 		flexWrap: 'wrap',
 		alignItems:"center"

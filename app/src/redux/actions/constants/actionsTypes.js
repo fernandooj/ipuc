@@ -4,6 +4,7 @@
 */
 ///////////////////////////////////////////////////////////////////////////
 export const GET_EVENTOS            = "GET_EVENTOS";
+export const GET_MIS_EVENTOS        = "GET_MIS_EVENTOS";
 export const GET_EVENTO             = "GET_EVENTO";
 export const GET_EVENTOS_PROXIMOS   = "GET_EVENTOS_PROXIMOS";
 export const INSERTAR_EVENTO        = "INSERTAR_EVENTO";
@@ -14,7 +15,7 @@ export const GET_EVENTOS_CATEGORIA  = "GET_EVENTOS_CATEGORIA";
 export const GET_EVENTOS_GUARDADOS  = "GET_EVENTOS_GUARDADOS";
 export const GET_EVENTOS_MENSAJES   = "GET_EVENTOS_MENSAJES";
 export const GET_MENSAJES           = "GET_MENSAJES";
-export const GET_TOKENPHONE           = "GET_TOKENPHONE";
+export const GET_TOKENPHONE         = "GET_TOKENPHONE";
 
 ///////////////////////////////////////////////////////////////////////////
 /*

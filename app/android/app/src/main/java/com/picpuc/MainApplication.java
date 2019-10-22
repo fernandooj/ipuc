@@ -17,9 +17,10 @@ import com.facebook.soloader.SoLoader;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.airbnb.android.react.maps.MapsPackage;
+import io.invertase.firebase.analytics.RNFirebaseAnalyticsPackage;
 import cl.json.RNSharePackage;
 import cl.json.ShareApplication;
-// import com.heanoria.library.reactnative.locationenabler.RNAndroidLocationEnablerPackage;
+import com.heanoria.library.reactnative.locationenabler.RNAndroidLocationEnablerPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -49,7 +50,8 @@ public class MainApplication extends Application implements ReactApplication {
           new FBSDKPackage(mCallbackManager),
           new MapsPackage(),
           new RNSharePackage(),
-          // new RNAndroidLocationEnablerPackage()
+          new RNFirebaseAnalyticsPackage(),
+          new RNAndroidLocationEnablerPackage(),
           new RNFirebaseMessagingPackage()
       );
     }

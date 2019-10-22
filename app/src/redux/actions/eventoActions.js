@@ -1,6 +1,7 @@
 import {
     GET_EVENTOS,
     GET_EVENTO,
+    GET_MIS_EVENTOS,
     INSERTAR_EVENTO,
     MODIFICAR_EVENTO,
     ELIMINAR_EVENTO,
@@ -31,7 +32,6 @@ import {
   };
   
   const getEventos = data => {
-    console.log(data)
     return dispatch => {
       return axios
         .get(`eve/evento/${data}`)
@@ -39,6 +39,21 @@ import {
           dispatch({
             type: GET_EVENTOS,
             eventos 
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    };
+  };
+  const getMisEventos = () => {
+    return dispatch => {
+      return axios
+        .get(`eve/evento/byUser`)
+        .then(res => {
+          dispatch({
+            type: GET_MIS_EVENTOS,
+            misEventos:res.data.eventos
           });
         })
         .catch(err => {
@@ -201,6 +216,7 @@ const cambiarEstadoEvento = id => {
   export {
     getEvento,
     getEventos,
+    getMisEventos,
     getEventosProximos,
     insertarEvento,
     modificarEvento,

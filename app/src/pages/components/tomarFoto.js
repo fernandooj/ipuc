@@ -2,27 +2,24 @@ import React, {Component} from 'react'
 import {View, Text, Image, TouchableOpacity, Modal} from 'react-native'
 import ImagePicker from 'react-native-image-crop-picker';
 import Icon from 'react-native-fa-icons' 
- 
 import {style}   from './style'
  
- 
- 
-
 export default class tomarPhoto extends Component{
     state={
         imagenes:[]
     }
     
     subirImagen(){
-        let {imagenes} = this.state
+        let   {imagenes} = this.state
+        const {avatar}   = this.props
         const options = {
             compressImageMaxWidth:800,
             compressImageMaxHeight:800,
             width: 800,
             height: 800,
             forgeJpg: true,
-            cropping: true,
-            compressImageQuality:0.5
+            cropping: avatar ?true :false,
+            compressImageQuality:0.8
         };
        
         ImagePicker.openPicker(options).then(response => {
@@ -43,12 +40,13 @@ export default class tomarPhoto extends Component{
     }
     tomarFoto(){
         let {imagenes} = this.state
+        const {avatar}   = this.props
         const options = {
             compressImageMaxWidth:800,
             compressImageMaxHeight:800,
             width: 800,
             height: 800,
-            cropping: true,
+            cropping: avatar ?true :false,
             forgeJpg: true,
         };
         ImagePicker.openCamera(options).then(response => {
@@ -118,7 +116,6 @@ export default class tomarPhoto extends Component{
     render(){
         const {showModal} = this.state
         const {width, avatar, limiteImagenes, imagen} = this.props
-        console.log({imagen:imagen.length,limiteImagenes})
         return(
             <View style={style.contenedorPortada}>
                 {
@@ -130,7 +127,7 @@ export default class tomarPhoto extends Component{
                     &&<TouchableOpacity style={[style.contenedorUploadPortada, {width}]} onPress={() => this.setState({showModal:true, isAndroidShareOpen:true}) }>
                         <Icon name={'camera'} style={style.iconPortada} />
                         <Text style={style.textPortada}> {!avatar ?"Imagen" :"Avatar"}</Text>
-                        {!avatar &&<Text style={style.textPortada2}>Sube al menos 1 imagen</Text>}
+                        {/* {!avatar &&<Text style={style.textPortada2}>Sube al menos 1 imagen</Text>} */}
                     </TouchableOpacity>
                 }
                 {

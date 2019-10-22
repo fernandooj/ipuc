@@ -33,24 +33,21 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.743312881993-5smd23gidrghfdgsir0akf6n6vf0bhsr</string>
+				<string>com.googleusercontent.apps.81330883681-ddkeig3ov5hml78um4ijprtade8urdv6</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
 	<key>FacebookAppID</key>
 	<string>766187960466049</string>
 	<key>FacebookDisplayName</key>
 	<string>picpuc</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-		<string>fbapi</string>
-		<string>fb-messenger-api</string>
-		<string>fbauth2</string>
-		<string>fbshareextension</string>
+		<string>whatsapp</string>
+		<string>mailto</string>
 	</array>
-  
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -66,27 +63,12 @@
 			</dict>
 		</dict>
 	</dict>
-  <key>LSApplicationQueriesSchemes</key>
-  <array>
-    <string>comgooglemaps</string>
-    <string>citymapper</string>
-    <string>uber</string>
-    <string>lyft</string>
-    <string>transit</string>
-    <string>waze</string>
-    <string>yandexnavi</string>
-    <string>moovit</string>
-    <string>yandexmaps</string>
-  </array>
-  <key>LSApplicationQueriesSchemes</key>
-  <array>
-    <string>whatsapp</string>
-    <string>mailto</string>
-  </array>
 	<key>NSCameraUsageDescription</key>
 	<string>Queremos acceder a tu camara para editar tu avatar</string>
+	<key>NSLocationUsageDescription</key>
+	<string>Activa las notificaciones para que estés al tanto de lo qué pasa en tus planes. Pueden incluir globos, alertas y sonidos que se pueden modificar en configuraciones.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Autorizar a Picpuc para acceder a tu localización para mostrarte tus planes mientras usas el app</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Queremos acceder a tu camara para editar tu avatar</string>
 	<key>UIAppFonts</key>

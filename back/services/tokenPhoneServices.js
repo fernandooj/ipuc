@@ -23,8 +23,7 @@ class tokenPhoneServices {
 					near: { type: "Point", coordinates: [  parseFloat(lng) ,  parseFloat(lat) ] },
 					distanceField: "distancia",
 					query: { showNotificacion:true },
-					maxDistance: 15000,
-					num: 1000,
+					maxDistance: 50000,
 					spherical: true
 				}
 			},

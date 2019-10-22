@@ -21,7 +21,6 @@ class perfil extends Component{
     componentWillMount(){
         axios.get("user/perfil")
         .then(res=>{
-            console.log(res.data.user)
             this.setState({user:res.data.user, status:res.data.status})
         })
         FCM.getFCMToken().then(token => {
@@ -35,10 +34,11 @@ class perfil extends Component{
     renderLogin(){
         const {navigation} = this.props
         const {navigate}   = this.props.navigation
-        return <View style={style.container}>
-                    <Login navigation={navigate} login={()=>this.props.getPerfil()} />
-                     
-                </View>	 
+        return (
+            <View style={style.container}>
+                <Login navigation={navigate} login={()=>this.props.getPerfil()} />
+            </View>	 
+        )
     }
     renderPerfil(){
         let {nombre, idUsuario, avatar, email, err, user} = this.state
@@ -63,6 +63,10 @@ class perfil extends Component{
                     <TouchableOpacity style={style.btnLista} onPress={()=>navigate("editarPerfil", {editar:true})} >
                         <Text style={style.txtLista}>Editar perfil</Text> 
                         <Icon name={'user-o'} style={style.icon} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={style.btnLista} onPress={()=>navigate("misEventos", {editar:true})} >
+                        <Text style={style.txtLista}>Mis Eventos</Text> 
+                        <Icon name={'calendar-o'} style={style.icon} />
                     </TouchableOpacity>
                     <TouchableOpacity  style={style.btnLista} onPress={()=>{this.cerrarSesion()}}>
                         <Text style={style.txtLista}>Cerrar Sesion</Text> 

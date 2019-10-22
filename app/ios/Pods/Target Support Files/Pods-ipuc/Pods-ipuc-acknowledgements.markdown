@@ -1297,6 +1297,10 @@ third-party archives.
    limitations under the License.
 
 
+## GoogleAnalytics
+
+Copyright 2016 Google
+
 ## GoogleAppMeasurement
 
 Copyright 2019 Google
@@ -1308,6 +1312,14 @@ Copyright 2017 Google
 ## GoogleSignIn
 
 Copyright 2018 Google
+
+## GoogleSymbolUtilities
+
+Copyright 2016 Google
+
+## GoogleTagManager
+
+Copyright 2019 Google
 
 ## GoogleToolboxForMac
 
@@ -1720,6 +1732,10 @@ Copyright 2018 Google
    See the License for the specific language governing permissions and
    limitations under the License.
 
+
+## GoogleUtilitiesLegacy
+
+Copyright 2018 Google
 
 ## Protobuf
 

@@ -2,6 +2,7 @@ import {StyleSheet, Dimensions, Platform} from 'react-native';
 import { MediaQueryStyleSheet } from "react-native-responsive";
 
 const size = Dimensions.get('window');
+console.log(size.heit)
 export const style = MediaQueryStyleSheet.create({
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////			CABEZERA
@@ -239,9 +240,9 @@ export const style = MediaQueryStyleSheet.create({
 	contenedorUploadPortada:{
 		backgroundColor:"#0071bb",
 		alignItems:"center",
-		paddingVertical:17,
+		paddingTop:16,
+		paddingBottom:6,
 		borderRadius:10,
-		 
 	},
 	iconPortada:{
 		color:"#ffffff",
@@ -340,6 +341,11 @@ export const style = MediaQueryStyleSheet.create({
 		padding:15,
 		zIndex:100,
 		width:size.width,
+	}	
+},{
+	"@media (min-device-height: 812)": {
+		contenedorFooter:{
+			height:65
+		},
 	}
-	
 })

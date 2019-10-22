@@ -3,6 +3,7 @@ import {View, Text, ScrollView, Image, Platform, ImageBackground, TouchableOpaci
 import PropTypes from "prop-types";
 import Icon 				from 'react-native-fa-icons'
 import FCM, { NotificationActionType } from "react-native-fcm";
+import firebase from 'react-native-firebase';
 import Cabezera from '../components/cabezera'
 import Footer   from '../components/footer'
 import axios    from 'axios'
@@ -16,6 +17,8 @@ import Toast from 'react-native-simple-toast';
 import { createFilter } from 'react-native-search-filter';
 import {style} from './style'
 
+const Analytics = firebase.analytics();
+Analytics.setCurrentScreen("Home", "Home");
 registerKilledListener();
 const KEYS_TO_FILTERS = ['descripcion', 'nombre']
 class Home extends Component{
@@ -29,28 +32,31 @@ class Home extends Component{
 			finalProximos:3,
 			terminoBuscador:""
 		}
+		
 	}
 	 
 	async componentWillMount(){
+		Analytics.setCurrentScreen("Home", "Home");
 		this.props.getCategorias();
 		this.props.getEventosProximos();
 		//////////////////////////////////////////////////////////////////////////////////////////////////  		ACCESO GEOLOCALIZACION
 		if (Platform.OS==='android') {
 			RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({interval: 10000, fastInterval: 5000})
 		   .then(data => {
-			   	console.log({data})
+ 
 		    	navigator.geolocation.getCurrentPosition(e=>{
 				let lat =parseFloat(e.coords.latitude)
 				let lng = parseFloat(e.coords.longitude)
 				this.setState({lat, lng})
 				this.getEventos(lat, lng)
-				console.log("{data}")
+				
 			}, 
 				(error)=>this.watchID = navigator.geolocation.watchPosition(e=>{
 				let lat =parseFloat(e.coords.latitude)
 				let lng = parseFloat(e.coords.longitude)
 				this.setState({lat, lng})
 				this.getEventos(lat, lng)
+				console.log({error})
 				
 			},
 				(error) => this.getEventos(undefined, undefined),
@@ -83,14 +89,14 @@ class Home extends Component{
 		}
 	}
 	getEventos(lat, lng){
-		// FCM.getFCMToken().then(token => {
-		// 	console.log("TOKEN (getFCMToken)", token);
-		// 	this.setState({ token: token || "" });
-		// 	axios.post("tok/tokenPhone", {tokenPhone:token, lat, lng})
-		// 	.then(res=>{
-		// 		  console.log(res.data)
-		// 	})
-		// });
+		FCM.getFCMToken().then(token => {
+			console.log("TOKEN (getFCMToken)", token);
+			this.setState({ token: token || "" });
+			axios.post("tok/tokenPhone", {tokenPhone:token, lat, lng})
+			.then(res=>{
+				  console.log(res.data)
+			})
+		});
 
 		axios.get(`eve/evento/cercanos/${lat}/${lng}`)
 		.then(res=>{
@@ -124,18 +130,12 @@ class Home extends Component{
 			}, 500);
 		  }
 		});
-	
-	
-	
-	
-	
 		if (Platform.OS === "ios") {
 		  FCM.getAPNSToken().then(token => {
 			console.log("APNS TOKEN (getFCMToken)", token);
 		  });
 		}
 	}
-	
  
 	renderCategorias(){
 		return this.props.categorias.map((e, key)=>{
@@ -178,6 +178,7 @@ class Home extends Component{
 	renderCercanos(){
 		const {inicio, final, filteredData} = this.state
 		let data =  filteredData
+		console.log(data)
 		return data.slice(inicio, final).map((e, key)=>{
 			let imagen = e.imagen[0].split("-")
 			imagen = `${imagen[0]}Miniatura${imagen[2]}`
@@ -185,6 +186,7 @@ class Home extends Component{
 				<TouchableOpacity key={key} style={style.contenedorEventos} onPress={()=>this.props.navigation.navigate('eventoMapa', {tipo:"evento", id:e._id})}>
 					<Image source={{uri: imagen}} style={style.imagenEventos}  />
 					<Text  style={style.textoEventos}>{e.nombre ?`${e.nombre.slice(0,24)}${e.nombre.length>25 ?"..." :""}` :""}</Text>
+					<Text  style={style.textoEventos}>{e.CategoriaData ?e.CategoriaData.nombre :""}</Text>
 				</TouchableOpacity>
 			)
 		})
@@ -276,7 +278,6 @@ class Home extends Component{
 }
 
 const mapState = state => {
-	console.log(state)
 	return {
 		categorias: state.categoria.categorias,
 		eventosProximos: state.evento.eventosProximos

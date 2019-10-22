@@ -3,23 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>743312881993-5smd23gidrghfdgsir0akf6n6vf0bhsr.apps.googleusercontent.com</string>
+	<string>81330883681-ddkeig3ov5hml78um4ijprtade8urdv6.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.743312881993-5smd23gidrghfdgsir0akf6n6vf0bhsr</string>
+	<string>com.googleusercontent.apps.81330883681-ddkeig3ov5hml78um4ijprtade8urdv6</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>743312881993-q8hej72pj5n40uibmva252b6utigbd45.apps.googleusercontent.com</string>
+	<string>81330883681-t01j8oib0d6omvfisnd3dhfuaknqo1os.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyB1XXD00_z53GcUjrv2Qe6VhmUSw_sJLtg</string>
+	<string>AIzaSyCc6Txtv84SInQZbYLpZrjUJCvUzH_Po6M</string>
 	<key>GCM_SENDER_ID</key>
-	<string>743312881993</string>
+	<string>81330883681</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.picpuc.picpuc</string>
 	<key>PROJECT_ID</key>
-	<string>picpuc</string>
+	<string>picpuc-22f9e</string>
 	<key>STORAGE_BUCKET</key>
-	<string>picpuc.appspot.com</string>
+	<string>picpuc-22f9e.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,8 +31,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:743312881993:ios:62f4789e6892767accc298</string>
+	<string>1:81330883681:ios:6f2205dfebd03b292e2e20</string>
 	<key>DATABASE_URL</key>
-	<string>https://picpuc.firebaseio.com</string>
+	<string>https://picpuc-22f9e.firebaseio.com</string>
 </dict>
 </plist>

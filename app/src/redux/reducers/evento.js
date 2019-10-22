@@ -1,5 +1,6 @@
 import {
   GET_EVENTOS,
+  GET_MIS_EVENTOS,
   GET_EVENTO,
   GET_EVENTOS_PROXIMOS,
   GET_EVENTOS_CATEGORIA,
@@ -22,6 +23,15 @@ const getEventos = (state = [], action) => {
   switch (action.type) {
     case GET_EVENTOS:
       return action.eventos;
+    default:
+      return state;
+  }
+};
+
+const getMisEventos = (state = [], action) => {
+  switch (action.type) {
+    case GET_MIS_EVENTOS:
+      return action.misEventos;
     default:
       return state;
   }
@@ -78,6 +88,7 @@ export default function reducer(state = {}, action) {
   return {
     evento:           getEvento(state.evento, action),
     eventos:          getEventos(state.eventos, action),
+    misEventos:       getMisEventos(state.misEventos, action),
     eventosProximos:  getEventosProximos(state.eventosProximos, action),
     eventoCategoria:  getEventosCategoria(state.eventoCategoria, action),
     eventosGuardados: getEventosGuardados(state.eventosGuardados, action),

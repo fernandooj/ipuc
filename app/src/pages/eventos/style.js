@@ -6,6 +6,7 @@ export const style = MediaQueryStyleSheet.create({
 	container:{
 		flex:1,
 		backgroundColor:'#ffffff',
+		alignItems: 'center'
 	},
 	contenedorEvento:{
         shadowColor: 'rgba(0,0,0, .4)', // IOS
@@ -14,10 +15,8 @@ export const style = MediaQueryStyleSheet.create({
 		shadowRadius: 5, //IOS
 		backgroundColor: '#fff',
 		elevation: 7, // Android
-		borderColor:"rgba(0,0,0,0)",
-		marginRight:0,
-		marginLeft:15,
-		width:size.width-30,
+		borderColor:"rgba(0,0,0,0)",		
+		width:size.width-20,
         marginBottom:20,
         borderRadius:10
     },
@@ -66,7 +65,7 @@ export const style = MediaQueryStyleSheet.create({
 		zIndex:500
 	},
 	contenedorFiltros:{
-		marginTop:80,
+		marginTop:100,
 		flexDirection: 'row',
 		flexWrap: 'wrap',
 		alignItems:"center"

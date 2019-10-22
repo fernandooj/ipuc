@@ -1,21 +1,29 @@
 {
   "project_info": {
-    "project_number": "743312881993",
-    "firebase_url": "https://picpuc.firebaseio.com",
-    "project_id": "picpuc",
-    "storage_bucket": "picpuc.appspot.com"
+    "project_number": "81330883681",
+    "firebase_url": "https://picpuc-22f9e.firebaseio.com",
+    "project_id": "picpuc-22f9e",
+    "storage_bucket": "picpuc-22f9e.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:743312881993:android:b72d24209de5df71ccc298",
+        "mobilesdk_app_id": "1:81330883681:android:13952e66931a40452e2e20",
         "android_client_info": {
           "package_name": "com.picpuc"
         }
       },
       "oauth_client": [
         {
-          "client_id": "743312881993-q8hej72pj5n40uibmva252b6utigbd45.apps.googleusercontent.com",
+          "client_id": "81330883681-2r6vrdm0g01cb9fild41qrfm1j1n4r7f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.picpuc",
+            "certificate_hash": "e60744b45ff09fdf7015a1793cc8aed981b8008d"
+          }
+        },
+        {
+          "client_id": "81330883681-nc90broghnl756gpfcev75jh0be47b50.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.picpuc",
@@ -23,7 +31,7 @@
           }
         },
         {
-          "client_id": "743312881993-0sukc6vaujohedivcptvgnpp7hvgehi6.apps.googleusercontent.com",
+          "client_id": "81330883681-8elln3dt3ofpajj8nij7iuo0glbka554.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.picpuc",
@@ -31,7 +39,7 @@
           }
         },
         {
-          "client_id": "743312881993-idci4hafssbmbtnopp78qmljvr9o830s.apps.googleusercontent.com",
+          "client_id": "81330883681-e304k9a942srun94hcicum3fskgoq5at.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.picpuc",
@@ -39,21 +47,28 @@
           }
         },
         {
-          "client_id": "743312881993-h63b0fpcj7fl73onq6ejvhck004sr6ql.apps.googleusercontent.com",
+          "client_id": "81330883681-aebjqnrmfa5m09qfncu8nfrrqf5all84.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyA1lo6B8Mrnq1x_LMRDtV9JrLDpzxpBw0g"
+          "current_key": "AIzaSyA_rUGim6ZilgaUBfknLAosFcs-yHFRUAw"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "743312881993-h63b0fpcj7fl73onq6ejvhck004sr6ql.apps.googleusercontent.com",
+              "client_id": "81330883681-aebjqnrmfa5m09qfncu8nfrrqf5all84.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "81330883681-ddkeig3ov5hml78um4ijprtade8urdv6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.picpuc.picpuc"
+              }
             }
           ]
         }

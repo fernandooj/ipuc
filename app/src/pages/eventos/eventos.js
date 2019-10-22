@@ -8,18 +8,17 @@ import { getCategorias }    from "../../redux/actions/categoriaActions.js";
 import { createFilter }     from 'react-native-search-filter';
 import axios                from 'axios';
 import Lightbox 		    from 'react-native-lightbox';
-import FastImage 		    from 'react-native-fast-image';
-import { createImageProgress } from 'react-native-image-progress';
 import AutoHeightImage         from 'react-native-auto-height-image';
 import Cabezera from '../components/cabezera'
 import Footer   from '../components/footer'
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import { getEventosProximos } from "../../redux/actions/eventoActions.js";
-const ImageProgress = createImageProgress(FastImage);
+import firebase from 'react-native-firebase';
 const {width, height} = Dimensions.get('window')
  
 moment.locale('es');
- 
+const Analytics = firebase.analytics();
+
 const KEYS_TO_FILTERS = ['descripcion', 'nombre', 'categoria._id']
 class eventosComponent extends Component{
 	constructor(props){
@@ -34,6 +33,7 @@ class eventosComponent extends Component{
 	}
 
 	async componentWillMount(){
+		Analytics.setCurrentScreen("Eventos", "Eventos");
 		this.props.getCategorias();
 		console.log(this.props.navigation.state.params)
 		const {tipo} = this.props.navigation.state.params
@@ -41,7 +41,7 @@ class eventosComponent extends Component{
 			//////////////////////////////////////////////////////////////////////////////////////////////////  		ACCESO GEOLOCALIZACION
 			if (Platform.OS==='android') {
 				RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({interval: 10000, fastInterval: 5000})
-			.then(data => {
+				.then(data => {
 					navigator.geolocation.getCurrentPosition(e=>{
 					let lat =parseFloat(e.coords.latitude)
 					let lng = parseFloat(e.coords.longitude)
@@ -180,13 +180,11 @@ class eventosComponent extends Component{
 		const {focus, terminoBuscador} = this.state
         return(
             <View style={style.container}>
-                <View style={{alignItems: 'center'}}>
-					<Cabezera 
-						navigation={navigation} 
-						focus={(focus)=>{this.setState({focus}) }} 
-						texto={(terminoBuscador)=>this.setState({terminoBuscador})}
-					/>
-                </View>
+				<Cabezera 
+					navigation={navigation} 
+					focus={(focus)=>{this.setState({focus}) }} 
+					texto={(terminoBuscador)=>this.setState({terminoBuscador})}
+				/>
 				{
 					focus
 					?<View style={style.fondo}>
@@ -200,7 +198,6 @@ class eventosComponent extends Component{
 								{this.renderEventosFiltros()}
 							</ScrollView>
 						}
-						
 					</View>
 					:null
 				}

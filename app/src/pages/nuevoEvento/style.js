@@ -75,12 +75,35 @@ export const style = MediaQueryStyleSheet.create({
 		alignItems:"center",
 		justifyContent:"center",
 		textAlign:"center",
-		width:size.width,
+		width:size.width-100,
 		padding:10,
 		borderRadius:5,
-		marginVertical:10
-		// position:"absolute",
-		// bottom:50
+		marginVertical:10,
+		left:50
+	},
+	btnEditar:{
+		flexDirection:"row",
+		backgroundColor:"#128606",
+		alignItems:"center",
+		justifyContent:"center",
+		textAlign:"center",
+		width:size.width-100,
+		padding:10,
+		borderRadius:5,
+		marginVertical:10,
+		left:50
+	},
+	btnEliminar:{
+		flexDirection:"row",
+		backgroundColor:"#c70c4f",
+		alignItems:"center",
+		justifyContent:"center",
+		textAlign:"center",
+		width:size.width-100,
+		padding:10,
+		borderRadius:5,
+		marginVertical:10,
+		left:50
 	},
 	textEnviar:{
 		color:"#fff"

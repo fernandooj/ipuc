@@ -47,5 +47,8 @@ export const style = MediaQueryStyleSheet.create({
 		top:6,
 		fontSize:17,
 		marginHorizontal:13
+	},
+	containerRegistro:{
+		marginTop:Platform.OS === 'android' ?0 :20,
 	}
 })

@@ -35,6 +35,26 @@ router.get('/byId/:id', (req, res)=>{
 	})
 })
 
+
+///////////////////////////////////////////////////////////////////////////
+/*
+Llamo a los eventos creados por el usuario logueado
+*/
+///////////////////////////////////////////////////////////////////////////
+router.get('/byUser', (req, res)=>{
+	if(req.session.usuario){
+		eventoServices.getByUser(req.session.usuario._id, (err, eventos)=>{
+			if (err) {
+				res.json({status:false, err, code:0, eventos:[]})    
+			}else{
+				res.json({status:true, eventos, code:1})    
+			}
+		})
+	}else{
+		res.json({status:false, message:"SIN LOGIN", code:0, eventos:[]})    
+	}
+})
+
 ///////////////////////////////////////////////////////////////////////////
 /*
 Llamo a los eventos con chats de cada usuario
@@ -166,6 +186,26 @@ router.post('/unLike', (req,res)=>{
 
 ///////////////////////////////////////////////////////////////////////////
 /*
+eliminar un evento
+*/
+///////////////////////////////////////////////////////////////////////////
+router.delete('/eliminar/:id', (req,res)=>{
+	if(req.session.usuario){
+		eventoServices.eliminar(req.params.id, (err, evento)=>{
+			if(!err){
+				res.json({status:true, evento})
+			}else{
+				res.json({ status: false, err}) 
+			}
+		})
+	}else{
+		res.json({ status: false, message:'usuario no logueado'})  
+	}
+})
+
+
+///////////////////////////////////////////////////////////////////////////
+/*
 eliminar un usuario que le gusta un evento
 */
 ///////////////////////////////////////////////////////////////////////////
@@ -232,6 +272,47 @@ router.post('/', (req, res)=>{
 		})
 	}
 })
+
+///////////////////////////////////////////////////////////////////////////
+/*
+editar un plan
+*/
+///////////////////////////////////////////////////////////////////////////
+router.put('/', (req, res)=>{
+	if (!req.session.usuario) {
+		res.json({status:false, mensaje:'sin login', code:0}) 
+	}else{
+		let ruta;
+		let randonNumber;
+		let rutaJim;
+		if(req.files.imagen){
+			randonNumber = Math.floor(90000000 + Math.random() * 1000000)
+			
+			////////////////////    ruta que se va a guardar en el folder
+			let fullUrlimagenOriginal = '../front/docs/uploads/eventos/Original'+fecha+'_'+randonNumber+'.jpg'
+		 
+			////////////////////    ruta que se va a guardar en la base de datos
+			ruta  = req.protocol+'://'+req.get('Host') + '/uploads/eventos/--'+fecha+'_'+randonNumber+'.jpg'
+			
+			///////////////////     envio la imagen al nuevo path
+			rutaJim  = req.protocol+'://'+req.get('Host') + '/uploads/eventos/Original'+fecha+'_'+randonNumber+'.jpg'
+			
+			fs.rename(req.files.imagen.path, fullUrlimagenOriginal, (err)=>{console.log(err)})
+		}else{
+			ruta=req.body.imagenGuardado
+		}
+		console.log({ruta})
+        
+		eventoServices.editar(req.body, ruta, (err, evento)=>{
+			if (err) {
+				res.json({status:false, err, code:0})    
+			}else{
+				req.files.imagen ?resizeImagenes(rutaJim, randonNumber, "jpg", res) :res.json({status:true, err, code:0})    
+			}
+		})
+	}
+})
+
 
 const enviaNotificacion=(req, res, rutaJim, randonNumber)=>{
 	tokenPhoneServices.getNear(req.body.lat, req.body.lng, (err, tokens)=>{

@@ -1,13 +1,15 @@
 import React, {Component} from 'react'
-import {View, Text, Image, TouchableOpacity, TextInput} from 'react-native'
-import {style}   from './style'
-import {connect} from 'react-redux' 
-import Icon from 'react-native-fa-icons' 
-import axios from 'axios';
-import Toast from 'react-native-simple-toast';
-import AsyncStorage from '@react-native-community/async-storage';
-import TomarFoto from "../components/tomarFoto";
-import Footer    from '../components/footer'
+import {View, Text, Platform, TouchableOpacity, TextInput} from 'react-native'
+import {style}          from './style'
+import publicIP         from 'react-native-public-ip';
+import FCM              from "react-native-fcm";
+import Icon             from 'react-native-fa-icons' 
+import axios            from 'axios';
+import Toast            from 'react-native-simple-toast';
+import { connect }      from "react-redux";
+import AsyncStorage     from '@react-native-community/async-storage';
+import TomarFoto        from "../components/tomarFoto";
+import Footer           from '../components/footer'
 
  
  
@@ -16,30 +18,78 @@ class perfil extends Component{
 	  super(props);
 	  this.state={
         user:{},
+        password:"",
+        nombre:"",
+        apellido:"",
         imagenes:[]
 	  }
     }
     componentWillMount(){
-       
-        axios.get("user/perfil")
+        FCM.getFCMToken().then(token => {
+			console.log("TOKEN (getFCMToken)", token);
+			this.setState({ token: token || "" });
+        });
+        let {editar} = this.props.navigation.state.params
+        console.log({editar})
+        axios.get("user/perfil") 
         .then(res=>{
             console.log(res.data.user)
             let imagenes = []
-            imagenes.push({uri:res.data.user.avatar})
-            this.setState({
+            res.data.user.avatar &&imagenes.push({uri:res.data.user.avatar})
+            editar
+            ?this.setState({
                 id      :res.data.user._id, 
                 nombre  :res.data.user.nombre, 
                 apellido:res.data.user.apellido, 
                 tipo    :res.data.user.tipo, 
                 imagenes
             })
+            :this.setState({id :res.data.user._id })
+                
         })
+        //////////////////////////////////////////////////////////////////////////////////////////////////  		ACCESO GEOLOCALIZACION
+        if (Platform.OS==='android') {
+            RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({interval: 10000, fastInterval: 5000})
+            .then(data => {
+                navigator.geolocation.getCurrentPosition(e=>{
+                let lat =parseFloat(e.coords.latitude)
+                let lng = parseFloat(e.coords.longitude)
+                this.setState({lat, lng})
+            }, 
+                (error)=>this.watchID = navigator.geolocation.watchPosition(e=>{
+                let lat =parseFloat(e.coords.latitude)
+                let lng = parseFloat(e.coords.longitude)
+                this.setState({lat, lng})
+                 
+            },
+                (error) =>  alert("error"),
+                {enableHighAccuracy: true, timeout:5000, maximumAge:0})
+            )
+            }).catch(err => {
+               alert("error")
+            });
+        }else{
+            navigator.geolocation.getCurrentPosition(e=>{
+                let lat =parseFloat(e.coords.latitude)
+                let lng = parseFloat(e.coords.longitude)
+                this.setState({lat, lng})
+            }, 
+                (error)=>this.watchID = navigator.geolocation.watchPosition(e=>{
+                let lat =parseFloat(e.coords.latitude)
+                let lng = parseFloat(e.coords.longitude)
+                this.setState({lat, lng})
+            },
+                (error) => alert("error"),
+                {enableHighAccuracy: true, timeout:5000, maximumAge:0})
+            )
+        }
+            
     }
      
     renderPerfil(){
         const {nombre, apellido, avatar, showPassword, tipo } = this.state
-        const {password, imagenes} = this.state
-        console.log({tipo})
+        const {password, imagenes, loading} = this.state
+        console.log({imagenes})
         return (
             <View style={style.perfilContenedor}>
                 <TextInput
@@ -92,8 +142,8 @@ class perfil extends Component{
                     imagen={imagenes}
                     imagenes={(imagenes) => {  this.setState({imagenes, showLoading:false}) }}
                 /> 
-                <TouchableOpacity style={style.btnEnviar} onPress={()=>this.guardarPerfil()} >
-                    <Text style={style.textEnviar}>Editar perfil</Text> 
+                <TouchableOpacity style={style.btnEnviar} onPress={loading ?null :()=>this.guardarPerfil()}  >
+                    <Text style={style.textEnviar}>{loading ?"Guardando ..." :"Editar perfil"}</Text> 
                 </TouchableOpacity>
             </View>	 
         )
@@ -112,27 +162,34 @@ class perfil extends Component{
         )
     }	 
     guardarPerfil(){
-        const {nombre, password, apellido, imagenes, tipo, id} = this.state
-        const {editar} = this.props.navigation.state.params
-        let contraseña =  editar ?true :false
+        this.setState({loading:true})
+        const {nombre, password, apellido, imagenes, tipo, id, lat, lng} = this.state
+        let {editar} = this.props.navigation.state.params
+        editar = editar ?true :password.length<3 ?false :true 
+        let contraseña = (tipo==="google" || tipo==="facebook" ) ?true :!editar ?false :true   //////// la contraseña solo es obligatoria si no ingresa por las redes
         console.log({nombre, password, apellido, imagenes, tipo, id, contraseña, editar})
-        if(nombre.length<3 || !contraseña || apellido.length<3 || imagenes.length<1 || !id){
+        if(nombre.length<3 || !contraseña || apellido.length<3   || !id){
             Toast.show("Todos los campos son obligatorios")
+            this.setState({loading:false})
         }else{
-            axios.put(`user/update/${id}`, {nombre, apellido})
-            .then(res=>{
-                if(res.data){
-                    if(password){
-                        this.password(password)
-                    } 
-                    if(imagenes){
-                        this.avatar(imagenes, id)
+            publicIP()
+            .then(ip => {
+                ip = ip ?ip :"186.155.13.27"
+                axios.put(`user/update/${id}/${ip}/${lat}/${lng}`, {nombre, apellido})
+                .then(res=>{
+                    if(res.data){
+                        if(password){
+                            this.password(password)
+                        } 
+                        if(imagenes.length>0){
+                            this.avatar(imagenes, id)
+                        }
+                        console.log(res.data)
+                        this.edicionExitoso(res.data.usuario._id) 
+                    }else{
+                        Toast.show("Tenemos un problema intentalo mas tarde")
                     }
-                    console.log(res.data)
-                    this.edicionExitoso(res.data.usuario._id) 
-                }else{
-                    Toast.show("Tenemos un problema intentalo mas tarde")
-                }
+                })
             })
         }
     }
@@ -140,6 +197,7 @@ class perfil extends Component{
 		console.log(idUsuario)
 		AsyncStorage.setItem('idUsuario', idUsuario)
         Toast.show("Datos Actualizados")
+        this.setState({loading:false})
         this.props.navigation.navigate("Home")
     }
     

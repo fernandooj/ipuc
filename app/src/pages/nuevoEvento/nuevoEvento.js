@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {View, Text, ScrollView, Image, ActivityIndicator, TextInput, TouchableOpacity} from 'react-native'
+import {View, Text, ScrollView, Alert, ActivityIndicator, TextInput, TouchableOpacity} from 'react-native'
 import PropTypes 			from "prop-types";
 import Footer   			from '../components/footer'
 import axios    			from 'axios'	
@@ -12,7 +12,7 @@ import DatePicker 			from 'react-native-datepicker'
 import moment 				from 'moment'
 import Toast 				from 'react-native-simple-toast';
 import {style} 				from './style'
-import AsyncStorage from '@react-native-community/async-storage';
+ 
  
 class NuevoEvento extends Component{
 	constructor(props) {
@@ -24,11 +24,36 @@ class NuevoEvento extends Component{
 	}
 	async componentWillMount(){
 		this.props.getCategorias()
-		const idUsuario = await AsyncStorage.getItem('idUsuario')
-		idUsuario ?this.setState({idUsuario})  :this.props.navigation.navigate("Perfil")
+		console.log(this.props.navigation.state.params.id)
+		if(this.props.navigation.state.params.id){
+			axios.get(`eve/evento/byId/${this.props.navigation.state.params.id}`)
+			.then(res=>{
+				const {_id, categoria, descripcion, nombre, fechaInicio, fechaFinal, imagen, lugar} = res.data.evento
+				console.log(res.data.evento.loc.coordinates[0])
+				let imagenes =  imagen[0].split("-")
+				imagenes 	 = `${imagenes[0]}Miniatura${imagenes[2]}`
+				let imagenArray=[]
+				imagenArray.push({uri:imagenes})
+				console.log({imagenArray})
+
+				this.setState({
+					_id,
+					categoria:categoria.nombre,
+					idCategoria:categoria._id,
+					nombre,
+					descripcion,
+					lat:res.data.evento.loc.coordinates[1],
+					lng:res.data.evento.loc.coordinates[0],
+					fechaInicio: moment(fechaInicio).format("DD-MMM-YYYY h:mm a"),
+					fechaFinal:  moment(fechaFinal).format("DD-MMM-YYYY h:mm a"), 
+					imagenes:imagenArray,
+					imagen:imagen,
+					direccion:lugar,
+				})
+			})
+		}
 	}
 	renderCategorias(){
-		console.log(this.props.categorias)
 		const {categoria} = this.state
 		return this.props.categorias.map((e, key)=>{
 				return(
@@ -44,7 +69,8 @@ class NuevoEvento extends Component{
 			})
 	}
 	renderFormulario(){
-		const {nombre, descripcion, fechaHoy, fechaInicio, fechaFinal, cargaPlan, lat, lng, direccion, mapa, imagenes, loading} = this.state
+		const {nombre, descripcion, fechaHoy, fechaInicio, fechaFinal, cargaPlan, lat, lng, direccion, mapa, imagenes, loading, loadingEliminar} = this.state
+	
 		return(
 			<View>
 				{/* 	CATEGORIAS	*/}
@@ -86,28 +112,28 @@ class NuevoEvento extends Component{
 					<DatePicker
 						minDate={fechaHoy}
 						customStyles={{
-						dateInput: {
-							borderLeftWidth: 0,
-							borderRightWidth: 0,
-							borderTopWidth: 0,
-							borderBottomWidth: 0,
-							alignItems: 'flex-start',
-						},
-						placeholderText:{
-							fontSize:14,
-							color:'#8F9093',
-						},
-						dateText: { 
-							fontSize:14,
-							color: '#8F9093'
-						},
-						btnTextConfirm: {
-							color: '#8F9093',
-						},
-						btnTextCancel: {
-							color: '#8F9093',
-						} 
-					}}
+							dateInput: {
+								borderLeftWidth: 0,
+								borderRightWidth: 0,
+								borderTopWidth: 0,
+								borderBottomWidth: 0,
+								alignItems: 'flex-start',
+							},
+							placeholderText:{
+								fontSize:14,
+								color:'#8F9093',
+							},
+							dateText: { 
+								fontSize:14,
+								color: '#000000'
+							},
+							btnTextConfirm: {
+								color: '#8F9093',
+							},
+							btnTextCancel: {
+								color: '#8F9093',
+							} 
+						}}
 					style={style.inputDate}
 					date={fechaInicio}
 					locale="es_co"
@@ -140,7 +166,7 @@ class NuevoEvento extends Component{
 						},
 						dateText: { 
 							fontSize:14,
-							color: '#8F9093'
+							color: '#000000'
 						},
 						btnTextConfirm: {
 							color: '#8F9093',
@@ -180,19 +206,35 @@ class NuevoEvento extends Component{
 					<TomarFoto 
 						width={120}
 						source={nombre}
-						limiteImagenes={3}
+						limiteImagenes={1}
 						imagen={imagenes}
 						imagenes={(imagenes) => {  this.setState({imagenes, showLoading:false}) }}
 					/> 
 				</View>
-				<TouchableOpacity onPress={() => {loading ?null :this.handleSubmit()}} style={style.btnEnviar}>
-					<Text style={style.textEnviar}>{loading ?"GUARDANDO"  :"GUARDAR"}</Text>
-					{loading &&<ActivityIndicator size="small" color="#fff" />}
-				</TouchableOpacity> 
+				{
+					!this.props.navigation.state.params
+					?<TouchableOpacity onPress={() => {loading ?null :this.handleSubmit()}} style={style.btnEnviar}>
+						<Text style={style.textEnviar}>{loading ?"GUARDANDO"  :"GUARDAR"}</Text>
+						{loading &&<ActivityIndicator size="small" color="#fff" />}
+					</TouchableOpacity> 
+					:<TouchableOpacity onPress={() => {loading ?null :this.editSubmit()}} style={style.btnEditar}>
+						<Text style={style.textEnviar}>{loading ?"EDITANDO"  :"EDITAR"}</Text>
+						{loading &&<ActivityIndicator size="small" color="#fff" />}
+					</TouchableOpacity> 
+				}
+				{
+					this.props.navigation.state.params
+					&&<TouchableOpacity onPress={() => {loadingEliminar ?null :this.eliminarSubmit()}} style={style.btnEliminar}>
+						<Text style={style.textEnviar}>{loadingEliminar ?"ElIMINANDO"  :"ELIMINAR"}</Text>
+						{loadingEliminar &&<ActivityIndicator size="small" color="#fff" />}
+					</TouchableOpacity> 
+				}
+				
+				
 			</View>
 		)
 	}
-		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////  ACTUALIZA LA UBICACION //////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	updateStateX(lat,lng, direccion){
@@ -204,7 +246,7 @@ class NuevoEvento extends Component{
 		const {categoria} = this.state
 		return (
 			<View style={style.container}>
-				<Text style={style.titulo}>Nuevo Evento: {categoria}</Text>
+				<Text style={style.titulo}>{this.props.navigation.state.params ?"Editar Evento:" :"Nuevo Evento:"} {categoria}</Text>
 				<ScrollView style={{flex:1, marginBottom:45}}>
 					{this.renderFormulario()}	
 				</ScrollView>
@@ -212,62 +254,144 @@ class NuevoEvento extends Component{
 			</View>
 		)
 	}
- handleSubmit(){
-	this.setState({loading:true})
-	let {imagenes, nombre, descripcion, fechaInicio, fechaFinal, direccion, lat, lng, idCategoria} = this.state
-	console.log(imagenes, nombre, descripcion, fechaInicio, fechaFinal, direccion, lat, lng, idCategoria)
-	if(!nombre || !descripcion || !fechaInicio || !fechaFinal || !direccion || !lat || !lng){
-		Toast.show("Todos los campos son obligatorios")
-		this.setState({loading:false})
-	}else if(!idCategoria){
-		Toast.show("Selecciona una categoria")
-		this.setState({loading:false})
-	}else if(imagenes.length<1){
-		Toast.show("Sube al menos una imagen")
-		this.setState({loading:false})
-	}else{
-		let data = new FormData();
-		imagenes.forEach(e=>{
-			data.append('imagen', e);
-		})
-		data.append('nombre', 		 nombre);
-		data.append('descripcion', descripcion);
-		data.append('fechaInicio', fechaInicio);
-		data.append('fechaFinal',  fechaFinal);
-		data.append('lugar', 			 direccion);
-		data.append('lat', 				 lat);
-		data.append('lng', 				 lng);
-		data.append('categoria', 	 idCategoria);
-		axios({
-			method: 'post',  
-			url: 'eve/evento',
-			data: data,
-			headers: {
-			'Accept': 'application/json',
-			'Content-Type': 'multipart/form-data'
-			}
-		})
-		.then(e => {
-				console.log(e.data)
-				if(e.data.status) {
+	eliminarSubmit(){
+		this.setState({loadingEliminar:true})
+		const {nombre, _id}= this.state
+		Alert.alert(
+            `Seguro desea eliminar a `,
+            nombre,
+            [
+              {text: 'Confirmar', onPress: () => confirmar()},
+               
+              {text: 'Cancelar', onPress: () => console.log("cancelado")},
+            ],
+            {cancelable: false},
+        );
+        const confirmar =()=>{
+            axios.delete(`eve/evento/eliminar/${_id}`)
+			.then(res=>{
+				if(res.data.status){
+					Toast.show("Evento Eliminado")
 					this.props.navigation.navigate("Home")
-					Toast.show("Evento Creado")
-					this.setState({loading:false})
 				}else{
-					Toast.show("Houston tenemos un problema, intentalo mas rato")
-					this.setState({loading:false})
+					this.setState({loadingEliminar:false})
+					alert("error intentalo nuevamente")
 				}
-		})
-		.catch(err=>{
-			this.setState({loading:false})
-		})
-
+			})
+			.catch(err=>{
+				this.setState({loadingEliminar:true})
+			})
+		}
+		
+		
 	}
- }
+	editSubmit(){
+		this.setState({loading:true})
+		let {imagenes, nombre, descripcion, fechaInicio, fechaFinal, direccion, lat, lng, idCategoria, _id, imagen} = this.state
+		console.log({imagenes, nombre, descripcion, fechaInicio, fechaFinal, direccion, lat, lng, idCategoria, _id, imagen:imagen[0] })
+		if(!nombre || !descripcion || !fechaInicio || !fechaFinal || !direccion || !lat || !lng){
+			Toast.show("Todos los campos son obligatorios")
+			this.setState({loading:false})
+		}else if(!idCategoria){
+			Toast.show("Selecciona una categoria")
+			this.setState({loading:false})
+		}else if(imagenes.length<1){
+			Toast.show("Sube al menos una imagen")
+			this.setState({loading:false})
+		}else{
+			let data = new FormData();
+			imagenes.forEach(e=>{
+				data.append('imagen', e);
+			})
+			data.append('_id', 	   	   _id);
+			data.append('nombre', 	   nombre);
+			data.append('descripcion', descripcion);
+			data.append('fechaInicio', fechaInicio);
+			data.append('fechaFinal',  fechaFinal);
+			data.append('lugar', 	   direccion);
+			data.append('lat', 		   lat);
+			data.append('lng', 		   lng);
+			data.append('categoria',   idCategoria);
+			data.append('imagenGuardado',imagen[0]);
+			axios({
+				method: 'put',  
+				url: 'eve/evento',
+				data: data,
+				headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'multipart/form-data'
+				}
+			})
+			.then(e => {
+					console.log(e.data)
+					if(e.data.status) {
+						this.props.navigation.navigate("Home")
+						Toast.show("Evento Editado")
+						this.setState({loading:false})
+					}else{
+						Toast.show("Houston tenemos un problema, intentalo mas rato")
+						this.setState({loading:false})
+					}
+			})
+			.catch(err=>{
+				this.setState({loading:false})
+			})
+		}
+ 	}
+	handleSubmit(){
+		this.setState({loading:true})
+		let {imagenes, nombre, descripcion, fechaInicio, fechaFinal, direccion, lat, lng, idCategoria} = this.state
+		console.log(imagenes, nombre, descripcion, fechaInicio, fechaFinal, direccion, lat, lng, idCategoria)
+		if(!nombre || !descripcion || !fechaInicio || !fechaFinal || !direccion || !lat || !lng){
+			Toast.show("Todos los campos son obligatorios")
+			this.setState({loading:false})
+		}else if(!idCategoria){
+			Toast.show("Selecciona una categoria")
+			this.setState({loading:false})
+		}else if(imagenes.length<1){
+			Toast.show("Sube al menos una imagen")
+			this.setState({loading:false})
+		}else{
+			let data = new FormData();
+			imagenes.forEach(e=>{
+				data.append('imagen', e);
+			})
+			data.append('nombre', 	   nombre);
+			data.append('descripcion', descripcion);
+			data.append('fechaInicio', fechaInicio);
+			data.append('fechaFinal',  fechaFinal);
+			data.append('lugar', 	   direccion);
+			data.append('lat', 		   lat);
+			data.append('lng', 		   lng);
+			data.append('categoria',   idCategoria);
+			axios({
+				method: 'post',  
+				url: 'eve/evento',
+				data: data,
+				headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'multipart/form-data'
+				}
+			})
+			.then(e => {
+					console.log(e.data)
+					if(e.data.status) {
+						this.props.navigation.navigate("Home")
+						Toast.show("Evento Creado")
+						this.setState({loading:false})
+					}else{
+						Toast.show("Houston tenemos un problema, intentalo mas rato")
+						this.setState({loading:false})
+					}
+			})
+			.catch(err=>{
+				this.setState({loading:false})
+			})
+		}
+ 	}
 }
 
 const mapState = state => {
-	console.log(state)
 	return {
 		categorias: state.categoria.categorias,
 	};
