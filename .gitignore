@@ -8,6 +8,7 @@ back/node_modules/
 *.log
 
 build/
+back_/
 dist/
 public/assets/
 recursos/

@@ -6,9 +6,9 @@ let path = require('path');
 let randonNumber=null;  /// numero randon que genera el codigo de verificacion, linea 35
 let transporter=null;   /// variable que guarda la configuracion para el envio del email
 let client = null; 
-
-let fs 		   = require('fs');
-let Jimp       = require("jimp");
+const geoip 	   = require('geoip-lite');
+let fs 		       = require('fs');
+let Jimp           = require("jimp");
 let {promisify}    = require('util');
 let moment         = require('moment');
 let fecha 	       = moment().format('YYYY_MM_DD_h_mm')
@@ -449,16 +449,18 @@ module.exports = function(app, passport){
     modificar usuarios
     */
     ///////////////////////////////////////////////////////////////////////////
-    app.put('/x/v1/user/update/:_id', function(req, res, next){
-        
-        userServices.editar(req.body, req.params._id, function(err, user1){
+    app.put('/x/v1/user/update/:id/:ip/:lat/:lng', function(req, res, next){
+        var geo = geoip.lookup(req.params.ip);
+       
+        userServices.editar(req.body, req.params, geo, (err, user1)=>{
+            console.log(user1)
             if(err){
-                res.json({ status: 'FAIL', message: err}) 
+                res.json({ status:false, message: err}) 
             } else{
                 userServices.getByUsername(user1.username, (err, usuario)=>{
                     if (!err) {
                         req.session.usuario = usuario
-                        res.json({ status: 'SUCCESS', message: 'Usuario Activado', usuario });    
+                        res.json({ status: true, message: 'Usuario Activado', usuario });    
                     }
                 })       
             }
@@ -484,12 +486,16 @@ module.exports = function(app, passport){
         fs.rename(req.files.imagen.path, fullUrlimagenOriginal, (err)=>{console.log(err)})
         
 
-        userServices.avatar(req.session.usuario._id, ruta, (err, categoria)=>{
+        userServices.avatar(req.session.usuario._id, ruta, (err, user1)=>{
             if (!err) {
-                // resizeImagenes(rutaJim, randonNumber, "jpg", res)
-                res.json({status:true,  code:1})  
+                userServices.getByUsername(user1.username, (err, usuario)=>{
+                    if (!err) {
+                        req.session.usuario = usuario
+                        res.json({ status: true, message: 'Usuario Activado', usuario });    
+                    }
+                })     
             }else{
-                res.json({ status: 'FAIL', message: err });  
+                res.json({ status:false, message: err });  
             }
         })
     })

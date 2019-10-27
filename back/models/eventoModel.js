@@ -24,7 +24,7 @@ const geoSchema = mongoose.Schema({
 
 
 let eventoSchema = mongoose.Schema({
-	creado	   	   : { type: String },
+	createdAt	   : { type: String },
 	updatedAt	   : { type: String },
 	imagen         : [{ type : String }],
 	nombre         : { type : String },
@@ -39,7 +39,6 @@ let eventoSchema = mongoose.Schema({
 	meGusta		   : [{ type: Schema.Types.ObjectId, ref:'User'}],
 	activo		   : { type : Boolean, default:true},
 	eliminado	   : { type : Boolean, default:false},
-	fechaEditado   : [{ type: String }],
 });
 
 module.exports =  mongoose.model('Evento', eventoSchema) 

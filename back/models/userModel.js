@@ -11,8 +11,20 @@ let Schema = mongoose.Schema
 /////////////////////////////////////////////////////////////////////////
 /********** genero la base la coleccion llamada users   ****************/
 /////////////////////////////////////////////////////////////////////////
+const geoSchema = mongoose.Schema({
+	type:{
+		type:String,
+		default:"Point"
+	},
+	coordinates:{
+		type:[Number],
+		index:'2dsphere'
+	}
+})
+
+
 let UserSchema = mongoose.Schema({
-	created: 	{ type: String, default: moment().format('YYYY-MM-DD h:mm:ss') },
+	created: 	{ type: String },
 	updatedAt:  { type: String},
 	username:    String,
 	nombre:      String,
@@ -27,6 +39,8 @@ let UserSchema = mongoose.Schema({
 	password:    String,
 	token:       String,
 	acceso:      String,
+	ip:      	 String,
+	loc   : 	 [geoSchema],
 	Eventos: 	[{ type: Schema.Types.ObjectId, ref:'Evento'}],	//// Ids de los eventos guardados
 });
 

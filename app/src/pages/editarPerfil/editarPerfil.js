@@ -10,7 +10,7 @@ import { connect }      from "react-redux";
 import AsyncStorage     from '@react-native-community/async-storage';
 import TomarFoto        from "../components/tomarFoto";
 import Footer           from '../components/footer'
-
+import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
  
  
 class perfil extends Component{
@@ -89,7 +89,7 @@ class perfil extends Component{
     renderPerfil(){
         const {nombre, apellido, avatar, showPassword, tipo } = this.state
         const {password, imagenes, loading} = this.state
-        console.log({imagenes})
+       
         return (
             <View style={style.perfilContenedor}>
                 <TextInput
@@ -151,7 +151,7 @@ class perfil extends Component{
 	render(){
         const {statusPerfil} = this.props
         const {navigation} = this.props
-       
+        console.log(this.state.lat, this.state.lng)
         return (
             <View style={style.container}>
                 <Text style={style.textTitulo}>Completa tu perfil</Text>
@@ -175,6 +175,7 @@ class perfil extends Component{
             publicIP()
             .then(ip => {
                 ip = ip ?ip :"186.155.13.27"
+               
                 axios.put(`user/update/${id}/${ip}/${lat}/${lng}`, {nombre, apellido})
                 .then(res=>{
                     if(res.data){
@@ -184,7 +185,6 @@ class perfil extends Component{
                         if(imagenes.length>0){
                             this.avatar(imagenes, id)
                         }
-                        console.log(res.data)
                         this.edicionExitoso(res.data.usuario._id) 
                     }else{
                         Toast.show("Tenemos un problema intentalo mas tarde")
@@ -229,7 +229,6 @@ class perfil extends Component{
     }
 }
 const mapState = state => {
-    console.log(state)
 	return {
         perfil:state.usuario.perfil.user,
         cerrarSesiones:state.usuario.cerrarSesion,

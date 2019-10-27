@@ -25,7 +25,7 @@ const path   = require('path');
 let https = require('http')
 var options = {
   // cert: fs.readFileSync('/home/certificados/bundle.crt', 'utf8'),
-  // key: fs.readFileSync('/home/certificados/releo.co.pem', 'utf8')
+  // key: fs.readFileSync('/home/certificados/picpuc.co.pem', 'utf8')
 };
 let server = https.Server(options, app)
 SocketIO(server)
@@ -40,7 +40,7 @@ let flash    = require('connect-flash');
 /////////////////////////////////////////////////////////////////////////
 /***** puerto donde va a funcionar el servidor por defecto 3030  *******/
 /////////////////////////////////////////////////////////////////////////
-let port = process.env.port || 8080;
+let port = process.env.port || 8181;
 
 
 /////////////////////////////////////////////////////////////////////////

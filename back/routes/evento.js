@@ -240,8 +240,6 @@ router.post('/agregarComentario', (req,res)=>{
 		res.json({ status: false, message:'usuario no logueado'})  
 	}
 })
-
-
 	
 const ubicacionJimp =  '../front/docs/uploads/eventos/'
 router.post('/', (req, res)=>{
@@ -254,10 +252,10 @@ router.post('/', (req, res)=>{
 		let fullUrlimagenOriginal = '../front/docs/uploads/eventos/Original'+fecha+'_'+randonNumber+'.jpg'
 	 
 		////////////////////    ruta que se va a guardar en la base de datos
-		let ruta  = req.protocol+'://'+req.get('Host') + '/uploads/eventos/--'+fecha+'_'+randonNumber+'.jpg'
+		let ruta  = req.protocol+'s://'+req.get('Host') + '/uploads/eventos/--'+fecha+'_'+randonNumber+'.jpg'
 		
 		///////////////////     envio la imagen al nuevo path
-		let rutaJim  = req.protocol+'://'+req.get('Host') + '/uploads/eventos/Original'+fecha+'_'+randonNumber+'.jpg'
+		let rutaJim  = req.protocol+'s://'+req.get('Host') + '/uploads/eventos/Original'+fecha+'_'+randonNumber+'.jpg'
 		fs.rename(req.files.imagen.path, fullUrlimagenOriginal, (err)=>{console.log(err)})
 
         let lat = req.body.lat
@@ -300,9 +298,7 @@ router.put('/', (req, res)=>{
 			fs.rename(req.files.imagen.path, fullUrlimagenOriginal, (err)=>{console.log(err)})
 		}else{
 			ruta=req.body.imagenGuardado
-		}
-		console.log({ruta})
-        
+		}        
 		eventoServices.editar(req.body, ruta, (err, evento)=>{
 			if (err) {
 				res.json({status:false, err, code:0})    
@@ -313,6 +309,28 @@ router.put('/', (req, res)=>{
 	}
 })
 
+
+///////////////////////////////////////////////////////////////////////////
+/*
+desactiva los planes
+*/
+///////////////////////////////////////////////////////////////////////////
+router.get('/innactivar', (req, res)=>{
+	eventoServices.getActivos((err, evento)=>{
+		if (err) {
+			res.json({status:false, err, code:0})    
+		}else{
+			let ahora = moment().format("YYYY-MM-DD HH:mm:ss")
+			ahora = moment(ahora).subtract(5, 'hours').format('YYYY/MM/DD h:mm:ss a')
+			ahora = ahora.valueOf()
+			evento.filter(e=>{
+				let diferenciaHoras = Math.abs(e.fechaFinal - ahora) / 36e5;
+				console.log(diferenciaHoras)
+			})
+			res.json({status:true, ahora, evento,  code:0})    
+		}
+	})
+})
 
 const enviaNotificacion=(req, res, rutaJim, randonNumber)=>{
 	tokenPhoneServices.getNear(req.body.lat, req.body.lng, (err, tokens)=>{

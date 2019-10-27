@@ -43,7 +43,7 @@ class Home extends Component{
 		if (Platform.OS==='android') {
 			RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({interval: 10000, fastInterval: 5000})
 		   .then(data => {
- 
+				console.log("data")
 		    	navigator.geolocation.getCurrentPosition(e=>{
 				let lat =parseFloat(e.coords.latitude)
 				let lng = parseFloat(e.coords.longitude)

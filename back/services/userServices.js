@@ -17,6 +17,7 @@ class userServices {
 		User.findOne({_id}).populate("Eventos").exec(callback)
 	}
 	create(user, token, callback){ 
+		let creado = moment().format('YYYY-MM-DD h:mm:ss')
 		var newUsuario = new User() 
 		newUsuario.username  = user.username,
 		newUsuario.pais  	 = user.pais,
@@ -29,6 +30,7 @@ class userServices {
 		newUsuario.nombre    = user.nombre
 		newUsuario.apellido  = user.apellido
 		newUsuario.avatar    = user.avatar
+		newUsuario.created   = creado
 		newUsuario.save(callback);	 
 	}
 	modificaToken(data, code, callback){
@@ -48,12 +50,25 @@ class userServices {
 			}}, callback );	
 		})
 	}
-	editar(user, id, callback){
-		User.findByIdAndUpdate(id, {$set: {
-			'nombre':   	  user.nombre,
-			'apellido':   	  user.apellido,
-			'updatedAt':     moment(fecha).valueOf()
-		}}, callback);
+	editar(user, data, geo, callback){
+		const {id, ip, lat, lng}= data
+		let loc = {'type':'Point', "coordinates": [parseFloat(lng), parseFloat(lat)] }
+		User.update(
+			{ _id: id }, 
+			{ $push: { loc } },
+			(err, res)=>{
+				if(!err){
+					User.findByIdAndUpdate(id, {$set: {
+						'nombre':     user.nombre,
+						'apellido':   user.apellido,
+						'ip':   	  ip,
+						'pais':   	  geo.country,
+						'ciudad':  	  geo.city,
+						'updatedAt':  moment(fecha).valueOf()
+					}}, callback);
+				}
+			}
+		);
 	}
 	editPassword(id, password, callback){
 		let newUsuario = new User();
