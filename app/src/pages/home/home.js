@@ -41,35 +41,21 @@ class Home extends Component{
 		this.props.getEventosProximos();
 		//////////////////////////////////////////////////////////////////////////////////////////////////  		ACCESO GEOLOCALIZACION
 		if (Platform.OS==='android') {
-			RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({interval: 10000, fastInterval: 5000})
-		   .then(data => {
-				console.log("data")
-		    	navigator.geolocation.getCurrentPosition(e=>{
+			navigator.geolocation.getCurrentPosition(e=>{
 				let lat =parseFloat(e.coords.latitude)
 				let lng = parseFloat(e.coords.longitude)
 				this.setState({lat, lng})
 				this.getEventos(lat, lng)
-				
 			}, 
 				(error)=>this.watchID = navigator.geolocation.watchPosition(e=>{
 				let lat =parseFloat(e.coords.latitude)
 				let lng = parseFloat(e.coords.longitude)
 				this.setState({lat, lng})
 				this.getEventos(lat, lng)
-				console.log({error})
-				
 			},
 				(error) => this.getEventos(undefined, undefined),
 				{enableHighAccuracy: true, timeout:5000, maximumAge:0})
 	      	)
-		  	}).catch(err => {
-			  	axios.get(`eve/evento/cercanos/${undefined}/${undefined}`)
-					.then(e=>{
-						if (e.data.code===1) {
-							this.setState({filteredData: e.data.planes, cargado:true})
-						}
-					})
-		  	});
 		  }else{
 		  	navigator.geolocation.getCurrentPosition(e=>{
 				let lat =parseFloat(e.coords.latitude)
@@ -89,6 +75,17 @@ class Home extends Component{
 		}
 	}
 	getEventos(lat, lng){
+		axios.get(`eve/evento/cercanos/${lat}/${lng}`)
+		.then(res=>{
+			if(res.data.status){
+				this.setState({filteredData: res.data.evento, cargado:true})  
+			}else{
+				Toast.show('Houston tenemos un problema, reinicia la app')
+			} 
+		})
+		.catch(err=>{
+			console.log(err)
+		})
 		FCM.getFCMToken().then(token => {
 			console.log("TOKEN (getFCMToken)", token);
 			this.setState({ token: token || "" });
@@ -98,16 +95,7 @@ class Home extends Component{
 			})
 		});
 
-		axios.get(`eve/evento/cercanos/${lat}/${lng}`)
-		.then(res=>{
-			console.log(res.data)
-			res.data.status 
-				?this.setState({filteredData: res.data.evento, cargado:true})  
-				:Toast.show('Houston tenemos un problema, reinicia la app')
-		})
-		.catch(err=>{
-			console.log(err)
-		})
+		
 	}
 
 	async componentDidMount() {

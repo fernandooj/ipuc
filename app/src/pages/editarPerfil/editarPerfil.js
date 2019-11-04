@@ -49,9 +49,7 @@ class perfil extends Component{
         })
         //////////////////////////////////////////////////////////////////////////////////////////////////  		ACCESO GEOLOCALIZACION
         if (Platform.OS==='android') {
-            RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({interval: 10000, fastInterval: 5000})
-            .then(data => {
-                navigator.geolocation.getCurrentPosition(e=>{
+            navigator.geolocation.getCurrentPosition(e=>{
                 let lat =parseFloat(e.coords.latitude)
                 let lng = parseFloat(e.coords.longitude)
                 this.setState({lat, lng})
@@ -60,14 +58,10 @@ class perfil extends Component{
                 let lat =parseFloat(e.coords.latitude)
                 let lng = parseFloat(e.coords.longitude)
                 this.setState({lat, lng})
-                 
             },
-                (error) =>  alert("error"),
+                (error) => alert("error"),
                 {enableHighAccuracy: true, timeout:5000, maximumAge:0})
             )
-            }).catch(err => {
-               alert("error")
-            });
         }else{
             navigator.geolocation.getCurrentPosition(e=>{
                 let lat =parseFloat(e.coords.latitude)
