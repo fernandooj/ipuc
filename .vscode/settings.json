@@ -1,0 +1,14 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "dbpicpuc.cdr5hk0crwhd.us-east-1.rds.amazonaws.com",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "picpucDB",
+            "database": "picpucDB",
+            "username": "postgres",
+            "password": "5HZfB4yz8RYPZ6vnZJjC"
+        }
+    ]
+}
