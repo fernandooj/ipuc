@@ -39,7 +39,7 @@ let eventoSchema = mongoose.Schema({
 	meGusta		   : [{ type: Schema.Types.ObjectId, ref:'User'}],
 	activo		   : { type : Boolean, default:true},
 	eliminado	   : { type : Boolean, default:false},
-});
+}); 
 
 module.exports =  mongoose.model('Evento', eventoSchema) 
 
