@@ -1,0 +1,94 @@
+service: picpuc
+frameworkVersion: '3'
+# app and org for use with dashboard.serverless.com
+#app: your-app-name
+#org: your-org-name
+plugins:
+  - serverless-offline
+  - serverless-webpack
+  - serverless-iam-roles-per-function
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+# frameworkVersion: "=X.X.X"
+  
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${opt:stage, "dev"}
+  region: ${opt:region, "us-east-1"}
+  environment:
+    RDS_HOSTNAME: ${self:custom.rds.host_name}
+    RDS_DB: ${self:custom.rds.db}
+    RDS_PORT: ${self:custom.rds.port} 
+    RDS_USERNAME: ${self:custom.rds.user_name}
+    RDS_PASSWORD: ${self:custom.rds.password} 
+  # apiGateway:
+  #   restApiId: ${output:${self:custom.n}.ApiId}
+  #   restApiRootResourceId: ${output:${self:custom.n}.ApiResourceId}
+
+custom:
+  webpack:
+    webpackConfig: 'webpack.config.js'   # Name of webpack configuration file
+    includeModules: false   # Node modules configuration for packaging
+    packager: 'npm'   # Packager that will be used to package your external modules
+    excludeFiles: src/**/*.test.js # Provide a glob for files to ignore
+  n: my-app:${self:provider.stage}:${self:provider.region}:api
+  base: ${self:service}-${self:provider.stage}
+  rds:
+    host_name: dbpicpuc.cdr5hk0crwhd.us-east-1.rds.amazonaws.com
+    db: picpucDB
+    user_name: postgres
+    password: 5HZfB4yz8RYPZ6vnZJjC
+    port: 5432
+
+functions:
+  getEventsDate:
+    name: ${self:custom.base}-get-events-date
+    handler: services/events/src/get-events-date.main
+    events:
+      - http:
+          path: events/date
+          method: get
+          cors: true
+          integration: lambda
+          request:
+            parameters:
+              querystrings:
+                order: true
+            headers:
+              Content-Type: "'application/json'"
+            passThrough: WHEN_NO_TEMPLATES
+            template:
+              application/json: |
+                {
+                  "order": "$input.params('order')"
+                }
+          response:
+            headers:
+              Content-Type: "'application/json'"
+            template: $input.json('$')
+            statusCodes:
+              400:
+                pattern: '.*"httpStatus":400.*'
+                template: ${file(error-templates/general-error.yml)}
+                headers:
+                  Content-Type: "'application/json'"
+              422:
+                pattern: '.*"httpStatus":422.*'
+                template: ${file(error-templates/general-error.yml)}
+                headers:
+                  Content-Type: "'application/json'"
+              500:
+                pattern: '.*"httpStatus":500.*'
+                template: ${file(error-templates/general-error.yml)}
+                headers:
+                  Content-Type: "'application/json'"
+              504:
+                pattern: '.* timed out .*'
+                template: ${file(error-templates/gateway-timeout.yml)}
+                headers:
+                  Content-Type: "'application/json'"
+    package:
+      include:
+        - services/events/src/get-events-date.js
+        - lib/errors/database-error.js

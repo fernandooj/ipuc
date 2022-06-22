@@ -1,0 +1,791 @@
+{
+  "service": {
+    "service": "picpuc",
+    "serviceObject": {
+      "name": "picpuc"
+    },
+    "provider": {
+      "name": "aws",
+      "runtime": "nodejs12.x",
+      "stage": "dev",
+      "region": "us-east-1",
+      "environment": {
+        "RDS_HOSTNAME": "dbpicpuc.cdr5hk0crwhd.us-east-1.rds.amazonaws.com",
+        "RDS_DB": "picpucDB",
+        "RDS_PORT": "5432",
+        "RDS_USERNAME": "postgres",
+        "RDS_PASSWORD": "5HZfB4yz8RYPZ6vnZJjC"
+      },
+      "versionFunctions": true,
+      "compiledCloudFormationTemplate": {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Description": "The AWS CloudFormation template for this Serverless application",
+        "Resources": {
+          "ServerlessDeploymentBucket": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+              "BucketEncryption": {
+                "ServerSideEncryptionConfiguration": [
+                  {
+                    "ServerSideEncryptionByDefault": {
+                      "SSEAlgorithm": "AES256"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "ServerlessDeploymentBucketPolicy": {
+            "Type": "AWS::S3::BucketPolicy",
+            "Properties": {
+              "Bucket": {
+                "Ref": "ServerlessDeploymentBucket"
+              },
+              "PolicyDocument": {
+                "Statement": [
+                  {
+                    "Action": "s3:*",
+                    "Effect": "Deny",
+                    "Principal": "*",
+                    "Resource": [
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":s3:::",
+                            {
+                              "Ref": "ServerlessDeploymentBucket"
+                            },
+                            "/*"
+                          ]
+                        ]
+                      },
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":s3:::",
+                            {
+                              "Ref": "ServerlessDeploymentBucket"
+                            }
+                          ]
+                        ]
+                      }
+                    ],
+                    "Condition": {
+                      "Bool": {
+                        "aws:SecureTransport": false
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "GetEventsDateLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/picpuc-dev-get-events-date"
+            }
+          },
+          "IamRoleLambdaExecution": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+              "AssumeRolePolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Principal": {
+                      "Service": [
+                        "lambda.amazonaws.com"
+                      ]
+                    },
+                    "Action": [
+                      "sts:AssumeRole"
+                    ]
+                  }
+                ]
+              },
+              "Policies": [
+                {
+                  "PolicyName": {
+                    "Fn::Join": [
+                      "-",
+                      [
+                        "picpuc",
+                        "dev",
+                        "lambda"
+                      ]
+                    ]
+                  },
+                  "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "logs:CreateLogStream",
+                          "logs:CreateLogGroup"
+                        ],
+                        "Resource": [
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/picpuc-dev*:*"
+                          }
+                        ]
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "logs:PutLogEvents"
+                        ],
+                        "Resource": [
+                          {
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/picpuc-dev*:*:*"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ],
+              "Path": "/",
+              "RoleName": {
+                "Fn::Join": [
+                  "-",
+                  [
+                    "picpuc",
+                    "dev",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    "lambdaRole"
+                  ]
+                ]
+              }
+            }
+          },
+          "GetEventsDateLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/picpuc/dev/1655866898996-2022-06-22T03:01:38.996Z/picpuc.zip"
+              },
+              "Handler": "services/events/src/get-events-date.main",
+              "Runtime": "nodejs12.x",
+              "FunctionName": "picpuc-dev-get-events-date",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "RDS_HOSTNAME": "dbpicpuc.cdr5hk0crwhd.us-east-1.rds.amazonaws.com",
+                  "RDS_DB": "picpucDB",
+                  "RDS_PORT": "5432",
+                  "RDS_USERNAME": "postgres",
+                  "RDS_PASSWORD": "5HZfB4yz8RYPZ6vnZJjC"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "GetEventsDateLogGroup"
+            ]
+          },
+          "GetEventsDateLambdaVersionvaKMBAAckVAlJXt4tKuhXjl4NuAOhdA3sVj1rTaVR4": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "GetEventsDateLambdaFunction"
+              },
+              "CodeSha256": "T5I5ZVJTIZPYboO+YzAK7HPHutv+Kf1fNweeED3yVYQ="
+            }
+          },
+          "ApiGatewayRestApi": {
+            "Type": "AWS::ApiGateway::RestApi",
+            "Properties": {
+              "Name": "dev-picpuc",
+              "EndpointConfiguration": {
+                "Types": [
+                  "EDGE"
+                ]
+              },
+              "Policy": ""
+            }
+          },
+          "ApiGatewayResourceEvents": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "events",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceEventsDate": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Ref": "ApiGatewayResourceEvents"
+              },
+              "PathPart": "date",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayMethodEventsDateOptions": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "AuthorizationType": "NONE",
+              "HttpMethod": "OPTIONS",
+              "MethodResponses": [
+                {
+                  "StatusCode": "200",
+                  "ResponseParameters": {
+                    "method.response.header.Access-Control-Allow-Origin": true,
+                    "method.response.header.Access-Control-Allow-Headers": true,
+                    "method.response.header.Access-Control-Allow-Methods": true
+                  },
+                  "ResponseModels": {}
+                }
+              ],
+              "RequestParameters": {},
+              "Integration": {
+                "Type": "MOCK",
+                "RequestTemplates": {
+                  "application/json": "{statusCode:200}"
+                },
+                "ContentHandling": "CONVERT_TO_TEXT",
+                "IntegrationResponses": [
+                  {
+                    "StatusCode": "200",
+                    "ResponseParameters": {
+                      "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                      "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET'"
+                    },
+                    "ResponseTemplates": {
+                      "application/json": ""
+                    }
+                  }
+                ]
+              },
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceEventsDate"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayMethodEventsDateGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {
+                "method.request.querystring.order": true
+              },
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceEventsDate"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "GetEventsDateLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                },
+                "PassthroughBehavior": "WHEN_NO_TEMPLATES",
+                "RequestTemplates": {
+                  "application/json": "{\n  \"order\": \"$input.params('order')\"\n}\n",
+                  "application/x-www-form-urlencoded": "\n    #define( $body )\n      {\n      #foreach( $token in $input.path('$').split('&') )\n        #set( $keyVal = $token.split('=') )\n        #set( $keyValSize = $keyVal.size() )\n        #if( $keyValSize >= 1 )\n          #set( $key = $util.escapeJavaScript($util.urlDecode($keyVal[0])) )\n          #if( $keyValSize >= 2 )\n            #set($val = $util.escapeJavaScript($util.urlDecode($keyVal[1])).replaceAll(\"\\\\'\",\"'\"))\n          #else\n            #set( $val = '' )\n          #end\n          \"$key\": \"$val\"#if($foreach.hasNext),#end\n        #end\n      #end\n      }\n    #end\n\n    \n  #define( $loop )\n    {\n    #foreach($key in $map.keySet())\n        #set( $k = $util.escapeJavaScript($key) )\n        #set( $v = $util.escapeJavaScript($map.get($key)).replaceAll(\"\\\\'\", \"'\") )\n        \"$k\":\n          \"$v\"\n          #if( $foreach.hasNext ) , #end\n    #end\n    }\n  #end\n\n  {\n    \"body\": $body,\n    \"method\": \"$context.httpMethod\",\n    \"principalId\": \"$context.authorizer.principalId\",\n    \"stage\": \"$context.stage\",\n\n    \"cognitoPoolClaims\" : {\n       \n       \"sub\": \"$context.authorizer.claims.sub\"\n    },\n\n    #set( $map = $context.authorizer )\n    \"enhancedAuthContext\": $loop,\n\n    #set( $map = $input.params().header )\n    \"headers\": $loop,\n\n    #set( $map = $input.params().querystring )\n    \"query\": $loop,\n\n    #set( $map = $input.params().path )\n    \"path\": $loop,\n\n    #set( $map = $context.identity )\n    \"identity\": $loop,\n\n    #set( $map = $stageVariables )\n    \"stageVariables\": $loop,\n\n    \"requestPath\": \"$context.resourcePath\"\n  }\n\n  "
+                },
+                "IntegrationResponses": [
+                  {
+                    "StatusCode": "200",
+                    "SelectionPattern": "",
+                    "ResponseParameters": {
+                      "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      "method.response.header.Content-Type": "'application/json'"
+                    },
+                    "ResponseTemplates": {
+                      "application/json": "$input.json('$')"
+                    }
+                  },
+                  {
+                    "StatusCode": "400",
+                    "SelectionPattern": ".*\"httpStatus\":400.*",
+                    "ResponseParameters": {
+                      "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      "method.response.header.Content-Type": "'application/json'"
+                    },
+                    "ResponseTemplates": {
+                      "application/json": "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n{\n  \"type\": \"$errorMessageObj.errorType\",\n  \"message\": \"$errorMessageObj.message\",\n  \"requestId\": \"$context.requestId\"\n}\n"
+                    }
+                  },
+                  {
+                    "StatusCode": "422",
+                    "SelectionPattern": ".*\"httpStatus\":422.*",
+                    "ResponseParameters": {
+                      "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      "method.response.header.Content-Type": "'application/json'"
+                    },
+                    "ResponseTemplates": {
+                      "application/json": "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n{\n  \"type\": \"$errorMessageObj.errorType\",\n  \"message\": \"$errorMessageObj.message\",\n  \"requestId\": \"$context.requestId\"\n}\n"
+                    }
+                  },
+                  {
+                    "StatusCode": "500",
+                    "SelectionPattern": ".*\"httpStatus\":500.*",
+                    "ResponseParameters": {
+                      "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      "method.response.header.Content-Type": "'application/json'"
+                    },
+                    "ResponseTemplates": {
+                      "application/json": "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n{\n  \"type\": \"$errorMessageObj.errorType\",\n  \"message\": \"$errorMessageObj.message\",\n  \"requestId\": \"$context.requestId\"\n}\n"
+                    }
+                  },
+                  {
+                    "StatusCode": "504",
+                    "SelectionPattern": ".* timed out .*",
+                    "ResponseParameters": {
+                      "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      "method.response.header.Content-Type": "'application/json'"
+                    },
+                    "ResponseTemplates": {
+                      "application/json": "#set ($errorMessage = $input.path('$.errorMessage'))\n{\n  \"type\": \"gatewayTimeout\",\n  \"message\": \"$errorMessage\",\n  \"requestId\": \"$context.requestId\"\n}\n"
+                    }
+                  }
+                ],
+                "RequestParameters": {
+                  "integration.request.querystring.order": "method.request.querystring.order"
+                }
+              },
+              "MethodResponses": [
+                {
+                  "ResponseParameters": {
+                    "method.response.header.Access-Control-Allow-Origin": true,
+                    "method.response.header.Content-Type": true
+                  },
+                  "ResponseModels": {},
+                  "StatusCode": "200"
+                },
+                {
+                  "ResponseParameters": {
+                    "method.response.header.Access-Control-Allow-Origin": true,
+                    "method.response.header.Content-Type": true
+                  },
+                  "ResponseModels": {},
+                  "StatusCode": "400"
+                },
+                {
+                  "ResponseParameters": {
+                    "method.response.header.Access-Control-Allow-Origin": true,
+                    "method.response.header.Content-Type": true
+                  },
+                  "ResponseModels": {},
+                  "StatusCode": "422"
+                },
+                {
+                  "ResponseParameters": {
+                    "method.response.header.Access-Control-Allow-Origin": true,
+                    "method.response.header.Content-Type": true
+                  },
+                  "ResponseModels": {},
+                  "StatusCode": "500"
+                },
+                {
+                  "ResponseParameters": {
+                    "method.response.header.Access-Control-Allow-Origin": true,
+                    "method.response.header.Content-Type": true
+                  },
+                  "ResponseModels": {},
+                  "StatusCode": "504"
+                }
+              ],
+              "RequestValidatorId": {
+                "Ref": "ApiGatewayPicpucRequestValidator"
+              }
+            },
+            "DependsOn": [
+              "GetEventsDateLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayPicpucRequestValidator": {
+            "Type": "AWS::ApiGateway::RequestValidator",
+            "Properties": {
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ValidateRequestBody": true,
+              "ValidateRequestParameters": true,
+              "Name": "picpuc-dev | Validate request body and querystring parameters"
+            }
+          },
+          "ApiGatewayDeployment1655866896036": {
+            "Type": "AWS::ApiGateway::Deployment",
+            "Properties": {
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "StageName": "dev"
+            },
+            "DependsOn": [
+              "ApiGatewayMethodEventsDateOptions",
+              "ApiGatewayMethodEventsDateGet"
+            ]
+          },
+          "GetEventsDateLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "GetEventsDateLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          }
+        },
+        "Outputs": {
+          "ServerlessDeploymentBucketName": {
+            "Value": {
+              "Ref": "ServerlessDeploymentBucket"
+            },
+            "Export": {
+              "Name": "sls-picpuc-dev-ServerlessDeploymentBucketName"
+            }
+          },
+          "GetEventsDateLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "GetEventsDateLambdaVersionvaKMBAAckVAlJXt4tKuhXjl4NuAOhdA3sVj1rTaVR4"
+            },
+            "Export": {
+              "Name": "sls-picpuc-dev-GetEventsDateLambdaFunctionQualifiedArn"
+            }
+          },
+          "ServiceEndpoint": {
+            "Description": "URL of the service endpoint",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  "https://",
+                  {
+                    "Ref": "ApiGatewayRestApi"
+                  },
+                  ".execute-api.",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ".",
+                  {
+                    "Ref": "AWS::URLSuffix"
+                  },
+                  "/dev"
+                ]
+              ]
+            },
+            "Export": {
+              "Name": "sls-picpuc-dev-ServiceEndpoint"
+            }
+          }
+        }
+      },
+      "coreCloudFormationTemplate": {
+        "AWSTemplateFormatVersion": "2010-09-09",
+        "Description": "The AWS CloudFormation template for this Serverless application",
+        "Resources": {
+          "ServerlessDeploymentBucket": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+              "BucketEncryption": {
+                "ServerSideEncryptionConfiguration": [
+                  {
+                    "ServerSideEncryptionByDefault": {
+                      "SSEAlgorithm": "AES256"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "ServerlessDeploymentBucketPolicy": {
+            "Type": "AWS::S3::BucketPolicy",
+            "Properties": {
+              "Bucket": {
+                "Ref": "ServerlessDeploymentBucket"
+              },
+              "PolicyDocument": {
+                "Statement": [
+                  {
+                    "Action": "s3:*",
+                    "Effect": "Deny",
+                    "Principal": "*",
+                    "Resource": [
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":s3:::",
+                            {
+                              "Ref": "ServerlessDeploymentBucket"
+                            },
+                            "/*"
+                          ]
+                        ]
+                      },
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":s3:::",
+                            {
+                              "Ref": "ServerlessDeploymentBucket"
+                            }
+                          ]
+                        ]
+                      }
+                    ],
+                    "Condition": {
+                      "Bool": {
+                        "aws:SecureTransport": false
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "Outputs": {
+          "ServerlessDeploymentBucketName": {
+            "Value": {
+              "Ref": "ServerlessDeploymentBucket"
+            }
+          }
+        }
+      },
+      "vpc": {}
+    },
+    "custom": {
+      "webpack": {
+        "webpackConfig": "webpack.config.js",
+        "includeModules": false,
+        "packager": "npm",
+        "excludeFiles": "src/**/*.test.js"
+      },
+      "n": "my-app:dev:us-east-1:api",
+      "base": "picpuc-dev",
+      "rds": {
+        "host_name": "dbpicpuc.cdr5hk0crwhd.us-east-1.rds.amazonaws.com",
+        "db": "picpucDB",
+        "user_name": "postgres",
+        "password": "5HZfB4yz8RYPZ6vnZJjC",
+        "port": 5432
+      }
+    },
+    "plugins": [
+      "serverless-offline",
+      "serverless-webpack",
+      "serverless-iam-roles-per-function"
+    ],
+    "pluginsData": {},
+    "functions": {
+      "getEventsDate": {
+        "name": "picpuc-dev-get-events-date",
+        "handler": "services/events/src/get-events-date.main",
+        "events": [
+          {
+            "http": {
+              "path": "events/date",
+              "method": "get",
+              "cors": {
+                "origin": "*",
+                "methods": [
+                  "OPTIONS",
+                  "GET"
+                ],
+                "headers": [
+                  "Content-Type",
+                  "X-Amz-Date",
+                  "Authorization",
+                  "X-Api-Key",
+                  "X-Amz-Security-Token",
+                  "X-Amz-User-Agent"
+                ],
+                "allowCredentials": false
+              },
+              "integration": "AWS",
+              "request": {
+                "parameters": {
+                  "method.request.querystring.order": true
+                },
+                "headers": {
+                  "Content-Type": "'application/json'"
+                },
+                "passThrough": "WHEN_NO_TEMPLATES",
+                "template": {
+                  "application/json": "{\n  \"order\": \"$input.params('order')\"\n}\n"
+                }
+              },
+              "response": {
+                "headers": {
+                  "Content-Type": "'application/json'"
+                },
+                "template": "$input.json('$')",
+                "statusCodes": {
+                  "200": {
+                    "pattern": ""
+                  },
+                  "400": {
+                    "pattern": ".*\"httpStatus\":400.*",
+                    "template": "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n{\n  \"type\": \"$errorMessageObj.errorType\",\n  \"message\": \"$errorMessageObj.message\",\n  \"requestId\": \"$context.requestId\"\n}\n",
+                    "headers": {
+                      "Content-Type": "'application/json'"
+                    }
+                  },
+                  "422": {
+                    "pattern": ".*\"httpStatus\":422.*",
+                    "template": "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n{\n  \"type\": \"$errorMessageObj.errorType\",\n  \"message\": \"$errorMessageObj.message\",\n  \"requestId\": \"$context.requestId\"\n}\n",
+                    "headers": {
+                      "Content-Type": "'application/json'"
+                    }
+                  },
+                  "500": {
+                    "pattern": ".*\"httpStatus\":500.*",
+                    "template": "#set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n{\n  \"type\": \"$errorMessageObj.errorType\",\n  \"message\": \"$errorMessageObj.message\",\n  \"requestId\": \"$context.requestId\"\n}\n",
+                    "headers": {
+                      "Content-Type": "'application/json'"
+                    }
+                  },
+                  "504": {
+                    "pattern": ".* timed out .*",
+                    "template": "#set ($errorMessage = $input.path('$.errorMessage'))\n{\n  \"type\": \"gatewayTimeout\",\n  \"message\": \"$errorMessage\",\n  \"requestId\": \"$context.requestId\"\n}\n",
+                    "headers": {
+                      "Content-Type": "'application/json'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "package": {
+          "artifact": ".serverless/picpuc.zip"
+        },
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs12.x",
+        "vpc": {},
+        "versionLogicalId": "GetEventsDateLambdaVersionvaKMBAAckVAlJXt4tKuhXjl4NuAOhdA3sVj1rTaVR4"
+      }
+    },
+    "configValidationMode": "warn",
+    "serviceFilename": "serverless.yml",
+    "initialServerlessConfig": {
+      "service": "picpuc",
+      "frameworkVersion": "3",
+      "plugins": {
+        "$ref": "$[\"service\"][\"plugins\"]"
+      },
+      "provider": {
+        "$ref": "$[\"service\"][\"provider\"]"
+      },
+      "custom": {
+        "$ref": "$[\"service\"][\"custom\"]"
+      },
+      "functions": {
+        "$ref": "$[\"service\"][\"functions\"]"
+      }
+    },
+    "layers": {},
+    "isDashboardMonitoringPreconfigured": false
+  },
+  "package": {
+    "artifactDirectoryName": "serverless/picpuc/dev/1655866898996-2022-06-22T03:01:38.996Z",
+    "artifact": ""
+  }
+}
