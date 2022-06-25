@@ -30,7 +30,7 @@ target 'ipuc' do
 
   pod 'RNImageCropPicker', :path =>  '../node_modules/react-native-image-crop-picker'
   # pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
-  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
+  # pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
   pod 'react-native-simple-toast', :path => '../node_modules/react-native-simple-toast'
 
   pod 'react-native-maps', path: rn_maps_path
