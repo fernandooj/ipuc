@@ -92,3 +92,61 @@ functions:
       include:
         - services/events/src/get-events-date.js
         - lib/errors/database-error.js
+
+  CreateEvents:
+    name: ${self:custom.base}-create-events
+    handler: services/events/src/create-events.main
+    events:
+      - http:
+          path: events/create
+          method: post
+          cors: true
+          integration: lambda
+          request:
+            headers:
+              Content-Type: "'application/json'"
+            passThrough: WHEN_NO_TEMPLATES
+            template:
+              application/json: |
+                #set($inputRoot = $input.path('$'))
+                {
+                  "title": "$inputRoot.title",
+                  "description": "$inputRoot.description",
+                  "eventDate": "$inputRoot.eventDate",                  
+                  "image": "$inputRoot.image",
+                  "idCategory": "$inputRoot.idCategory",
+                  "namePlace": "$inputRoot.namePlace"
+                }
+          response:
+            headers:
+              Content-Type: "'application/json'"
+            template: |
+              #set($inputRoot = $input.path('$'))
+              {
+                "id":"$inputRoot.id"
+              }
+            statusCodes:
+              400:
+                pattern: '.*"httpStatus":400.*'
+                template: ${file(error-templates/general-error.yml)}
+                headers:
+                  Content-Type: "'application/json'"
+              422:
+                pattern: '.*"httpStatus":422.*'
+                template: ${file(error-templates/general-error.yml)}
+                headers:
+                  Content-Type: "'application/json'"
+              500:
+                pattern: '.*"httpStatus":500.*'
+                template: ${file(error-templates/general-error.yml)}
+                headers:
+                  Content-Type: "'application/json'"
+              504:
+                pattern: '.* timed out .*'
+                template: ${file(error-templates/gateway-timeout.yml)}
+                headers:
+                  Content-Type: "'application/json'"
+    package:
+      include:
+        - services/events/src/create-events.js
+        - lib/errors/database-error.js
