@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS eventos (
-  idEventos INT NOT NULL,
+  idEventos SERIAL NOT NULL,
   title VARCHAR(45) NOT NULL,
   description character VARYING NOT NULL,
   eventDate timestamp NOT NULL,
@@ -7,8 +7,10 @@ CREATE TABLE IF NOT EXISTS eventos (
   image VARCHAR(255) NULL,
   idCategory INT NOT NULL,
   namePlace VARCHAR(45) NOT NULL,
-  estado BOOLEAN DEFAULT FALSE,
+  status BOOLEAN DEFAULT FALSE,
+  active BOOLEAN DEFAULT FALSE,
   PRIMARY KEY (idEventos));
+
 
 
 COMMENT ON TABLE eventos IS 'events directory';
