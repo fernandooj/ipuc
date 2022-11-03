@@ -33,6 +33,7 @@
     "react-native-image-slider-show": "^1.0.3",
     "react-native-keyboard-listener": "^1.1.0",
     "react-native-lightbox": "^0.8.0",
+    "react-native-linear-gradient": "^2.6.2",
     "react-native-map-link": "^2.5.1",
     "react-native-maps": "^0.24.2",
     "react-native-public-ip": "^1.0.1",
