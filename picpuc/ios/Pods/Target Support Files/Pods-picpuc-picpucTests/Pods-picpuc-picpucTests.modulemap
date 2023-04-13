@@ -1,4 +1,4 @@
-module Pods_picpuc_picpucTests {
+framework module Pods_picpuc_picpucTests {
   umbrella header "Pods-picpuc-picpucTests-umbrella.h"
 
   export *

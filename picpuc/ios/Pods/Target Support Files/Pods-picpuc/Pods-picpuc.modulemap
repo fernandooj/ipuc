@@ -1,4 +1,4 @@
-module Pods_picpuc {
+framework module Pods_picpuc {
   umbrella header "Pods-picpuc-umbrella.h"
 
   export *

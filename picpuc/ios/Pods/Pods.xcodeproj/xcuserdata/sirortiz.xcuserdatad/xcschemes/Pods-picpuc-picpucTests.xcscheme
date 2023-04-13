@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1240"
+   LastUpgradeVersion = "1300"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D2A1EA218738E4B192B4E93390E1DBA"
-               BuildableName = "libPods-picpuc-picpucTests.a"
+               BuildableName = "Pods_picpuc_picpucTests.framework"
                BlueprintName = "Pods-picpuc-picpucTests"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>

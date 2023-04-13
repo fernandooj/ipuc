@@ -1,15 +1,9 @@
-import {TextStyle, TextInputStyle, ViewStyle, ScrollViewStyle, Dimensions} from 'react-native';
+import {TextStyle, TextInputStyle, ViewStyle, Dimensions} from 'react-native';
 import styled from 'styled-components/native';
 
-const { width, height } = Dimensions.get('window')
+const {width} = Dimensions.get('window');
 const Content: ViewStyle = {
-  flexDirection: 'row',
-};
-
-const Gradient: ViewStyle = {
-  borderBottomLeftRadius: 70,
-  borderBottomRightRadius: 70,
- 
+  backgroundColor: 'white',
 };
 
 const title: TextStyle = {
@@ -24,10 +18,10 @@ const InputSearchBox: ViewStyle = {
   marginTop: 50,
   left: 25,
   width: width - 50,
-  backgroundColor: 'white',
-  height: 70,
+  height: 50,
   borderRadius: 30,
-  padding: 20,
+  paddingVertical: 10,
+  paddingHorizontal: 20,
   flexDirection: 'row',
 };
 
@@ -35,46 +29,24 @@ const InputSearch: TextInputStyle = {
   width: width - 120,
 };
 
-const ListCategoriesBox: ScrollViewStyle = {
+const Gradient: ViewStyle = {
+  borderRadius: 10,
   flexDirection: 'row',
-  marginVertical: 18,
-  left: 20,
+  padding: 5,
+  left: 25,
+  width: width - 50,
 };
-const ListCategories: ViewStyle = {
-  marginRight: 15,
-};
-
-const ListCategoriesText: TextStyle = {
-  fontSize: 16,
-  fontWeight: 'bold',
-  color: '#5E5992',
-};
-
-const ContentEvents = styled.ScrollView`
-  max-height: 150px; 
+const Btn = styled.View`
+  border-radius: 10;
+  background-color: ${(props: {isSelected: boolean}) => props.isSelected ? 'white' : 'transparent'};
+  width: 33%;
 `;
-const ContentEventsRow = styled.View`
-  flex-direction: row;
-  padding-horizontal: 20;
-`;
-const TitleEvents = styled.Text`
+const Title = styled.Text`
   padding-horizontal: 18;
-  font-size: 20px;
-  margin-top: 15px;
-  margin-bottom: 5px;
+  font-size: 14px;
+  padding: 10px;
+  text-align: center;
+  color: ${(props: {isSelected: boolean}) => props.isSelected ? '#00338D' : 'rgb(108, 107, 107)'};
 `;
 
-
-export {
-  Content,
-  title,
-  Gradient,
-  InputSearch,
-  InputSearchBox,
-  ListCategories,
-  ListCategoriesBox,
-  ListCategoriesText,
-  ContentEvents,
-  ContentEventsRow,
-  TitleEvents,
-};
+export {Content, title, Gradient, InputSearch, InputSearchBox, Btn, Title};

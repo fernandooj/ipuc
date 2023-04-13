@@ -4,22 +4,21 @@ import styled from 'styled-components/native';
 // const {width, height} = Dimensions.get('window');
 
 export const EventStyled = {
-  Contain: styled.View`
-    shadow-opacity: 0.75;
-    shadow-radius: 5px;
-    shadow-color: grey;
-    shadow-offset: 10px 10px;
-    width: 130px;
-    height: 130px;
-    margin-right: 10px;
-    border-radius: 10px
-    
-  `,
-  ImageContent: styled.ImageBackground`
+  ContainList: styled.View`
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
     width: 100%;
-    height: 100%;
-    position: relative;
-    border-radius: 10px
+    align-items: center;
+    margin-top: 10
+  `,
+  ListCategories: styled.View`
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-top-color: rgba(183, 183, 183, 0.272);
+    padding-bottom: 20;
+    padding-left: 15;
+    padding-right: 15;
   `,
   BoxText: styled.View`
     position: absolute;
@@ -28,13 +27,40 @@ export const EventStyled = {
     height: 20px;
   `,
   Title: styled.Text`
-    font-size: 11px;
-    color: white;
+    font-size: 14px;
+    color: #535353;
+    font-weight: bold;
     padding: 3px;
+    min-height: 41px;
   `,
   SubTitle: styled.Text`
     font-size: 10px;
     color: white;
     padding-left: 3px;
+  `,
+  BtnAsist: styled.TouchableOpacity`
+    background-color: ${(props: {going: boolean}) => props.going ? '#00338D' : '#F0AB00'};
+    padding: 10px;
+    border-radius: 20px;
+  `,
+  TextAssistants: styled.Text`
+    color: #b5b3b3d4;
+    font-size: 11px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  `,
+  TextAsist: styled.Text`
+    text-align: center;
+    color: white;
+  `,
+  DateContent: styled.View`
+    margin-top: 20px;
+    margin-bottom: 20px;
+    flex-direction: row;
+    align-items: center;
+  `,
+  TextDate: styled.Text`
+    margin-left: 10px;
+    font-size: 13px;
   `,
 };
