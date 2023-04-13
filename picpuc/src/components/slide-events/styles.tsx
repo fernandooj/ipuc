@@ -37,7 +37,7 @@ export const EventStyled = {
     color: white;
     padding-left: 3px;
   `,
-    InputSearchBox: styled.View `
+  InputSearchBox: styled.View `
     marginTop: 50,
     left: 25,
     width: width - 50,

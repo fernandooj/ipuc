@@ -14,6 +14,7 @@ const {
   TextAsist,
   DateContent,
   TextDate,
+  IconArrow
 } = EventStyled;
 
 // const Categories = [
@@ -51,6 +52,7 @@ const events = [
     going: true,
     assistants: 35,
     categoria: 1,
+    distance: 20,
   },
   {
     title: 'convencion medellin',
@@ -59,6 +61,7 @@ const events = [
     going: false,
     assistants: 150,
     categoria: 2,
+    distance: 20,
   },
   {
     title: 'el mejor evento de todos',
@@ -66,6 +69,7 @@ const events = [
     namePlace: 'casa de la moneda',
     going: true,
     assistants: 350,
+    distance: 20,
   },
   {
     title: 'el mejor evento de todos',
@@ -73,6 +77,7 @@ const events = [
     namePlace: 'casa de la moneda',
     going: true,
     assistants: 1020,
+    distance: 1,
   },
   {
     title: 'el mejor evento de todos',
@@ -80,6 +85,7 @@ const events = [
     namePlace: 'casa de la moneda',
     going: true,
     assistants: 1020,
+    distance: 1
   },
   {
     title: 'el mejor evento de todos en bogota',
@@ -87,6 +93,7 @@ const events = [
     namePlace: 'casa de la moneda',
     going: true,
     assistants: 1020,
+    distance: 38,
   },
 ];
 
@@ -95,11 +102,12 @@ interface EventType {
   eventDate: string;
   assistants: number;
   going: Boolean;
+  distance: number;
 }
 
 const EventComponent = (): ReactElement => {
   const renderItem = (
-    {title, assistants, going, eventDate}: EventType,
+    {title, assistants, going, eventDate, distance}: EventType,
     index: number,
   ) => (
     <ListCategories
@@ -117,9 +125,13 @@ const EventComponent = (): ReactElement => {
         <Icon name="date" size={14} color="#00338D" />
         <TextDate>{eventDate}</TextDate>
       </DateContent>
-      <BtnAsist going={going}>
-        <TextAsist>{going ? 'Voy a ir' : 'asistiendo'}</TextAsist>
+      <BtnAsist distance={distance <= 1}>
+        <TextAsist>Estas a: {distance} Km</TextAsist>
+        <IconArrow>
+          <Icon name="arrow-right-l" size={14} color="#00338D" style={{top:-1}}/>
+        </IconArrow>
       </BtnAsist>
+     
     </ListCategories>
   );
 

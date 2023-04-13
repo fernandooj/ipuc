@@ -1,7 +1,4 @@
-// import {Dimensions} from 'react-native';
 import styled from 'styled-components/native';
-
-// const {width, height} = Dimensions.get('window');
 
 export const EventStyled = {
   Contain: styled.View`
@@ -10,7 +7,6 @@ export const EventStyled = {
     shadow-color: grey;
     shadow-offset: 10px 10px;
     width: 130px;
-    height: 130px;
     margin-right: 10px;
     border-radius: 10px;
   `,

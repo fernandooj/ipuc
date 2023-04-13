@@ -39,8 +39,18 @@ export const EventStyled = {
     padding-left: 3px;
   `,
   BtnAsist: styled.TouchableOpacity`
-    background-color: ${(props: {going: boolean}) => props.going ? '#00338D' : '#F0AB00'};
-    padding: 10px;
+    background-color: ${({distance}: {distance: boolean}) =>
+      distance ? '#00338D' : '#F0AB00'};
+    padding: 5px;
+    padding-left: 15px;
+    border-radius: 20px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  `,
+  IconArrow: styled.View`
+    background-color: white;
+    padding: 5px;
     border-radius: 20px;
   `,
   TextAssistants: styled.Text`
