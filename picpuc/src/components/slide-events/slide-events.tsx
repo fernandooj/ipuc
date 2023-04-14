@@ -74,10 +74,10 @@ const events = [
   },
 ];
 
-const EventComponent = (): ReactElement => {
+const SlideEvents = (): ReactElement => {
   const renderItem = ({ title }: { title: string }) => (
-    <View>
-      <Text>{title}aaa</Text>
+    <View style={ListCategories}>
+      <Text style={ListCategoriesText}>{title}aaa</Text>
     </View>
   );
 
@@ -91,12 +91,12 @@ const EventComponent = (): ReactElement => {
 
   return (
     <Contain>
-        <Text>aesfasef</Text>
+      <LinearGradient colors={['#E5F6FE', '#E7F5FC']} style={Gradient}>
         <EventList />
-      
+      </LinearGradient>
     </Contain>
   );
 };
 
-export default EventComponent;
+export default SlideEvents;
 

@@ -9,6 +9,16 @@
             "database": "picpucDB",
             "username": "postgres",
             "password": "5HZfB4yz8RYPZ6vnZJjC"
+        },
+        {
+            "previewLimit": 50,
+            "server": "db-picpuc.cjjhqtyxbiax.us-east-1.rds.amazonaws.com",
+            "port": 5432,
+            "askForPassword": true,
+            "driver": "PostgreSQL",
+            "name": "DBpicpuc",
+            "database": "DBpicpuc",
+            "username": "postgres"
         }
     ]
 }

@@ -1,27 +1,24 @@
-import React, {useEffect, useState} from 'react';
-import auth, {firebase} from '@react-native-firebase/auth';
-import {Text, Button, View, TouchableOpacity} from 'react-native';
+import React, {ReactElement} from 'react';
+import auth from '@react-native-firebase/auth';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {EventStyled} from './styles';
-import {
-  GoogleSignin,
-  GoogleSigninButton,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 const {ContainList, GoogleButton, TextButton} = EventStyled;
-const GoogleLoginButton = () => {
+
+type Props = {
+  handleSignIn: Function;
+};
+
+const GoogleLoginButton = ({handleSignIn}: Props) => {
   return (
-    <GoogleButton>
+    <GoogleButton onPress={() => handleSignIn}>
       <Icon name="google" size={20} color="#fff" />
       <TextButton>Continuar con Google</TextButton>
     </GoogleButton>
   );
 };
-
 const LoginScreen = (): ReactElement => {
-  const [user, setUser] = useState(null);
-
   const signIn = async () => {
     // Check if your device supports Google Play
     await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
@@ -37,7 +34,7 @@ const LoginScreen = (): ReactElement => {
 
   return (
     <ContainList>
-      <GoogleLoginButton />
+      <GoogleLoginButton handleSignIn={signIn} />
     </ContainList>
   );
 };

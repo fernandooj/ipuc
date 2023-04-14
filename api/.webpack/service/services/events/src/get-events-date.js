@@ -1,27 +1,26 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./lib/errors/database-error.js":
-/*!**************************************!*\
-  !*** ./lib/errors/database-error.js ***!
-  \**************************************/
-/***/ ((module) => {
+/***/ "./lib/connection-pg.js":
+/*!******************************!*\
+  !*** ./lib/connection-pg.js ***!
+  \******************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-/** @module database-error */
+const { Pool } = __webpack_require__(/*! pg */ "./node_modules/pg/lib/index.js");
+ 
+const {RDS_HOSTNAME, RDS_DB, RDS_PORT, RDS_USERNAME, RDS_PASSWORD} = process.env;
 
-/**
- * Structures the error into a standard format
- * object to be handled by the `Lambdas`
- * @param {Object} error - error caught
- * @returns {void}
- */
-module.exports = function DatabaseError(error) {
-  this.errorType = error.routine || error.code;
-  this.httpStatus = error.statusCode || 500;
-  this.message = (error.error || error.message).replace(/["]/g, "'");
-  this.stack = error.stack;
-};
+const poolConection = new Pool({
+  host: RDS_HOSTNAME,
+  database: RDS_DB,
+  port: RDS_PORT,
+  user: RDS_USERNAME,
+  password: RDS_PASSWORD,
+});
 
+
+module.exports = {poolConection}
 
 /***/ }),
 
@@ -5618,32 +5617,22 @@ function extend(target) {
 
 /***/ }),
 
-/***/ "./services/events/src/create-events.js":
-/*!**********************************************!*\
-  !*** ./services/events/src/create-events.js ***!
-  \**********************************************/
+/***/ "./services/events/src/get-events-date.js":
+/*!************************************************!*\
+  !*** ./services/events/src/get-events-date.js ***!
+  \************************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const { Pool } = __webpack_require__(/*! pg */ "./node_modules/pg/lib/index.js");
-const DatabaseError = __webpack_require__(/*! ../../../lib/errors/database-error */ "./lib/errors/database-error.js");
-
-const pool = new Pool({
-  host: process.env.RDS_HOSTNAME,
-  database: process.env.RDS_DB,
-  port: process.env.RDS_PORT,
-  user: process.env.RDS_USERNAME,
-  password: process.env.RDS_PASSWORD,
-});
-
-const createEvent = 'SELECT * FROM insert_event($1, $2, $3, $4, $5, $6)';
+const {poolConection} = __webpack_require__(/*! ../../../lib/connection-pg.js */ "./lib/connection-pg.js")
+const selectAsesores = 'SELECT * FROM events';
 
 module.exports.main = async (event) => {
-  const client = await pool.connect();
-   const {title, description, eventDate, image, idCategory, namePlace } = event
+  const client = await poolConection.connect();
+
   try {
     client.query('BEGIN');
 
-    const { rows } = await client.query(createEvent, [title, description, eventDate, image, idCategory, namePlace ]);
+    const { rows } = await client.query(selectAsesores);
 
     client.query('COMMIT');
 
@@ -5806,7 +5795,7 @@ module.exports = require("util");
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"_from":"pg@^8.7.3","_id":"pg@8.7.3","_inBundle":false,"_integrity":"sha512-HPmH4GH4H3AOprDJOazoIcpI49XFsHCe8xlrjHkWiapdbHK+HLtbm/GQzXYAZwmPju/kzKhjaSfMACG+8cgJcw==","_location":"/pg","_phantomChildren":{},"_requested":{"type":"range","registry":true,"raw":"pg@^8.7.3","name":"pg","escapedName":"pg","rawSpec":"^8.7.3","saveSpec":null,"fetchSpec":"^8.7.3"},"_requiredBy":["/"],"_resolved":"https://registry.npmjs.org/pg/-/pg-8.7.3.tgz","_shasum":"8a5bdd664ca4fda4db7997ec634c6e5455b27c44","_spec":"pg@^8.7.3","_where":"/Users/sirortiz/Documents/proyects/picpuc/api","author":{"name":"Brian Carlson","email":"brian.m.carlson@gmail.com"},"bugs":{"url":"https://github.com/brianc/node-postgres/issues"},"bundleDependencies":false,"dependencies":{"buffer-writer":"2.0.0","packet-reader":"1.0.0","pg-connection-string":"^2.5.0","pg-pool":"^3.5.1","pg-protocol":"^1.5.0","pg-types":"^2.1.0","pgpass":"1.x"},"deprecated":false,"description":"PostgreSQL client - pure javascript & libpq with the same API","devDependencies":{"async":"0.9.0","bluebird":"3.5.2","co":"4.6.0","pg-copy-streams":"0.3.0"},"engines":{"node":">= 8.0.0"},"files":["lib","SPONSORS.md"],"gitHead":"4fa7ee891a456168a75695ac026792136f16577f","homepage":"https://github.com/brianc/node-postgres","keywords":["database","libpq","pg","postgre","postgres","postgresql","rdbms"],"license":"MIT","main":"./lib","name":"pg","peerDependencies":{"pg-native":">=2.0.0"},"peerDependenciesMeta":{"pg-native":{"optional":true}},"repository":{"type":"git","url":"git://github.com/brianc/node-postgres.git","directory":"packages/pg"},"scripts":{"test":"make test-all"},"version":"8.7.3"}');
+module.exports = JSON.parse('{"name":"pg","version":"8.7.3","description":"PostgreSQL client - pure javascript & libpq with the same API","keywords":["database","libpq","pg","postgre","postgres","postgresql","rdbms"],"homepage":"https://github.com/brianc/node-postgres","repository":{"type":"git","url":"git://github.com/brianc/node-postgres.git","directory":"packages/pg"},"author":"Brian Carlson <brian.m.carlson@gmail.com>","main":"./lib","dependencies":{"buffer-writer":"2.0.0","packet-reader":"1.0.0","pg-connection-string":"^2.5.0","pg-pool":"^3.5.1","pg-protocol":"^1.5.0","pg-types":"^2.1.0","pgpass":"1.x"},"devDependencies":{"async":"0.9.0","bluebird":"3.5.2","co":"4.6.0","pg-copy-streams":"0.3.0"},"peerDependencies":{"pg-native":">=2.0.0"},"peerDependenciesMeta":{"pg-native":{"optional":true}},"scripts":{"test":"make test-all"},"files":["lib","SPONSORS.md"],"license":"MIT","engines":{"node":">= 8.0.0"},"gitHead":"4fa7ee891a456168a75695ac026792136f16577f"}');
 
 /***/ })
 
@@ -5841,11 +5830,11 @@ module.exports = JSON.parse('{"_from":"pg@^8.7.3","_id":"pg@8.7.3","_inBundle":f
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module used 'module' so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__("./services/events/src/create-events.js");
+/******/ 	var __webpack_exports__ = __webpack_require__("./services/events/src/get-events-date.js");
 /******/ 	var __webpack_export_target__ = exports;
 /******/ 	for(var i in __webpack_exports__) __webpack_export_target__[i] = __webpack_exports__[i];
 /******/ 	if(__webpack_exports__.__esModule) Object.defineProperty(__webpack_export_target__, "__esModule", { value: true });
 /******/ 	
 /******/ })()
 ;
-//# sourceMappingURL=create-events.js.map
+//# sourceMappingURL=get-events-date.js.map

@@ -1,17 +1,15 @@
 import React, {FC, useEffect, useState} from 'react';
-import {View, Text, Dimensions} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+import {Dimensions} from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import MapView from 'react-native-maps';
 import {EventStyled} from './styles';
-import {EvenType} from './event.types';
-
+import {MapType} from './map.types';
 // import SlideEvents from '../../components/slide-events/slide-events'
 
 const {width, height} = Dimensions.get('window');
-const {ImageContent, BoxText, Contain, Title, SubTitle} = EventStyled;
+const {BoxText, Contain} = EventStyled;
 
-const MapScreeen: FC<EvenType> = ({title, description, image}) => {
+const MapScreeen: FC<MapType> = () => {
   const [region, setRegion] = useState<
     | {
         latitude: number;
@@ -23,11 +21,17 @@ const MapScreeen: FC<EvenType> = ({title, description, image}) => {
   >();
 
   useEffect(() => {
-    Geolocation.getCurrentPosition(({coords}) => setRegion(coords));
-  }, [])
-  if(region){
+    Geolocation.getCurrentPosition(({coords}) => {
+      const newRegion = {
+        ...coords,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      };
+      setRegion(newRegion);
+    });
+  }, []);
+  if (region) {
     const {latitude, longitude} = region;
-    console.log(region)
     return (
       <Contain>
         <BoxText>
@@ -42,15 +46,14 @@ const MapScreeen: FC<EvenType> = ({title, description, image}) => {
             mapType="mutedStandard"
             onRegionChange={setRegion}
             style={{width: width, height: height - 80}}
-
           />
         </BoxText>
         {/* <SlideEvents />  */}
       </Contain>
     );
-  }else{
-    return null
+  } else {
+    return null;
   }
-}
+};
 
 export default MapScreeen;

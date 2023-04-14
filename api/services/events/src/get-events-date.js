@@ -1,18 +1,8 @@
-const { Pool } = require('pg');
-const DatabaseError = require('../../../lib/errors/database-error');
-
-const pool = new Pool({
-  host: process.env.RDS_HOSTNAME,
-  database: process.env.RDS_DB,
-  port: process.env.RDS_PORT,
-  user: process.env.RDS_USERNAME,
-  password: process.env.RDS_PASSWORD,
-});
-
-const selectAsesores = 'SELECT * FROM eventos';
+const {poolConection} = require('../../../lib/connection-pg.js')
+const selectAsesores = 'SELECT * FROM events';
 
 module.exports.main = async (event) => {
-  const client = await pool.connect();
+  const client = await poolConection.connect();
 
   try {
     client.query('BEGIN');
