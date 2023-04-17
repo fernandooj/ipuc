@@ -1,9 +1,10 @@
+const AWS = require('aws-sdk')
+const S3 = new AWS.S3()
 const {poolConection} = require('../../../lib/connection-pg.js')
-const selectAsesores = 'SELECT * FROM events';
+const {uploadImage}   = require('../../../lib/image')
 
 /** create user */
 const SAVE_EVENT = 'SELECT * FROM save_events($1, $2, $3, $4, $5, $6, $7)';
-
 
 /**
  * Inserts an event into the database.
@@ -22,15 +23,21 @@ const SAVE_EVENT = 'SELECT * FROM save_events($1, $2, $3, $4, $5, $6, $7)';
  */
 
 module.exports.main = async (event, context) => {
-  // context.callbackWaitsForEmptyEventLoop = false;
+  const body = JSON.parse(event.body);
   const {
-    title, description, event_date, image_url, category_id, place_name, location,  
-  } = event;
+    title, description, event_date, category_id, place_name, location,
+  } = body;
   const client = await poolConection.connect();
- 
+
   try {
+    
+    const image_url = await uploadImage(event);
+
     await client.query(SAVE_EVENT, [title, description, event_date, image_url, category_id, place_name, location])
-    return {status:true}
+    return {
+        statusCode: 200,
+        body: image_url
+      }
   } catch (error) {
     throw JSON.stringify(error);
   }

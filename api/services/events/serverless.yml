@@ -6,23 +6,25 @@ createEvent:
           path: events
           method: post
           cors: true
-          integration: lambda
-          request:
-            headers:
-                Content-Type: "'application/json'"
-            passThrough: WHEN_NO_TEMPLATES
-            template:
-              application/json: |
-                #set($inputRoot = $input.path('$'))
-                {
-                  "title": "$inputRoot.title",
-                  "description": "$inputRoot.description",
-                  "event_date": "$inputRoot.event_date",
-                  "image_url": "$inputRoot.image_url",
-                  "category_id": "$inputRoot.category_id",
-                  "place_name": "$inputRoot.place_name",
-                  "location": "$inputRoot.location"
-                }
+    environment:
+      BUCKET: picpuc
+    integration: lambda
+    request:
+      headers:
+        Content-Type: "'multipart/form-data'"
+      passThrough: WHEN_NO_TEMPLATES
+      template:
+        application/json: |
+          #set($inputRoot = $input.path('$'))
+          {
+            "title": "$inputRoot.title",
+            "description": "$inputRoot.description",
+            "event_date": "$inputRoot.event_date",
+            "image_url": "$inputRoot.image_url",
+            "category_id": "$inputRoot.category_id",
+            "place_name": "$inputRoot.place_name",
+            "location": "$inputRoot.location"
+          }
             response:
               headers:
                 Content-Type: "'application/json'"
@@ -48,7 +50,12 @@ createEvent:
                   template: ${file(error-templates/gateway-timeout.yml)}
                   headers:
                     Content-Type: "'application/json'"
-
+    package:
+      include:
+        - services/events/src/create-event.js
+        - lib/errors/database-error.js
+        - lib/image.js
+        - lib/responses.js
 getEventsDate:
     name: ${self:custom.base}-get-events-date
     handler: services/events/src/get-events-date.main

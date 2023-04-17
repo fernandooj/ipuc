@@ -9,12 +9,29 @@
       "runtime": "nodejs12.x",
       "stage": "dev",
       "region": "us-east-1",
+      "apiGateway": {
+        "binaryMediaTypes": [
+          "*/*"
+        ]
+      },
+      "iamRoleStatements": [
+        {
+          "Effect": "Allow",
+          "Action": [
+            "s3:PutObject",
+            "s3:GetObject"
+          ],
+          "Resource": "arn:aws:s3:::picpuc/*"
+        }
+      ],
       "environment": {
-        "RDS_HOSTNAME": "dbpicpuc.cdr5hk0crwhd.us-east-1.rds.amazonaws.com",
-        "RDS_DB": "picpucDB",
+        "RDS_HOSTNAME": "db-picpuc.cjjhqtyxbiax.us-east-1.rds.amazonaws.com",
+        "RDS_DB": "DBpicpuc",
         "RDS_PORT": "5432",
         "RDS_USERNAME": "postgres",
-        "RDS_PASSWORD": "5HZfB4yz8RYPZ6vnZJjC"
+        "RDS_PASSWORD": "W8po5IEMHyDJsrW1FWMv",
+        "AWS_REGION_ULR": "us-east-1",
+        "BUCKET": "picpuc"
       },
       "versionFunctions": true,
       "compiledCloudFormationTemplate": {
@@ -90,6 +107,12 @@
               }
             }
           },
+          "CreateEventLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/picpuc-dev-create-event"
+            }
+          },
           "GetEventsDateLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
@@ -152,6 +175,9 @@
                             "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/picpuc-dev*:*:*"
                           }
                         ]
+                      },
+                      {
+                        "$ref": "$[\"service\"][\"provider\"][\"iamRoleStatements\"][0]"
                       }
                     ]
                   }
@@ -173,6 +199,42 @@
               }
             }
           },
+          "CreateEventLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/picpuc/dev/1681761601650-2023-04-17T20:00:01.650Z/picpuc.zip"
+              },
+              "Handler": "services/events/src/create-event.main",
+              "Runtime": "nodejs12.x",
+              "FunctionName": "picpuc-dev-create-event",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "RDS_HOSTNAME": "db-picpuc.cjjhqtyxbiax.us-east-1.rds.amazonaws.com",
+                  "RDS_DB": "DBpicpuc",
+                  "RDS_PORT": "5432",
+                  "RDS_USERNAME": "postgres",
+                  "RDS_PASSWORD": "W8po5IEMHyDJsrW1FWMv",
+                  "AWS_REGION_ULR": "us-east-1",
+                  "BUCKET": "picpuc"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "CreateEventLogGroup"
+            ]
+          },
           "GetEventsDateLambdaFunction": {
             "Type": "AWS::Lambda::Function",
             "Properties": {
@@ -180,7 +242,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/picpuc/dev/1655866898996-2022-06-22T03:01:38.996Z/picpuc.zip"
+                "S3Key": "serverless/picpuc/dev/1681761601650-2023-04-17T20:00:01.650Z/picpuc.zip"
               },
               "Handler": "services/events/src/get-events-date.main",
               "Runtime": "nodejs12.x",
@@ -189,11 +251,13 @@
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "RDS_HOSTNAME": "dbpicpuc.cdr5hk0crwhd.us-east-1.rds.amazonaws.com",
-                  "RDS_DB": "picpucDB",
+                  "RDS_HOSTNAME": "db-picpuc.cjjhqtyxbiax.us-east-1.rds.amazonaws.com",
+                  "RDS_DB": "DBpicpuc",
                   "RDS_PORT": "5432",
                   "RDS_USERNAME": "postgres",
-                  "RDS_PASSWORD": "5HZfB4yz8RYPZ6vnZJjC"
+                  "RDS_PASSWORD": "W8po5IEMHyDJsrW1FWMv",
+                  "AWS_REGION_ULR": "us-east-1",
+                  "BUCKET": "picpuc"
                 }
               },
               "Role": {
@@ -207,20 +271,33 @@
               "GetEventsDateLogGroup"
             ]
           },
-          "GetEventsDateLambdaVersionvaKMBAAckVAlJXt4tKuhXjl4NuAOhdA3sVj1rTaVR4": {
+          "CreateEventLambdaVersiongX2WFMtZ5wzVlXkylpmDeOTGWlHgi9qFWlBYcfEj71I": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "CreateEventLambdaFunction"
+              },
+              "CodeSha256": "1VmcAYczrH1thVWrIMcL870nFCLBMfZ4NPA09IvYHOg="
+            }
+          },
+          "GetEventsDateLambdaVersions9yvXxYFGjQfGcqKZiULfJtCZZGZ0qPrgXiSrdghhE": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetEventsDateLambdaFunction"
               },
-              "CodeSha256": "T5I5ZVJTIZPYboO+YzAK7HPHutv+Kf1fNweeED3yVYQ="
+              "CodeSha256": "1VmcAYczrH1thVWrIMcL870nFCLBMfZ4NPA09IvYHOg="
             }
           },
           "ApiGatewayRestApi": {
             "Type": "AWS::ApiGateway::RestApi",
             "Properties": {
               "Name": "dev-picpuc",
+              "BinaryMediaTypes": [
+                "*/*"
+              ],
               "EndpointConfiguration": {
                 "Types": [
                   "EDGE"
@@ -251,6 +328,51 @@
                 "Ref": "ApiGatewayResourceEvents"
               },
               "PathPart": "date",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayMethodEventsOptions": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "AuthorizationType": "NONE",
+              "HttpMethod": "OPTIONS",
+              "MethodResponses": [
+                {
+                  "StatusCode": "200",
+                  "ResponseParameters": {
+                    "method.response.header.Access-Control-Allow-Origin": true,
+                    "method.response.header.Access-Control-Allow-Headers": true,
+                    "method.response.header.Access-Control-Allow-Methods": true
+                  },
+                  "ResponseModels": {}
+                }
+              ],
+              "RequestParameters": {},
+              "Integration": {
+                "Type": "MOCK",
+                "RequestTemplates": {
+                  "application/json": "{statusCode:200}"
+                },
+                "ContentHandling": "CONVERT_TO_TEXT",
+                "IntegrationResponses": [
+                  {
+                    "StatusCode": "200",
+                    "ResponseParameters": {
+                      "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                      "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,POST'"
+                    },
+                    "ResponseTemplates": {
+                      "application/json": ""
+                    }
+                  }
+                ]
+              },
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceEvents"
+              },
               "RestApiId": {
                 "Ref": "ApiGatewayRestApi"
               }
@@ -300,6 +422,52 @@
                 "Ref": "ApiGatewayRestApi"
               }
             }
+          },
+          "ApiGatewayMethodEventsPost": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "POST",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceEvents"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "CreateEventLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "CreateEventLambdaPermissionApiGateway"
+            ]
           },
           "ApiGatewayMethodEventsDateGet": {
             "Type": "AWS::ApiGateway::Method",
@@ -469,7 +637,7 @@
               "Name": "picpuc-dev | Validate request body and querystring parameters"
             }
           },
-          "ApiGatewayDeployment1655866896036": {
+          "ApiGatewayDeployment1681761596144": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -478,9 +646,48 @@
               "StageName": "dev"
             },
             "DependsOn": [
+              "ApiGatewayMethodEventsOptions",
               "ApiGatewayMethodEventsDateOptions",
+              "ApiGatewayMethodEventsPost",
               "ApiGatewayMethodEventsDateGet"
             ]
+          },
+          "CreateEventLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "CreateEventLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
           },
           "GetEventsDateLambdaPermissionApiGateway": {
             "Type": "AWS::Lambda::Permission",
@@ -529,10 +736,19 @@
               "Name": "sls-picpuc-dev-ServerlessDeploymentBucketName"
             }
           },
+          "CreateEventLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "CreateEventLambdaVersiongX2WFMtZ5wzVlXkylpmDeOTGWlHgi9qFWlBYcfEj71I"
+            },
+            "Export": {
+              "Name": "sls-picpuc-dev-CreateEventLambdaFunctionQualifiedArn"
+            }
+          },
           "GetEventsDateLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetEventsDateLambdaVersionvaKMBAAckVAlJXt4tKuhXjl4NuAOhdA3sVj1rTaVR4"
+              "Ref": "GetEventsDateLambdaVersions9yvXxYFGjQfGcqKZiULfJtCZZGZ0qPrgXiSrdghhE"
             },
             "Export": {
               "Name": "sls-picpuc-dev-GetEventsDateLambdaFunctionQualifiedArn"
@@ -651,6 +867,9 @@
       "vpc": {}
     },
     "custom": {
+      "dotenv": {
+        "path": ".env"
+      },
       "webpack": {
         "webpackConfig": "webpack.config.js",
         "includeModules": false,
@@ -660,20 +879,71 @@
       "n": "my-app:dev:us-east-1:api",
       "base": "picpuc-dev",
       "rds": {
-        "host_name": "dbpicpuc.cdr5hk0crwhd.us-east-1.rds.amazonaws.com",
-        "db": "picpucDB",
+        "host_name": "db-picpuc.cjjhqtyxbiax.us-east-1.rds.amazonaws.com",
+        "db": "DBpicpuc",
         "user_name": "postgres",
-        "password": "5HZfB4yz8RYPZ6vnZJjC",
+        "password": "W8po5IEMHyDJsrW1FWMv",
         "port": 5432
       }
     },
     "plugins": [
+      "serverless-dotenv-plugin",
       "serverless-offline",
       "serverless-webpack",
       "serverless-iam-roles-per-function"
     ],
     "pluginsData": {},
     "functions": {
+      "createEvent": {
+        "name": "picpuc-dev-create-event",
+        "handler": "services/events/src/create-event.main",
+        "events": [
+          {
+            "http": {
+              "path": "events",
+              "method": "post",
+              "cors": {
+                "origin": "*",
+                "methods": [
+                  "OPTIONS",
+                  "POST"
+                ],
+                "headers": [
+                  "Content-Type",
+                  "X-Amz-Date",
+                  "Authorization",
+                  "X-Api-Key",
+                  "X-Amz-Security-Token",
+                  "X-Amz-User-Agent"
+                ],
+                "allowCredentials": false
+              },
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "environment": {
+          "BUCKET": "picpuc"
+        },
+        "integration": "lambda",
+        "request": {
+          "headers": {
+            "Content-Type": "'multipart/form-data'"
+          },
+          "passThrough": "WHEN_NO_TEMPLATES",
+          "template": {
+            "application/json": "#set($inputRoot = $input.path('$'))\n{\n  \"title\": \"$inputRoot.title\",\n  \"description\": \"$inputRoot.description\",\n  \"event_date\": \"$inputRoot.event_date\",\n  \"image_url\": \"$inputRoot.image_url\",\n  \"category_id\": \"$inputRoot.category_id\",\n  \"place_name\": \"$inputRoot.place_name\",\n  \"location\": \"$inputRoot.location\"\n}\n  response:\n    headers:\n      Content-Type: \"'application/json'\"\n    template: $input.json('$')\n    statusCodes:\n      400:\n        pattern: '.*\"httpStatus\":400.*'\n        template: #set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n{\n  \"type\": \"$errorMessageObj.errorType\",\n  \"message\": \"$errorMessageObj.message\",\n  \"requestId\": \"$context.requestId\"\n}\n\n        headers:\n          Content-Type: \"'application/json'\"\n      422:\n        pattern: '.*\"httpStatus\":422.*'\n        template: #set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n{\n  \"type\": \"$errorMessageObj.errorType\",\n  \"message\": \"$errorMessageObj.message\",\n  \"requestId\": \"$context.requestId\"\n}\n\n        headers:\n          Content-Type: \"'application/json'\"\n      500:\n        pattern: '.*\"httpStatus\":500.*'\n        template: #set ($errorMessageObj = $util.parseJson($input.path('$.errorMessage')))\n{\n  \"type\": \"$errorMessageObj.errorType\",\n  \"message\": \"$errorMessageObj.message\",\n  \"requestId\": \"$context.requestId\"\n}\n\n        headers:\n          Content-Type: \"'application/json'\"\n      504:\n        pattern: '.* timed out .*'\n        template: #set ($errorMessage = $input.path('$.errorMessage'))\n{\n  \"type\": \"gatewayTimeout\",\n  \"message\": \"$errorMessage\",\n  \"requestId\": \"$context.requestId\"\n}\n\n        headers:\n          Content-Type: \"'application/json'\"\n"
+          }
+        },
+        "package": {
+          "artifact": ".serverless/picpuc.zip"
+        },
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs12.x",
+        "vpc": {},
+        "versionLogicalId": "CreateEventLambdaVersiongX2WFMtZ5wzVlXkylpmDeOTGWlHgi9qFWlBYcfEj71I"
+      },
       "getEventsDate": {
         "name": "picpuc-dev-get-events-date",
         "handler": "services/events/src/get-events-date.main",
@@ -760,7 +1030,7 @@
         "timeout": 6,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "GetEventsDateLambdaVersionvaKMBAAckVAlJXt4tKuhXjl4NuAOhdA3sVj1rTaVR4"
+        "versionLogicalId": "GetEventsDateLambdaVersions9yvXxYFGjQfGcqKZiULfJtCZZGZ0qPrgXiSrdghhE"
       }
     },
     "configValidationMode": "warn",
@@ -785,7 +1055,7 @@
     "isDashboardMonitoringPreconfigured": false
   },
   "package": {
-    "artifactDirectoryName": "serverless/picpuc/dev/1655866898996-2022-06-22T03:01:38.996Z",
+    "artifactDirectoryName": "serverless/picpuc/dev/1681761601650-2023-04-17T20:00:01.650Z",
     "artifact": ""
   }
 }

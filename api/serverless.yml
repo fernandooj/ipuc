@@ -15,14 +15,25 @@ plugins:
 provider:
   name: aws
   runtime: nodejs12.x
-  stage: ${opt:stage, "dev"}
+  stage: ${opt:stage, 'dev'}
   region: ${opt:region, "us-east-1"}
+  apiGateway:
+      binaryMediaTypes:
+          - '*/*'
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "s3:PutObject"
+        - "s3:GetObject"
+      Resource:
+        -  "arn:aws:s3:::picpuc/*"
   environment:
     RDS_HOSTNAME: ${self:custom.rds.host_name}
     RDS_DB: ${self:custom.rds.db}
     RDS_PORT: ${self:custom.rds.port} 
     RDS_USERNAME: ${self:custom.rds.user_name}
     RDS_PASSWORD: ${self:custom.rds.password} 
+    
   # apiGateway:
   #   restApiId: ${output:${self:custom.n}.ApiId}
   #   restApiRootResourceId: ${output:${self:custom.n}.ApiResourceId}
@@ -38,7 +49,7 @@ custom:
   n: my-app:${self:provider.stage}:${self:provider.region}:api
   base: ${self:service}-${self:provider.stage}
   rds:
-    host_name:  db-picpuc.cjjhqtyxbiax.us-east-1.rds.amazonaws.com
+    host_name: db-picpuc.cjjhqtyxbiax.us-east-1.rds.amazonaws.com
     db: DBpicpuc
     user_name: postgres
     password: W8po5IEMHyDJsrW1FWMv
