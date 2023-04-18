@@ -10,7 +10,7 @@ const Tab = createMaterialBottomTabNavigator();
 function AppStack() {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Home" component={MapScreeen} />
+      <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Map" component={MapScreeen} />
       <Tab.Screen name="LoginScreen" component={LoginScreen} />
     </Tab.Navigator>

@@ -22,16 +22,13 @@ const SAVE_EVENT = 'SELECT * FROM save_events($1, $2, $3, $4, $5, $6, $7)';
  * @throws {string} - Throws a string with an error message if the operation fails.
  */
 
-module.exports.main = async (event, context) => {
-  // context.callbackWaitsForEmptyEventLoop = false;
-  console.log("event.body.title")
-  console.log(event)
+module.exports.main = async (event) => {
   const body = JSON.parse(event.body);
   const {
-    title, description, event_date, category_id, place_name, location, image_url
+    title, description, event_date, category_id, place_name, location
   } = body;
   const client = await poolConection.connect();
-  console.log(event);
+
   try {
     
     const image_url = await uploadImage(body);

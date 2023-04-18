@@ -83,6 +83,12 @@
         "LogGroupName": "/aws/lambda/picpuc-dev-get-events-date"
       }
     },
+    "GetEventsNearLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/picpuc-dev-get-events-near"
+      }
+    },
     "IamRoleLambdaExecution": {
       "Type": "AWS::IAM::Role",
       "Properties": {
@@ -175,7 +181,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/picpuc/dev/1681840482947-2023-04-18T17:54:42.947Z/picpuc.zip"
+          "S3Key": "serverless/picpuc/dev/1681846144940-2023-04-18T19:29:04.940Z/picpuc.zip"
         },
         "Handler": "services/events/src/create-event.main",
         "Runtime": "nodejs12.x",
@@ -184,12 +190,12 @@
         "Timeout": 6,
         "Environment": {
           "Variables": {
+            "AWS_REGION_ULR": "us-east-1",
             "RDS_HOSTNAME": "db-picpuc.cjjhqtyxbiax.us-east-1.rds.amazonaws.com",
             "RDS_DB": "DBpicpuc",
             "RDS_PORT": "5432",
             "RDS_USERNAME": "postgres",
             "RDS_PASSWORD": "W8po5IEMHyDJsrW1FWMv",
-            "AWS_REGION_ULR": "us-east-1",
             "BUCKET": "picpuc"
           }
         },
@@ -211,7 +217,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/picpuc/dev/1681840482947-2023-04-18T17:54:42.947Z/picpuc.zip"
+          "S3Key": "serverless/picpuc/dev/1681846144940-2023-04-18T19:29:04.940Z/picpuc.zip"
         },
         "Handler": "services/events/src/get-events-date.main",
         "Runtime": "nodejs12.x",
@@ -220,12 +226,12 @@
         "Timeout": 6,
         "Environment": {
           "Variables": {
+            "AWS_REGION_ULR": "us-east-1",
             "RDS_HOSTNAME": "db-picpuc.cjjhqtyxbiax.us-east-1.rds.amazonaws.com",
             "RDS_DB": "DBpicpuc",
             "RDS_PORT": "5432",
             "RDS_USERNAME": "postgres",
             "RDS_PASSWORD": "W8po5IEMHyDJsrW1FWMv",
-            "AWS_REGION_ULR": "us-east-1",
             "BUCKET": "picpuc"
           }
         },
@@ -240,24 +246,70 @@
         "GetEventsDateLogGroup"
       ]
     },
-    "CreateEventLambdaVersionAQ5jLYqMt5X5trpMuLCXtGBFkFgvXdl6H5MdxmUbk": {
+    "GetEventsNearLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/picpuc/dev/1681846144940-2023-04-18T19:29:04.940Z/picpuc.zip"
+        },
+        "Handler": "services/events/src/get-events-near.handle",
+        "Runtime": "nodejs12.x",
+        "FunctionName": "picpuc-dev-get-events-near",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "AWS_REGION_ULR": "us-east-1",
+            "RDS_HOSTNAME": "db-picpuc.cjjhqtyxbiax.us-east-1.rds.amazonaws.com",
+            "RDS_DB": "DBpicpuc",
+            "RDS_PORT": "5432",
+            "RDS_USERNAME": "postgres",
+            "RDS_PASSWORD": "W8po5IEMHyDJsrW1FWMv",
+            "BUCKET": "picpuc"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "GetEventsNearLogGroup"
+      ]
+    },
+    "CreateEventLambdaVersionzVqh42wmA4KA97ON8QEJlXF3m5Bi2aa9jBKtCSusWg": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "CreateEventLambdaFunction"
         },
-        "CodeSha256": "sOW1Yf2165h/lke34vbfp/+uHdLGpVgl9mpqqQLkenA="
+        "CodeSha256": "J6MmNYO5JauNwn/44zKvJL0mpqqb8LDsQo8S2d/ulLU="
       }
     },
-    "GetEventsDateLambdaVersionYIfnZjT39Yi2M85uXED4DhmpaeXAlnmINmP5smbIPyI": {
+    "GetEventsDateLambdaVersionrf6TYOm9RPuq8tOLzT39ek1mb7hsOWzNVzvxxJ2x1Fg": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "GetEventsDateLambdaFunction"
         },
-        "CodeSha256": "sOW1Yf2165h/lke34vbfp/+uHdLGpVgl9mpqqQLkenA="
+        "CodeSha256": "J6MmNYO5JauNwn/44zKvJL0mpqqb8LDsQo8S2d/ulLU="
+      }
+    },
+    "GetEventsNearLambdaVersion0zGOzYR0WzimnlnaqHbMfIUbgduK75AiMG9toic": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "GetEventsNearLambdaFunction"
+        },
+        "CodeSha256": "J6MmNYO5JauNwn/44zKvJL0mpqqb8LDsQo8S2d/ulLU="
       }
     },
     "HttpApi": {
@@ -447,6 +499,81 @@
         }
       },
       "DependsOn": "HttpApiIntegrationGetEventsDate"
+    },
+    "GetEventsNearLambdaPermissionHttpApi": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "GetEventsNearLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "HttpApi"
+              },
+              "/*"
+            ]
+          ]
+        }
+      }
+    },
+    "HttpApiIntegrationGetEventsNear": {
+      "Type": "AWS::ApiGatewayV2::Integration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": {
+          "Fn::GetAtt": [
+            "GetEventsNearLambdaFunction",
+            "Arn"
+          ]
+        },
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 6500
+      }
+    },
+    "HttpApiRouteGetEventsNearCoordsVar": {
+      "Type": "AWS::ApiGatewayV2::Route",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "RouteKey": "GET /events/near/{coords}",
+        "Target": {
+          "Fn::Join": [
+            "/",
+            [
+              "integrations",
+              {
+                "Ref": "HttpApiIntegrationGetEventsNear"
+              }
+            ]
+          ]
+        }
+      },
+      "DependsOn": "HttpApiIntegrationGetEventsNear"
     }
   },
   "Outputs": {
@@ -461,7 +588,7 @@
     "CreateEventLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "CreateEventLambdaVersionAQ5jLYqMt5X5trpMuLCXtGBFkFgvXdl6H5MdxmUbk"
+        "Ref": "CreateEventLambdaVersionzVqh42wmA4KA97ON8QEJlXF3m5Bi2aa9jBKtCSusWg"
       },
       "Export": {
         "Name": "sls-picpuc-dev-CreateEventLambdaFunctionQualifiedArn"
@@ -470,10 +597,19 @@
     "GetEventsDateLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GetEventsDateLambdaVersionYIfnZjT39Yi2M85uXED4DhmpaeXAlnmINmP5smbIPyI"
+        "Ref": "GetEventsDateLambdaVersionrf6TYOm9RPuq8tOLzT39ek1mb7hsOWzNVzvxxJ2x1Fg"
       },
       "Export": {
         "Name": "sls-picpuc-dev-GetEventsDateLambdaFunctionQualifiedArn"
+      }
+    },
+    "GetEventsNearLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "GetEventsNearLambdaVersion0zGOzYR0WzimnlnaqHbMfIUbgduK75AiMG9toic"
+      },
+      "Export": {
+        "Name": "sls-picpuc-dev-GetEventsNearLambdaFunctionQualifiedArn"
       }
     },
     "HttpApiId": {

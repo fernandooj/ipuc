@@ -21,3 +21,13 @@ getEventsDate:
     include:
       - services/events/src/get-events-date.js
       - lib/errors/database-error.js
+
+getEventsNear:
+  name: ${self:custom.base}-get-events-near
+  handler: services/events/src/get-events-near.handle
+  events:
+    - httpApi: 'GET /events/near/{coords}'
+  package:
+    include:
+      - services/events/src/get-events-near.js
+      - lib/errors/database-error.js

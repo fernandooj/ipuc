@@ -1,12 +1,12 @@
 const {poolConection} = require('../../../lib/connection-pg.js')
 const DatabaseError  = require('../../../lib/errors/database-error')
 
-module.exports.main = async (event) => {
+module.exports.handle = async (event) => {
   
-  const {order = 'asc'} = event.pathParameters
-  const selectEvents = `SELECT * FROM events WHERE active=true ORDER BY event_date ${order}`;
+  const {coords = "4.662795384557246, -74.11561761785137"} = event.pathParameters
+  const selectEvents = `SELECT * FROM get_nearest_events(${coords})`;
   
-  console.log(order)
+
   try {
     const client = await poolConection.connect();
     client.query('BEGIN');

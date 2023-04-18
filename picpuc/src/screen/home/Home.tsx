@@ -9,27 +9,25 @@ import {
   Title,
   Btn,
 } from './styles';
+import EventComponent from '../../components/events/event';
+import {getEvents} from '../../services/event';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Feather';
-import EventComponent from '../../components/events/event';
+import {useDispatch} from 'react-redux';
 
 const HomeScreen = (): ReactElement => {
-  const [events, setEventos] = useState([]);
   const [btnActive, setBtnActive] = useState(true);
-  const apiEvents = async () => {
-    try {
-      const {data} = await axios.get(
-        'https://j6ptbe97xb.execute-api.us-east-1.amazonaws.com/dev/events/date?order=ASC',
-      );
-      setEventos(data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const dispatch = useDispatch();
+  
+  const fetchEvent = () => {
+    getEvents().then(e=> {
+      dispatch(getEventReducer(e)); 
+    })
+  }
 
   useEffect(() => {
-    apiEvents();
-  }, []);
+      fetchEvent();
+  }, [dispatch]);
 
   const onChangeText = () => {};
 
