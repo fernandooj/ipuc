@@ -7,9 +7,9 @@ const s3 = new AWS.S3();
 
 const allowedMimes = ['image/jpeg', 'image/png', 'image/jpg'];
 
-const uploadImage = async event => {
+const uploadImage = async body => {
     try {
-        const body = JSON.parse(event.body);
+        // const body = JSON.parse(event.body);
 
         if (!body.image || !body.mime) {
             Responses._200({ message: 'incorrect body on request' });

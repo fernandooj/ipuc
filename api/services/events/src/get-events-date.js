@@ -1,5 +1,5 @@
 const {poolConection} = require('../../../lib/connection-pg.js')
-const selectAsesores = 'SELECT * FROM events';
+const selectEvents = 'SELECT * FROM events';
 
 module.exports.main = async (event) => {
   const client = await poolConection.connect();
@@ -7,7 +7,7 @@ module.exports.main = async (event) => {
   try {
     client.query('BEGIN');
 
-    const { rows } = await client.query(selectAsesores);
+    const { rows } = await client.query(selectEvents);
 
     client.query('COMMIT');
 

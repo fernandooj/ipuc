@@ -1,109 +1,23 @@
 createEvent:
-    name: ${self:custom.base}-create-event
-    handler: services/events/src/create-event.main
-    events:
-      - http:
-          path: events
-          method: post
-          cors: true
-    environment:
-      BUCKET: picpuc
-    integration: lambda
-    request:
-      headers:
-        Content-Type: "'multipart/form-data'"
-      passThrough: WHEN_NO_TEMPLATES
-      template:
-        application/json: |
-          #set($inputRoot = $input.path('$'))
-          {
-            "title": "$inputRoot.title",
-            "description": "$inputRoot.description",
-            "event_date": "$inputRoot.event_date",
-            "image_url": "$inputRoot.image_url",
-            "category_id": "$inputRoot.category_id",
-            "place_name": "$inputRoot.place_name",
-            "location": "$inputRoot.location"
-          }
-            response:
-              headers:
-                Content-Type: "'application/json'"
-              template: $input.json('$')
-              statusCodes:
-                400:
-                  pattern: '.*"httpStatus":400.*'
-                  template: ${file(error-templates/general-error.yml)}
-                  headers:
-                    Content-Type: "'application/json'"
-                422:
-                  pattern: '.*"httpStatus":422.*'
-                  template: ${file(error-templates/general-error.yml)}
-                  headers:
-                    Content-Type: "'application/json'"
-                500:
-                  pattern: '.*"httpStatus":500.*'
-                  template: ${file(error-templates/general-error.yml)}
-                  headers:
-                    Content-Type: "'application/json'"
-                504:
-                  pattern: '.* timed out .*'
-                  template: ${file(error-templates/gateway-timeout.yml)}
-                  headers:
-                    Content-Type: "'application/json'"
-    package:
-      include:
-        - services/events/src/create-event.js
-        - lib/errors/database-error.js
-        - lib/image.js
-        - lib/responses.js
-getEventsDate:
-    name: ${self:custom.base}-get-events-date
-    handler: services/events/src/get-events-date.main
-    events:
-      - http:
-          path: events/date
-          method: get
-          cors: true
-          integration: lambda
-          request:
-            parameters:
-              querystrings:
-                order: true
-            headers:
-              Content-Type: "'application/json'"
-            passThrough: WHEN_NO_TEMPLATES
-            template:
-              application/json: |
-                {
-                  "order": "$input.params('order')"
-                }
-          response:
-            headers:
-              Content-Type: "'application/json'"
-            template: $input.json('$')
-            statusCodes:
-              400:
-                pattern: '.*"httpStatus":400.*'
-                template: ${file(error-templates/general-error.yml)}
-                headers:
-                  Content-Type: "'application/json'"
-              422:
-                pattern: '.*"httpStatus":422.*'
-                template: ${file(error-templates/general-error.yml)}
-                headers:
-                  Content-Type: "'application/json'"
-              500:
-                pattern: '.*"httpStatus":500.*'
-                template: ${file(error-templates/general-error.yml)}
-                headers:
-                  Content-Type: "'application/json'"
-              504:
-                pattern: '.* timed out .*'
-                template: ${file(error-templates/gateway-timeout.yml)}
-                headers:
-                  Content-Type: "'application/json'"
-    package:
-      include:
-        - services/events/src/get-events-date.js
-        - lib/errors/database-error.js
+  name: ${self:custom.base}-create-event
+  handler: services/events/src/create-event.main
+  events:
+    - httpApi: 'POST /events'
+  environment:
+    BUCKET: picpuc
+  package:
+    include:
+      - services/events/src/create-event.js
+      - lib/errors/database-error.js
+      - lib/image.js
+      - lib/responses.js
 
+getEventsDate:
+  name: ${self:custom.base}-get-events-date
+  handler: services/events/src/get-events-date.main
+  events:
+    - httpApi: 'GET /events/date/{order}'
+  package:
+    include:
+      - services/events/src/get-events-date.js
+      - lib/errors/database-error.js

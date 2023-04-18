@@ -23,15 +23,18 @@ const SAVE_EVENT = 'SELECT * FROM save_events($1, $2, $3, $4, $5, $6, $7)';
  */
 
 module.exports.main = async (event, context) => {
+  // context.callbackWaitsForEmptyEventLoop = false;
+  console.log("event.body.title")
+  console.log(event)
   const body = JSON.parse(event.body);
   const {
-    title, description, event_date, category_id, place_name, location,
+    title, description, event_date, category_id, place_name, location, image_url
   } = body;
   const client = await poolConection.connect();
-
+  console.log(event);
   try {
     
-    const image_url = await uploadImage(event);
+    const image_url = await uploadImage(body);
 
     await client.query(SAVE_EVENT, [title, description, event_date, image_url, category_id, place_name, location])
     return {
