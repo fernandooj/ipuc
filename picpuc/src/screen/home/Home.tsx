@@ -1,6 +1,12 @@
-import React, {Fragment, ReactElement, useEffect, useState} from 'react';
+import React, {
+  Fragment,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import {TextInput, View} from 'react-native';
-import axios from 'axios';
+
 import {
   Content,
   InputSearch,
@@ -11,26 +17,34 @@ import {
 } from './styles';
 import EventComponent from '../../components/events/event';
 import {getEvents} from '../../services/event';
+import {getEvent} from '../../reducers/eventReducer';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Feather';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 const HomeScreen = (): ReactElement => {
   const [btnActive, setBtnActive] = useState(true);
   const dispatch = useDispatch();
-  
-  const fetchEvent = () => {
-    getEvents().then(e=> {
-      dispatch(getEventReducer(e)); 
-    })
-  }
+ 
+  const eventos = useSelector(state => state.events);
 
-  useEffect(() => {
-      fetchEvent();
+  const fetchEvent = useCallback(async () => {
+    try {
+      const events = await getEvents();
+
+      dispatch(getEvent(events));
+    } catch (error) {
+      // Manejo del error
+      console.log(error);
+    }
   }, [dispatch]);
 
-  const onChangeText = () => {};
+  useEffect(() => {
+    fetchEvent();
+  }, [fetchEvent]);
 
+  const onChangeText = () => {};
+  console.log('eventos', eventos);
   return (
     <Fragment>
       <View style={Content}>

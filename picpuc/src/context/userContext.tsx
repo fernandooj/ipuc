@@ -9,15 +9,7 @@ import {
 export const UserContext = createContext();
 
 const UserProvider = ({children}) => {
-  // const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
-
-  // function onAuthStateChanged(user) {
-  //   console.log("user");
-  //   console.log(user);
-  //   setUser(user);
-  //   if (initializing) setInitializing(false);
-  // }
 
   useEffect(() => {
     GoogleSignin.configure({
@@ -27,8 +19,7 @@ const UserProvider = ({children}) => {
       offlineAccess: true,
   });
     const user = auth().currentUser;
-    console.log("user");
-    console.log(user);
+
   }, []);
   // if (initializing) return null;
   const userFlow = {

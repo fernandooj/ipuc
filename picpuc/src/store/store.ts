@@ -1,8 +1,10 @@
-import {combineReducers, createStore} from 'redux';
-import {getEventReducer} from '../reducers/eventReducer';
+import { configureStore } from '@reduxjs/toolkit';
+import eventReducer from '../reducers/eventReducer';
 
-const reducers = combineReducers({
-  events: getEventReducer,
+const store = configureStore({
+  reducer: {
+    events: eventReducer, // cambiar getEventReducer a eventReducer
+  },
 });
 
-export const store = createStore(reducers);
+export default store;
