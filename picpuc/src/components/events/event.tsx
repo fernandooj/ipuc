@@ -14,7 +14,7 @@ const {
   TextAsist,
   DateContent,
   TextDate,
-  IconArrow
+  IconArrow,
 } = EventStyled;
 
 // const Categories = [
@@ -128,12 +128,16 @@ const EventComponent = (): ReactElement => {
       <BtnAsist distance={distance <= 1}>
         <TextAsist>Estas a: {distance} Km</TextAsist>
         <IconArrow>
-          <Icon name="arrow-right-l" size={14} color="#00338D" style={{top:-1}}/>
+          <Icon
+            name="arrow-right-l"
+            size={14}
+            color="#00338D"
+            style={{top: -1}}
+          />
         </IconArrow>
       </BtnAsist>
-     
     </ListCategories>
-  );
+);
 
   const EventList = () => (
     <ContainList horizontal>

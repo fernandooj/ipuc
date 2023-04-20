@@ -73,7 +73,7 @@ const HomeScreen = (): ReactElement => {
             <Title>Proximos</Title>
           </Btn>
         </LinearGradient>
-        <EventComponent />
+        <EventComponent data={eventos} />
       </View>
     </Fragment>
   );

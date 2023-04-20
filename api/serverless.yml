@@ -43,5 +43,7 @@ custom:
   n: my-app:${self:provider.stage}:${self:provider.region}:api
   base: ${self:service}-${self:provider.stage}
 
-functions: ${file(./services/events/serverless.yml)}
+functions: 
+  - ${file(./services/events/serverless.yml)}
+  - ${file(./services/categories/serverless.yml)}
   
