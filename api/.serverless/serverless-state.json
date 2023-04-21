@@ -221,7 +221,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/picpuc/dev/1682026809912-2023-04-20T21:40:09.912Z/picpuc.zip"
+                "S3Key": "serverless/picpuc/dev/1682106942680-2023-04-21T19:55:42.680Z/picpuc.zip"
               },
               "Handler": "services/events/src/create-event.main",
               "Runtime": "nodejs12.x",
@@ -257,7 +257,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/picpuc/dev/1682026809912-2023-04-20T21:40:09.912Z/picpuc.zip"
+                "S3Key": "serverless/picpuc/dev/1682106942680-2023-04-21T19:55:42.680Z/picpuc.zip"
               },
               "Handler": "services/events/src/get-events-date.main",
               "Runtime": "nodejs12.x",
@@ -293,7 +293,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/picpuc/dev/1682026809912-2023-04-20T21:40:09.912Z/picpuc.zip"
+                "S3Key": "serverless/picpuc/dev/1682106942680-2023-04-21T19:55:42.680Z/picpuc.zip"
               },
               "Handler": "services/events/src/get-events-near.handle",
               "Runtime": "nodejs12.x",
@@ -329,7 +329,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/picpuc/dev/1682026809912-2023-04-20T21:40:09.912Z/picpuc.zip"
+                "S3Key": "serverless/picpuc/dev/1682106942680-2023-04-21T19:55:42.680Z/picpuc.zip"
               },
               "Handler": "services/categories/src/get-categories.handle",
               "Runtime": "nodejs12.x",
@@ -358,44 +358,44 @@
               "GetCategoriesLogGroup"
             ]
           },
-          "CreateEventLambdaVersionOhnqcajYTP5ewmoPkW7A7kX3dL7lAY2h1OTTPaSYrY": {
+          "CreateEventLambdaVersionppEGvXmIIJTU0JcNUYIZrQKco3cuAmzpBWvdv4zGpk": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "CreateEventLambdaFunction"
               },
-              "CodeSha256": "5LNFQW6Rj2eYHA4uyWj5n2YQLoxHDiN99+AlVxsEtbM="
+              "CodeSha256": "lJLUzkBEWQkEAqlxXttaPOyCvaLknZKjts3Kg+LEsN0="
             }
           },
-          "GetEventsDateLambdaVersionVyVwIbiZyWw4DeSTJIgCCmUZpbyqFSQ0LxQZsE8w0": {
+          "GetEventsDateLambdaVersionBync0VVJoI1e7c3R8Uxuy5irkZXo7PfXNQISdukAarg": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetEventsDateLambdaFunction"
               },
-              "CodeSha256": "5LNFQW6Rj2eYHA4uyWj5n2YQLoxHDiN99+AlVxsEtbM="
+              "CodeSha256": "lJLUzkBEWQkEAqlxXttaPOyCvaLknZKjts3Kg+LEsN0="
             }
           },
-          "GetEventsNearLambdaVersionjPJFGTs5XP7aog2zGX0r6fx4XxzVQm4SSDA2ugoQvB4": {
+          "GetEventsNearLambdaVersionn6JJvnLVlEHMGBAXW4tAfkDxNZtOjTxX123sjOzJ4": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetEventsNearLambdaFunction"
               },
-              "CodeSha256": "5LNFQW6Rj2eYHA4uyWj5n2YQLoxHDiN99+AlVxsEtbM="
+              "CodeSha256": "lJLUzkBEWQkEAqlxXttaPOyCvaLknZKjts3Kg+LEsN0="
             }
           },
-          "GetCategoriesLambdaVersionpsO3yb1MJcwXanFvLQrksl6AtcvlnjUxEXLG10sO8I": {
+          "GetCategoriesLambdaVersionlmGVZOd2bOZauKmgZpSKOAa9wvbKPjR1wKODzujfcY": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetCategoriesLambdaFunction"
               },
-              "CodeSha256": "5LNFQW6Rj2eYHA4uyWj5n2YQLoxHDiN99+AlVxsEtbM="
+              "CodeSha256": "lJLUzkBEWQkEAqlxXttaPOyCvaLknZKjts3Kg+LEsN0="
             }
           },
           "HttpApi": {
@@ -559,13 +559,13 @@
               "TimeoutInMillis": 6500
             }
           },
-          "HttpApiRouteGetEventsDateOrderVar": {
+          "HttpApiRouteGetEventsDateCoordsVarOrderVar": {
             "Type": "AWS::ApiGatewayV2::Route",
             "Properties": {
               "ApiId": {
                 "Ref": "HttpApi"
               },
-              "RouteKey": "GET /events/date/{order}",
+              "RouteKey": "GET /events/date/{coords}/{order}",
               "Target": {
                 "Fn::Join": [
                   "/",
@@ -737,7 +737,7 @@
           "CreateEventLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CreateEventLambdaVersionOhnqcajYTP5ewmoPkW7A7kX3dL7lAY2h1OTTPaSYrY"
+              "Ref": "CreateEventLambdaVersionppEGvXmIIJTU0JcNUYIZrQKco3cuAmzpBWvdv4zGpk"
             },
             "Export": {
               "Name": "sls-picpuc-dev-CreateEventLambdaFunctionQualifiedArn"
@@ -746,7 +746,7 @@
           "GetEventsDateLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetEventsDateLambdaVersionVyVwIbiZyWw4DeSTJIgCCmUZpbyqFSQ0LxQZsE8w0"
+              "Ref": "GetEventsDateLambdaVersionBync0VVJoI1e7c3R8Uxuy5irkZXo7PfXNQISdukAarg"
             },
             "Export": {
               "Name": "sls-picpuc-dev-GetEventsDateLambdaFunctionQualifiedArn"
@@ -755,7 +755,7 @@
           "GetEventsNearLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetEventsNearLambdaVersionjPJFGTs5XP7aog2zGX0r6fx4XxzVQm4SSDA2ugoQvB4"
+              "Ref": "GetEventsNearLambdaVersionn6JJvnLVlEHMGBAXW4tAfkDxNZtOjTxX123sjOzJ4"
             },
             "Export": {
               "Name": "sls-picpuc-dev-GetEventsNearLambdaFunctionQualifiedArn"
@@ -764,7 +764,7 @@
           "GetCategoriesLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetCategoriesLambdaVersionpsO3yb1MJcwXanFvLQrksl6AtcvlnjUxEXLG10sO8I"
+              "Ref": "GetCategoriesLambdaVersionlmGVZOd2bOZauKmgZpSKOAa9wvbKPjR1wKODzujfcY"
             },
             "Export": {
               "Name": "sls-picpuc-dev-GetCategoriesLambdaFunctionQualifiedArn"
@@ -931,16 +931,16 @@
         "timeout": 6,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "CreateEventLambdaVersionOhnqcajYTP5ewmoPkW7A7kX3dL7lAY2h1OTTPaSYrY"
+        "versionLogicalId": "CreateEventLambdaVersionppEGvXmIIJTU0JcNUYIZrQKco3cuAmzpBWvdv4zGpk"
       },
       "getEventsDate": {
         "name": "picpuc-dev-get-events-date",
         "handler": "services/events/src/get-events-date.main",
         "events": [
           {
-            "httpApi": "GET /events/date/{order}",
+            "httpApi": "GET /events/date/{coords}/{order}",
             "resolvedMethod": "GET",
-            "resolvedPath": "/events/date/{order}"
+            "resolvedPath": "/events/date/{coords}/{order}"
           }
         ],
         "package": {
@@ -950,7 +950,7 @@
         "timeout": 6,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "GetEventsDateLambdaVersionVyVwIbiZyWw4DeSTJIgCCmUZpbyqFSQ0LxQZsE8w0"
+        "versionLogicalId": "GetEventsDateLambdaVersionBync0VVJoI1e7c3R8Uxuy5irkZXo7PfXNQISdukAarg"
       },
       "getEventsNear": {
         "name": "picpuc-dev-get-events-near",
@@ -969,7 +969,7 @@
         "timeout": 6,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "GetEventsNearLambdaVersionjPJFGTs5XP7aog2zGX0r6fx4XxzVQm4SSDA2ugoQvB4"
+        "versionLogicalId": "GetEventsNearLambdaVersionn6JJvnLVlEHMGBAXW4tAfkDxNZtOjTxX123sjOzJ4"
       },
       "getCategories": {
         "name": "picpuc-dev-get-categories",
@@ -988,7 +988,7 @@
         "timeout": 6,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "GetCategoriesLambdaVersionpsO3yb1MJcwXanFvLQrksl6AtcvlnjUxEXLG10sO8I"
+        "versionLogicalId": "GetCategoriesLambdaVersionlmGVZOd2bOZauKmgZpSKOAa9wvbKPjR1wKODzujfcY"
       }
     },
     "configValidationMode": "warn",
@@ -1013,7 +1013,7 @@
     "isDashboardMonitoringPreconfigured": false
   },
   "package": {
-    "artifactDirectoryName": "serverless/picpuc/dev/1682026809912-2023-04-20T21:40:09.912Z",
+    "artifactDirectoryName": "serverless/picpuc/dev/1682106942680-2023-04-21T19:55:42.680Z",
     "artifact": ""
   }
 }

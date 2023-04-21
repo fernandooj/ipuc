@@ -16,7 +16,7 @@ getEventsDate:
   name: ${self:custom.base}-get-events-date
   handler: services/events/src/get-events-date.main
   events:
-    - httpApi: 'GET /events/date/{order}'
+    - httpApi: 'GET /events/date/{coords}/{order}'
   package:
     include:
       - services/events/src/get-events-date.js

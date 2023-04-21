@@ -3,10 +3,10 @@ const DatabaseError  = require('../../../lib/errors/database-error')
 
 module.exports.main = async (event) => {
   
-  const {order = 'asc'} = event.pathParameters
-  const selectEvents = `SELECT * FROM events WHERE active=true ORDER BY event_date ${order}`;
+  const {coords = "4.662795384557246, -74.11561761785137", order} = event.pathParameters
+  const selectEvents = `SELECT * FROM get_date_events(${coords}, '${order}')`;
   
-  console.log(order)
+  console.log(selectEvents)
   try {
     const client = await poolConection.connect();
     client.query('BEGIN');

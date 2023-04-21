@@ -1,29 +1,43 @@
 import React, {createContext, useEffect, useState} from 'react';
 import auth from '@react-native-firebase/auth';
-import {
-  GoogleSignin,
-  GoogleSigninButton,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import Geolocation from '@react-native-community/geolocation';
 
 export const UserContext = createContext();
 
 const UserProvider = ({children}) => {
   const [user, setUser] = useState();
+  const [region, setRegion] = useState<
+    | {
+        latitude: number;
+        longitude: number;
+        latitudeDelta: number;
+        longitudeDelta: number;
+      }
+    | undefined
+  >();
 
   useEffect(() => {
     GoogleSignin.configure({
       scopes: ['email'],
-    webClientId:
-      '81330883681-ddkeig3ov5hml78um4ijprtade8urdv6.apps.googleusercontent.com',
+      webClientId:
+        '81330883681-ddkeig3ov5hml78um4ijprtade8urdv6.apps.googleusercontent.com',
       offlineAccess: true,
-  });
-    const user = auth().currentUser;
+    });
 
+    Geolocation.getCurrentPosition(({coords}) => {
+      const newRegion = {
+        ...coords,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      };
+      setRegion(newRegion);
+    });
   }, []);
   // if (initializing) return null;
   const userFlow = {
     user,
+    region,
     setUser,
     login: async (email: string, password: string) => {
       try {
@@ -49,7 +63,9 @@ const UserProvider = ({children}) => {
   };
 
   return (
-    <UserContext.Provider value={userFlow}>{children}</UserContext.Provider>
+    <UserContext.Provider value={(userFlow)}>
+      {children}
+    </UserContext.Provider>
   );
 };
 
