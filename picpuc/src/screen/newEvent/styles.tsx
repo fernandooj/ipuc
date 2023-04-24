@@ -1,71 +1,40 @@
 import styled from 'styled-components/native';
 
-export const EventStyled = {
-  ContainList: styled.View`
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    width: 100%;
-    align-items: center;
-    margin-top: 10px;
+const COLOR = 'rgba(122, 122, 122, 0.829)';
+
+export const inputStyles = {
+  marginBottom: 10,
+  padding: 10,
+  borderWidth: 1,
+  borderColor: '#fff',
+  backgroundColor: '#F4F7FF',
+  borderRadius: 15,
+  color: COLOR,
+};
+
+export const newEventStyled = {
+  FormContainer: styled.View`
+    margin-top: 70px;
+    padding: 20px;
+    background: #fff;
   `,
-  ListCategories: styled.View`
-    border-top-width: 1px;
-    border-top-style: solid;
-    border-top-color: rgba(183, 183, 183, 0.272);
-    padding-bottom: 20px;
-    padding-left: 15px;
-    padding-right: 15px;
+
+  StyledTextInput: styled.TextInput`
+    ${inputStyles}
   `,
-  BoxText: styled.View`
-    position: absolute;
-    bottom: 11px;
-    width: 100%;
-    height: 20px;
+  StyledButtonInput: styled.TouchableOpacity`
+    ${inputStyles}
   `,
-  Title: styled.Text`
-    font-size: 14px;
-    color: #535353;
-    font-weight: bold;
-    padding: 3px;
-    min-height: 41px;
+
+  StyledText: styled.Text`
+    color: ${(props: {isSelected: boolean}) =>
+      props.isSelected ? '#333333' : COLOR};
   `,
-  SubTitle: styled.Text`
-    font-size: 13px;
-    padding-left: 3px;
+
+  StyledButton: styled.Button`
+    margin-top: 20px;
   `,
-  BtnAsist: styled.TouchableOpacity`
-    background-color: ${({distance}: {distance: boolean}) =>
-      distance ? '#00338D' : '#F0AB00'};
-    padding: 5px;
-    padding-left: 15px;
-    border-radius: 20px;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  `,
-  IconArrow: styled.View`
-    background-color: white;
-    padding: 5px;
-    border-radius: 20px;
-  `,
-  TextAssistants: styled.Text`
-    color: #b5b3b3d4;
-    font-size: 11px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-  `,
-  TextAsist: styled.Text`
-    text-align: center;
-    color: white;
-  `,
-  DateContent: styled.View`
-    margin-bottom: 15px;
-    flex-direction: row;
-    align-items: center;
-  `,
-  TextDate: styled.Text`
-    margin-left: 10px;
-    font-size: 13px;
+  ErrorText: styled.Text`
+    color: red;
   `,
 };

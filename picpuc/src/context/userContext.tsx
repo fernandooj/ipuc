@@ -63,9 +63,7 @@ const UserProvider = ({children}) => {
   };
 
   return (
-    <UserContext.Provider value={(userFlow)}>
-      {children}
-    </UserContext.Provider>
+    <UserContext.Provider value={userFlow}>{children}</UserContext.Provider>
   );
 };
 

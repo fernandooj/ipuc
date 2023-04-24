@@ -2177,6 +2177,11 @@ acorn@^8.5.0, acorn@^8.8.0:
   resolved "https://registry.npmjs.org/acorn/-/acorn-8.8.2.tgz"
   integrity sha512-xjIYgE8HBrkpd/sJqOGNspf8uHG+NOHGOw6a/Urj8taM2EXfdNAH2oFcPeIFfsv3+kz/mJrS5VuMqbNLjCa2vw==
 
+add@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/add/-/add-2.0.6.tgz#248f0a9f6e5a528ef2295dbeec30532130ae2235"
+  integrity sha512-j5QzrmsokwWWp6kUcJQySpbG+xfOBqqKnup3OIk1pz+kB/80SLorZ9V8zHFLO92Lcd+hbvq8bT+zOGoPkmBV0Q==
+
 ajv@^6.10.0, ajv@^6.12.4:
   version "6.12.6"
   resolved "https://registry.npmjs.org/ajv/-/ajv-6.12.6.tgz"
@@ -6328,6 +6333,11 @@ prop-types@*, prop-types@^15.7.2, prop-types@^15.8.1:
     object-assign "^4.1.1"
     react-is "^16.13.1"
 
+property-expr@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/property-expr/-/property-expr-2.0.5.tgz#278bdb15308ae16af3e3b9640024524f4dc02cb4"
+  integrity sha512-IJUkICM5dP5znhCckHSv30Q4b5/JA5enCtkRHYaOVOAocnH/1BQEYTC5NMfT3AVl/iXKdr3aqQbQn9DxyWknwA==
+
 proxy-from-env@^1.1.0:
   version "1.1.0"
   resolved "https://registry.npmjs.org/proxy-from-env/-/proxy-from-env-1.1.0.tgz"
@@ -6345,6 +6355,11 @@ punycode@^2.1.0:
   version "2.3.0"
   resolved "https://registry.npmjs.org/punycode/-/punycode-2.3.0.tgz"
   integrity sha512-rRV+zQD8tVFys26lAGR9WUuS4iUAngJScM+ZRSKtvl5tKeZ2t5bvdNFdNHBW9FWR4guGHlgmsZ1G7BSm2wTbuA==
+
+qs@~6.9.1:
+  version "6.9.7"
+  resolved "https://registry.yarnpkg.com/qs/-/qs-6.9.7.tgz#4610846871485e1e048f44ae3b94033f0e675afe"
+  integrity sha512-IhMFgUmuNpyRfxA90umL7ByLlgRXu6tIfKPpF5TmcfRLlLCckfP/g3IQmju6jjpu+Hh8rA+2p6A27ZSPOOHdKw==
 
 query-string@^7.1.3:
   version "7.1.3"
@@ -6411,6 +6426,13 @@ react-native-codegen@^0.71.5:
     jscodeshift "^0.13.1"
     nullthrows "^1.1.1"
 
+react-native-date-picker@^4.2.12:
+  version "4.2.12"
+  resolved "https://registry.yarnpkg.com/react-native-date-picker/-/react-native-date-picker-4.2.12.tgz#8ed8bcb30531322b46fccc774df4cdaabdfe3c5a"
+  integrity sha512-/PHhx06dbJ1K5Ynx71vq5VzfrQnmjTuxS5uqiDTiklJzJrZc3aCBYwvpmpLB3eJuepy2Yfhl5IENceOIAWt+PA==
+  dependencies:
+    prop-types "^15.8.1"
+
 react-native-fbsdk-next@^11.2.0:
   version "11.2.0"
   resolved "https://registry.npmjs.org/react-native-fbsdk-next/-/react-native-fbsdk-next-11.2.0.tgz"
@@ -6424,10 +6446,24 @@ react-native-gesture-bottom-sheet@^1.1.0:
   resolved "https://registry.npmjs.org/react-native-gesture-bottom-sheet/-/react-native-gesture-bottom-sheet-1.1.0.tgz"
   integrity sha512-1kF6wwtN9cPOav9iNC1hZ9gdpILucQ4vTgUYjyCHGc100WTgm6j7QDclT3a12Ge8X4PTsZF1PRZreGGIkGJKUg==
 
+react-native-google-places-autocomplete@^2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/react-native-google-places-autocomplete/-/react-native-google-places-autocomplete-2.5.1.tgz#93d5ac3e34e3e8f594aae5349f9e2d3e0b87484e"
+  integrity sha512-2FZZomogB18mLSC/N39UcpiVoJn/fFIpud1M2KZMom/pJhSMgfqV4qLjHuzaDyYIl7KBz/zpGDcbYgmtvvpkHQ==
+  dependencies:
+    lodash.debounce "^4.0.8"
+    prop-types "^15.7.2"
+    qs "~6.9.1"
+
 react-native-gradle-plugin@^0.71.15:
   version "0.71.15"
   resolved "https://registry.npmjs.org/react-native-gradle-plugin/-/react-native-gradle-plugin-0.71.15.tgz"
   integrity sha512-7S3pAuPaQJlhax6EZ4JMsDNpj05TfuzX9gPgWLrFfAIWIFLuJ6aDQYAZy2TEI9QJALPoWrj8LWaqP/DGYh14pw==
+
+react-native-image-picker@^5.3.1:
+  version "5.3.1"
+  resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-5.3.1.tgz#836ab13c228174728a0bd68293b27dc5e1affa0f"
+  integrity sha512-zRCjtlE3KOeaWDM8gXzTwXfvo3ZeF2XMkHceU7CVCtKRleKxna/E4XWIPu/lXO2qlMdnSx1WvfPSbqzAX0qxpA==
 
 react-native-linear-gradient@^2.6.2:
   version "2.6.2"
@@ -7371,6 +7407,11 @@ through2@^2.0.1:
     readable-stream "~2.3.6"
     xtend "~4.0.1"
 
+tiny-case@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/tiny-case/-/tiny-case-1.0.3.tgz#d980d66bc72b5d5a9ca86fb7c9ffdb9c898ddd03"
+  integrity sha512-Eet/eeMhkO6TX8mnUteS9zgPbUMQa4I6Kkp5ORiBD5476/m+PIRiumP5tmh5ioJpH7k51Kehawy2UDfsnxxY8Q==
+
 tiny-warning@^1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/tiny-warning/-/tiny-warning-1.0.3.tgz#94a30db453df4c643d0fd566060d60a875d84754"
@@ -7423,6 +7464,11 @@ toidentifier@1.0.1:
   resolved "https://registry.npmjs.org/toidentifier/-/toidentifier-1.0.1.tgz"
   integrity sha512-o5sSPKEkg/DIQNmH43V0/uerLrpzVedkUh8tGNvaeXpfpuwjKenlSox/2O/BTlZUtEe+JG7s5YhEz608PlAHRA==
 
+toposort@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/toposort/-/toposort-2.0.2.tgz#ae21768175d1559d48bef35420b2f4962f09c330"
+  integrity sha512-0a5EOkAUp8D4moMi2W8ZF8jcga7BgZd91O/yabJCFY8az+XSzeGyTKs0Aoo897iV1Nj6guFq8orWDS96z91oGg==
+
 tr46@~0.0.3:
   version "0.0.3"
   resolved "https://registry.npmjs.org/tr46/-/tr46-0.0.3.tgz"
@@ -7471,6 +7517,11 @@ type-fest@^0.7.1:
   version "0.7.1"
   resolved "https://registry.npmjs.org/type-fest/-/type-fest-0.7.1.tgz"
   integrity sha512-Ne2YiiGN8bmrmJJEuTWTLJR32nh/JdL1+PSicowtNb0WFpn59GK8/lfD61bVtzguz7b3PBt74nxpv/Pw5po5Rg==
+
+type-fest@^2.19.0:
+  version "2.19.0"
+  resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-2.19.0.tgz#88068015bb33036a598b952e55e9311a60fd3a9b"
+  integrity sha512-RAH822pAdBgcNMAfWnCBU3CFZcfZ/i1eZjwFU/dsLKumyuuP3niueg2UAukXYF0E2AAoc82ZSSf9J0WQBinzHA==
 
 typed-array-length@^1.0.4:
   version "1.0.4"
@@ -7877,7 +7928,22 @@ yargs@^17.3.1, yargs@^17.5.1:
     y18n "^5.0.5"
     yargs-parser "^21.1.1"
 
+yarn@^1.22.19:
+  version "1.22.19"
+  resolved "https://registry.yarnpkg.com/yarn/-/yarn-1.22.19.tgz#4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447"
+  integrity sha512-/0V5q0WbslqnwP91tirOvldvYISzaqhClxzyUKXYxs07yUILIs5jx/k6CFe8bvKSkds5w+eiOqta39Wk3WxdcQ==
+
 yocto-queue@^0.1.0:
   version "0.1.0"
   resolved "https://registry.npmjs.org/yocto-queue/-/yocto-queue-0.1.0.tgz"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
+
+yup@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/yup/-/yup-1.1.1.tgz#49dbcf5ae7693ed0a36ed08a9e9de0a09ac18e6b"
+  integrity sha512-KfCGHdAErqFZWA5tZf7upSUnGKuTOnsI3hUsLr7fgVtx+DK04NPV01A68/FslI4t3s/ZWpvXJmgXhd7q6ICnag==
+  dependencies:
+    property-expr "^2.0.5"
+    tiny-case "^1.0.3"
+    toposort "^2.0.2"
+    type-fest "^2.19.0"
