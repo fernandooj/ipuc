@@ -5650,7 +5650,7 @@ function extend(target) {
 const {poolConection} = __webpack_require__(/*! ../../../lib/connection-pg.js */ "./lib/connection-pg.js")
 const DatabaseError  = __webpack_require__(/*! ../../../lib/errors/database-error */ "./lib/errors/database-error.js")
 /** create user update*/
-const GET_USERS = 'SELECT * FROM users';
+const GET_USERS = 'SELECT * FROM users order by id_user desc';
 
 
 /** get user
@@ -5660,7 +5660,6 @@ const GET_USERS = 'SELECT * FROM users';
  */
 
 module.exports.main = async (event) => {
-  // context.callbackWaitsForEmptyEventLoop = false;
   const {
     email
   } = event;

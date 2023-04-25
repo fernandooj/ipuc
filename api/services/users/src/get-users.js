@@ -1,7 +1,7 @@
 const {poolConection} = require('../../../lib/connection-pg.js')
 const DatabaseError  = require('../../../lib/errors/database-error')
 /** create user update*/
-const GET_USERS = 'SELECT * FROM users';
+const GET_USERS = 'SELECT * FROM users order by id_user desc';
 
 
 /** get user
