@@ -6,7 +6,7 @@ import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete'
 import {newEventStyled, inputStyles} from './styles';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {ScrollView} from 'react-native';
-import { saveEvent } from '../../services/event';
+import {saveEvent} from '../../services/event';
 const {
   FormContainer,
   StyledTextInput,
@@ -21,7 +21,6 @@ const validationSchema = Yup.object().shape({
   description: Yup.string().required('Description is required'),
   date: Yup.date().required('Date is required'),
 });
-
 
 const COLOR = 'rgba(122, 122, 122, 0.829)';
 
@@ -62,7 +61,7 @@ const NewEventScreen = () => {
   const [openDate, setOpenDate] = useState(false);
   const handleSubmit = values => {
     console.log(values);
-    saveEvent(values)
+    saveEvent(values);
   };
   const Camera = async ({callback, setFieldValue}) => {
     const options = {
@@ -70,13 +69,12 @@ const NewEventScreen = () => {
       mediaType: 'photo',
     };
 
- 
     const result = await launchImageLibrary(options);
-    console.log(result);
-    setFieldValue('image', result.assets[0].base64)
-    callback(result)
+
+    setFieldValue('image', result.assets[0].base64);
+    callback(result);
   };
-  
+
   return (
     <Formik
       initialValues={{
@@ -145,13 +143,13 @@ const NewEventScreen = () => {
             }}
           />
           <GooglePlacesInput
-            callback={(place_name, location) =>{
-        
-              setFieldValue('place_name', place_name)
-              setFieldValue('location', location)
+            callback={(place_name, location) => {
+              setFieldValue('place_name', place_name);
+              setFieldValue('location', location);
             }}
           />
-          <StyledButtonInput onPress={() => Camera({callback: () => {}, setFieldValue})}>
+          <StyledButtonInput
+            onPress={() => Camera({callback: () => {}, setFieldValue})}>
             <StyledText>Subir imagen</StyledText>
           </StyledButtonInput>
 

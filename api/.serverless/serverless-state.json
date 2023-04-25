@@ -134,6 +134,24 @@
               "LogGroupName": "/aws/lambda/picpuc-dev-get-categories"
             }
           },
+          "CreateUserLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/picpuc-dev-save-user"
+            }
+          },
+          "GetUsersLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/picpuc-dev-get-users"
+            }
+          },
+          "GetUserByEmailLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/picpuc-dev-get-user-by-email"
+            }
+          },
           "IamRoleLambdaExecution": {
             "Type": "AWS::IAM::Role",
             "Properties": {
@@ -221,7 +239,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/picpuc/dev/1682106942680-2023-04-21T19:55:42.680Z/picpuc.zip"
+                "S3Key": "serverless/picpuc/dev/1682464788537-2023-04-25T23:19:48.537Z/picpuc.zip"
               },
               "Handler": "services/events/src/create-event.main",
               "Runtime": "nodejs12.x",
@@ -257,7 +275,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/picpuc/dev/1682106942680-2023-04-21T19:55:42.680Z/picpuc.zip"
+                "S3Key": "serverless/picpuc/dev/1682464788537-2023-04-25T23:19:48.537Z/picpuc.zip"
               },
               "Handler": "services/events/src/get-events-date.main",
               "Runtime": "nodejs12.x",
@@ -293,7 +311,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/picpuc/dev/1682106942680-2023-04-21T19:55:42.680Z/picpuc.zip"
+                "S3Key": "serverless/picpuc/dev/1682464788537-2023-04-25T23:19:48.537Z/picpuc.zip"
               },
               "Handler": "services/events/src/get-events-near.handle",
               "Runtime": "nodejs12.x",
@@ -329,7 +347,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/picpuc/dev/1682106942680-2023-04-21T19:55:42.680Z/picpuc.zip"
+                "S3Key": "serverless/picpuc/dev/1682464788537-2023-04-25T23:19:48.537Z/picpuc.zip"
               },
               "Handler": "services/categories/src/get-categories.handle",
               "Runtime": "nodejs12.x",
@@ -358,44 +376,182 @@
               "GetCategoriesLogGroup"
             ]
           },
-          "CreateEventLambdaVersionppEGvXmIIJTU0JcNUYIZrQKco3cuAmzpBWvdv4zGpk": {
+          "CreateUserLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/picpuc/dev/1682464788537-2023-04-25T23:19:48.537Z/picpuc.zip"
+              },
+              "Handler": "services/users/src/save-user.main",
+              "Runtime": "nodejs12.x",
+              "FunctionName": "picpuc-dev-save-user",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "AWS_REGION_ULR": "us-east-1",
+                  "RDS_HOSTNAME": "db-picpuc.cjjhqtyxbiax.us-east-1.rds.amazonaws.com",
+                  "RDS_DB": "DBpicpuc",
+                  "RDS_PORT": "5432",
+                  "RDS_USERNAME": "postgres",
+                  "RDS_PASSWORD": "W8po5IEMHyDJsrW1FWMv",
+                  "BUCKET": "picpuc"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "CreateUserLogGroup"
+            ]
+          },
+          "GetUsersLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/picpuc/dev/1682464788537-2023-04-25T23:19:48.537Z/picpuc.zip"
+              },
+              "Handler": "services/users/src/get-users.main",
+              "Runtime": "nodejs12.x",
+              "FunctionName": "picpuc-dev-get-users",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "AWS_REGION_ULR": "us-east-1",
+                  "RDS_HOSTNAME": "db-picpuc.cjjhqtyxbiax.us-east-1.rds.amazonaws.com",
+                  "RDS_DB": "DBpicpuc",
+                  "RDS_PORT": "5432",
+                  "RDS_USERNAME": "postgres",
+                  "RDS_PASSWORD": "W8po5IEMHyDJsrW1FWMv",
+                  "BUCKET": "picpuc"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "GetUsersLogGroup"
+            ]
+          },
+          "GetUserByEmailLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/picpuc/dev/1682464788537-2023-04-25T23:19:48.537Z/picpuc.zip"
+              },
+              "Handler": "services/users/src/get-user-by-email.handle",
+              "Runtime": "nodejs12.x",
+              "FunctionName": "picpuc-dev-get-user-by-email",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "AWS_REGION_ULR": "us-east-1",
+                  "RDS_HOSTNAME": "db-picpuc.cjjhqtyxbiax.us-east-1.rds.amazonaws.com",
+                  "RDS_DB": "DBpicpuc",
+                  "RDS_PORT": "5432",
+                  "RDS_USERNAME": "postgres",
+                  "RDS_PASSWORD": "W8po5IEMHyDJsrW1FWMv",
+                  "BUCKET": "picpuc"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "GetUserByEmailLogGroup"
+            ]
+          },
+          "CreateEventLambdaVersionoNwj88sEIshvjfn0TkVoJh5461Ep54wiWboRNsUx2Kg": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "CreateEventLambdaFunction"
               },
-              "CodeSha256": "lJLUzkBEWQkEAqlxXttaPOyCvaLknZKjts3Kg+LEsN0="
+              "CodeSha256": "O9qBHACQ1RQal0Wjen4ixpJ788+8F1RcTmkKAZ64TF8="
             }
           },
-          "GetEventsDateLambdaVersionBync0VVJoI1e7c3R8Uxuy5irkZXo7PfXNQISdukAarg": {
+          "GetEventsDateLambdaVersionlsGhQB6JPi5ie8BNl6Zsa4o9fDAFOUAoEtrfqlep94": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetEventsDateLambdaFunction"
               },
-              "CodeSha256": "lJLUzkBEWQkEAqlxXttaPOyCvaLknZKjts3Kg+LEsN0="
+              "CodeSha256": "O9qBHACQ1RQal0Wjen4ixpJ788+8F1RcTmkKAZ64TF8="
             }
           },
-          "GetEventsNearLambdaVersionn6JJvnLVlEHMGBAXW4tAfkDxNZtOjTxX123sjOzJ4": {
+          "GetEventsNearLambdaVersionDtRgpojddOqsE2mBLIQSkLb5wW9XTqkUmIufpH4Xi0": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetEventsNearLambdaFunction"
               },
-              "CodeSha256": "lJLUzkBEWQkEAqlxXttaPOyCvaLknZKjts3Kg+LEsN0="
+              "CodeSha256": "O9qBHACQ1RQal0Wjen4ixpJ788+8F1RcTmkKAZ64TF8="
             }
           },
-          "GetCategoriesLambdaVersionlmGVZOd2bOZauKmgZpSKOAa9wvbKPjR1wKODzujfcY": {
+          "GetCategoriesLambdaVersionIBiouSL4MumQ7vOGVv1uIT4fOc7UahduvjM3sPNIE": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetCategoriesLambdaFunction"
               },
-              "CodeSha256": "lJLUzkBEWQkEAqlxXttaPOyCvaLknZKjts3Kg+LEsN0="
+              "CodeSha256": "O9qBHACQ1RQal0Wjen4ixpJ788+8F1RcTmkKAZ64TF8="
+            }
+          },
+          "CreateUserLambdaVersionaryarDMXdVFVy85VuVQVpbBA6Bzk9pJCzJBnNWhMJI": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "CreateUserLambdaFunction"
+              },
+              "CodeSha256": "O9qBHACQ1RQal0Wjen4ixpJ788+8F1RcTmkKAZ64TF8="
+            }
+          },
+          "GetUsersLambdaVersionvNKhWkIXuLeMgDM4UJclPkdOys3FB7yN8mPBeFM4": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "GetUsersLambdaFunction"
+              },
+              "CodeSha256": "O9qBHACQ1RQal0Wjen4ixpJ788+8F1RcTmkKAZ64TF8="
+            }
+          },
+          "GetUserByEmailLambdaVersionKmjsZidzQ5dEHF5cKTQo0x9yJEKbyigiBZT4K3PeE": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "GetUserByEmailLambdaFunction"
+              },
+              "CodeSha256": "O9qBHACQ1RQal0Wjen4ixpJ788+8F1RcTmkKAZ64TF8="
             }
           },
           "HttpApi": {
@@ -723,6 +879,222 @@
               }
             },
             "DependsOn": "HttpApiIntegrationGetCategories"
+          },
+          "CreateUserLambdaPermissionHttpApi": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "CreateUserLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "HttpApi"
+                    },
+                    "/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "HttpApiIntegrationCreateUser": {
+            "Type": "AWS::ApiGatewayV2::Integration",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "IntegrationType": "AWS_PROXY",
+              "IntegrationUri": {
+                "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"CreateUserLambdaPermissionHttpApi\"][\"Properties\"][\"FunctionName\"]"
+              },
+              "PayloadFormatVersion": "2.0",
+              "TimeoutInMillis": 6500
+            }
+          },
+          "HttpApiRoutePostUsers": {
+            "Type": "AWS::ApiGatewayV2::Route",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "RouteKey": "POST /users",
+              "Target": {
+                "Fn::Join": [
+                  "/",
+                  [
+                    "integrations",
+                    {
+                      "Ref": "HttpApiIntegrationCreateUser"
+                    }
+                  ]
+                ]
+              }
+            },
+            "DependsOn": "HttpApiIntegrationCreateUser"
+          },
+          "GetUsersLambdaPermissionHttpApi": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "GetUsersLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "HttpApi"
+                    },
+                    "/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "HttpApiIntegrationGetUsers": {
+            "Type": "AWS::ApiGatewayV2::Integration",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "IntegrationType": "AWS_PROXY",
+              "IntegrationUri": {
+                "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"GetUsersLambdaPermissionHttpApi\"][\"Properties\"][\"FunctionName\"]"
+              },
+              "PayloadFormatVersion": "2.0",
+              "TimeoutInMillis": 6500
+            }
+          },
+          "HttpApiRouteGetUsers": {
+            "Type": "AWS::ApiGatewayV2::Route",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "RouteKey": "GET /users",
+              "Target": {
+                "Fn::Join": [
+                  "/",
+                  [
+                    "integrations",
+                    {
+                      "Ref": "HttpApiIntegrationGetUsers"
+                    }
+                  ]
+                ]
+              }
+            },
+            "DependsOn": "HttpApiIntegrationGetUsers"
+          },
+          "GetUserByEmailLambdaPermissionHttpApi": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "GetUserByEmailLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "HttpApi"
+                    },
+                    "/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "HttpApiIntegrationGetUserByEmail": {
+            "Type": "AWS::ApiGatewayV2::Integration",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "IntegrationType": "AWS_PROXY",
+              "IntegrationUri": {
+                "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"GetUserByEmailLambdaPermissionHttpApi\"][\"Properties\"][\"FunctionName\"]"
+              },
+              "PayloadFormatVersion": "2.0",
+              "TimeoutInMillis": 6500
+            }
+          },
+          "HttpApiRouteGetUsersEmailVar": {
+            "Type": "AWS::ApiGatewayV2::Route",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "RouteKey": "GET /users/{email}",
+              "Target": {
+                "Fn::Join": [
+                  "/",
+                  [
+                    "integrations",
+                    {
+                      "Ref": "HttpApiIntegrationGetUserByEmail"
+                    }
+                  ]
+                ]
+              }
+            },
+            "DependsOn": "HttpApiIntegrationGetUserByEmail"
           }
         },
         "Outputs": {
@@ -737,7 +1109,7 @@
           "CreateEventLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CreateEventLambdaVersionppEGvXmIIJTU0JcNUYIZrQKco3cuAmzpBWvdv4zGpk"
+              "Ref": "CreateEventLambdaVersionoNwj88sEIshvjfn0TkVoJh5461Ep54wiWboRNsUx2Kg"
             },
             "Export": {
               "Name": "sls-picpuc-dev-CreateEventLambdaFunctionQualifiedArn"
@@ -746,7 +1118,7 @@
           "GetEventsDateLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetEventsDateLambdaVersionBync0VVJoI1e7c3R8Uxuy5irkZXo7PfXNQISdukAarg"
+              "Ref": "GetEventsDateLambdaVersionlsGhQB6JPi5ie8BNl6Zsa4o9fDAFOUAoEtrfqlep94"
             },
             "Export": {
               "Name": "sls-picpuc-dev-GetEventsDateLambdaFunctionQualifiedArn"
@@ -755,7 +1127,7 @@
           "GetEventsNearLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetEventsNearLambdaVersionn6JJvnLVlEHMGBAXW4tAfkDxNZtOjTxX123sjOzJ4"
+              "Ref": "GetEventsNearLambdaVersionDtRgpojddOqsE2mBLIQSkLb5wW9XTqkUmIufpH4Xi0"
             },
             "Export": {
               "Name": "sls-picpuc-dev-GetEventsNearLambdaFunctionQualifiedArn"
@@ -764,10 +1136,37 @@
           "GetCategoriesLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetCategoriesLambdaVersionlmGVZOd2bOZauKmgZpSKOAa9wvbKPjR1wKODzujfcY"
+              "Ref": "GetCategoriesLambdaVersionIBiouSL4MumQ7vOGVv1uIT4fOc7UahduvjM3sPNIE"
             },
             "Export": {
               "Name": "sls-picpuc-dev-GetCategoriesLambdaFunctionQualifiedArn"
+            }
+          },
+          "CreateUserLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "CreateUserLambdaVersionaryarDMXdVFVy85VuVQVpbBA6Bzk9pJCzJBnNWhMJI"
+            },
+            "Export": {
+              "Name": "sls-picpuc-dev-CreateUserLambdaFunctionQualifiedArn"
+            }
+          },
+          "GetUsersLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "GetUsersLambdaVersionvNKhWkIXuLeMgDM4UJclPkdOys3FB7yN8mPBeFM4"
+            },
+            "Export": {
+              "Name": "sls-picpuc-dev-GetUsersLambdaFunctionQualifiedArn"
+            }
+          },
+          "GetUserByEmailLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "GetUserByEmailLambdaVersionKmjsZidzQ5dEHF5cKTQo0x9yJEKbyigiBZT4K3PeE"
+            },
+            "Export": {
+              "Name": "sls-picpuc-dev-GetUserByEmailLambdaFunctionQualifiedArn"
             }
           },
           "HttpApiId": {
@@ -931,7 +1330,7 @@
         "timeout": 6,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "CreateEventLambdaVersionppEGvXmIIJTU0JcNUYIZrQKco3cuAmzpBWvdv4zGpk"
+        "versionLogicalId": "CreateEventLambdaVersionoNwj88sEIshvjfn0TkVoJh5461Ep54wiWboRNsUx2Kg"
       },
       "getEventsDate": {
         "name": "picpuc-dev-get-events-date",
@@ -950,7 +1349,7 @@
         "timeout": 6,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "GetEventsDateLambdaVersionBync0VVJoI1e7c3R8Uxuy5irkZXo7PfXNQISdukAarg"
+        "versionLogicalId": "GetEventsDateLambdaVersionlsGhQB6JPi5ie8BNl6Zsa4o9fDAFOUAoEtrfqlep94"
       },
       "getEventsNear": {
         "name": "picpuc-dev-get-events-near",
@@ -969,7 +1368,7 @@
         "timeout": 6,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "GetEventsNearLambdaVersionn6JJvnLVlEHMGBAXW4tAfkDxNZtOjTxX123sjOzJ4"
+        "versionLogicalId": "GetEventsNearLambdaVersionDtRgpojddOqsE2mBLIQSkLb5wW9XTqkUmIufpH4Xi0"
       },
       "getCategories": {
         "name": "picpuc-dev-get-categories",
@@ -988,7 +1387,64 @@
         "timeout": 6,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "GetCategoriesLambdaVersionlmGVZOd2bOZauKmgZpSKOAa9wvbKPjR1wKODzujfcY"
+        "versionLogicalId": "GetCategoriesLambdaVersionIBiouSL4MumQ7vOGVv1uIT4fOc7UahduvjM3sPNIE"
+      },
+      "createUser": {
+        "name": "picpuc-dev-save-user",
+        "handler": "services/users/src/save-user.main",
+        "events": [
+          {
+            "httpApi": "POST /users",
+            "resolvedMethod": "POST",
+            "resolvedPath": "/users"
+          }
+        ],
+        "package": {
+          "artifact": ".serverless/picpuc.zip"
+        },
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs12.x",
+        "vpc": {},
+        "versionLogicalId": "CreateUserLambdaVersionaryarDMXdVFVy85VuVQVpbBA6Bzk9pJCzJBnNWhMJI"
+      },
+      "getUsers": {
+        "name": "picpuc-dev-get-users",
+        "handler": "services/users/src/get-users.main",
+        "events": [
+          {
+            "httpApi": "GET /users",
+            "resolvedMethod": "GET",
+            "resolvedPath": "/users"
+          }
+        ],
+        "package": {
+          "artifact": ".serverless/picpuc.zip"
+        },
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs12.x",
+        "vpc": {},
+        "versionLogicalId": "GetUsersLambdaVersionvNKhWkIXuLeMgDM4UJclPkdOys3FB7yN8mPBeFM4"
+      },
+      "getUserByEmail": {
+        "name": "picpuc-dev-get-user-by-email",
+        "handler": "services/users/src/get-user-by-email.handle",
+        "events": [
+          {
+            "httpApi": "GET /users/{email}",
+            "resolvedMethod": "GET",
+            "resolvedPath": "/users/{email}"
+          }
+        ],
+        "package": {
+          "artifact": ".serverless/picpuc.zip"
+        },
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs12.x",
+        "vpc": {},
+        "versionLogicalId": "GetUserByEmailLambdaVersionKmjsZidzQ5dEHF5cKTQo0x9yJEKbyigiBZT4K3PeE"
       }
     },
     "configValidationMode": "warn",
@@ -1013,7 +1469,7 @@
     "isDashboardMonitoringPreconfigured": false
   },
   "package": {
-    "artifactDirectoryName": "serverless/picpuc/dev/1682106942680-2023-04-21T19:55:42.680Z",
+    "artifactDirectoryName": "serverless/picpuc/dev/1682464788537-2023-04-25T23:19:48.537Z",
     "artifact": ""
   }
 }
