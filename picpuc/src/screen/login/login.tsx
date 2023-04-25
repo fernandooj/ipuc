@@ -12,7 +12,7 @@ type Props = {
 
 const GoogleLoginButton = ({handleSignIn}: Props) => {
   return (
-    <GoogleButton onPress={() => handleSignIn}>
+    <GoogleButton onPress={() => handleSignIn()}>
       <Icon name="google" size={20} color="#fff" />
       <TextButton>Continuar con Google</TextButton>
     </GoogleButton>
@@ -23,14 +23,16 @@ const LoginScreen = (): ReactElement => {
     // Check if your device supports Google Play
     await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
     // Get the users ID token
-    const {idToken} = await GoogleSignin.signIn();
+    const data = await GoogleSignin.signIn();
+    console.log(data)
+    // const {idToken} = await GoogleSignin.signIn();
 
-    // Create a Google credential with the token
-    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+    // // Create a Google credential with the token
+    // const googleCredential = auth.GoogleAuthProvider.credential(idToken);
 
-    // Sign-in the user with the credential
-    return auth().signInWithCredential(googleCredential);
-  };
+    // // Sign-in the user with the credential
+    // return auth().signInWithCredential(googleCredential);
+};  
 
   return (
     <ContainList>

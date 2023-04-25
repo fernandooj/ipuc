@@ -6,6 +6,7 @@ import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete'
 import {newEventStyled, inputStyles} from './styles';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {ScrollView} from 'react-native';
+import { saveEvent } from '../../services/event';
 const {
   FormContainer,
   StyledTextInput,
@@ -24,14 +25,16 @@ const validationSchema = Yup.object().shape({
 
 const COLOR = 'rgba(122, 122, 122, 0.829)';
 
-const GooglePlacesInput = () => {
+const GooglePlacesInput = ({callback}) => {
   return (
     <ScrollView keyboardShouldPersistTaps="always">
       <GooglePlacesAutocomplete
         placeholder="Selecciona la ubicación"
         query={{key: 'AIzaSyCt2xrOG7v01zH7xrOK4VUHcuscFTG3Ej4'}}
         fetchDetails={true}
-        onPress={(data, details = null) => console.log(data, details)}
+        onPress={(data, details = null) =>
+          callback(data.description, details.geometry.location)
+        }
         onFail={error => console.log(error)}
         onNotFound={() => console.log('no results')}
         currentLocation={true}
@@ -59,21 +62,32 @@ const NewEventScreen = () => {
   const [openDate, setOpenDate] = useState(false);
   const handleSubmit = values => {
     console.log(values);
+    saveEvent(values)
   };
-  const Camera = async () => {
+  const Camera = async ({callback, setFieldValue}) => {
     const options = {
       includeBase64: true,
       mediaType: 'photo',
     };
 
-    // You can also use as a promise without 'callback':
+ 
     const result = await launchImageLibrary(options);
     console.log(result);
+    setFieldValue('image', result.assets[0].base64)
+    callback(result)
   };
- 
+  
   return (
     <Formik
-      initialValues={{title: '', description: '', date: '', image: null}}
+      initialValues={{
+        title: '',
+        description: '',
+        event_date: '',
+        image: null,
+        category_id: 3,
+        location: '4.6230545, -74.1910443',
+        place_name: 'Casa',
+      }}
       onSubmit={handleSubmit}
       // validationSchema={validationSchema}
     >
@@ -108,8 +122,8 @@ const NewEventScreen = () => {
             <ErrorText>{errors.description}</ErrorText>
           )}
           <StyledButtonInput onPress={() => setOpenDate(true)}>
-            <StyledText isSelected={values.date}>
-              {values.date ? values.date : 'Seleccionar fecha '}
+            <StyledText isSelected={values.event_date}>
+              {values.event_date ? values.event_date : 'Seleccionar fecha '}
             </StyledText>
           </StyledButtonInput>
           <DatePicker
@@ -124,14 +138,20 @@ const NewEventScreen = () => {
                 .replace(/\.\d{3}Z$/, '');
               setOpenDate(false);
               setDate(date);
-              setFieldValue('date', formattedDate);
+              setFieldValue('event_date', formattedDate);
             }}
             onCancel={() => {
               setOpenDate(false);
             }}
           />
-          <GooglePlacesInput />
-          <StyledButtonInput onPress={Camera}>
+          <GooglePlacesInput
+            callback={(place_name, location) =>{
+        
+              setFieldValue('place_name', place_name)
+              setFieldValue('location', location)
+            }}
+          />
+          <StyledButtonInput onPress={() => Camera({callback: () => {}, setFieldValue})}>
             <StyledText>Subir imagen</StyledText>
           </StyledButtonInput>
 

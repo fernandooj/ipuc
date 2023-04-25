@@ -1,35 +1,23 @@
-const { Pool } = require('pg');
-
-/** RDS Pool */
-const pool = new Pool({
-  host: process.env.RDS_HOSTNAME,
-  database: process.env.RDS_DB,
-  port: process.env.RDS_PORT,
-  user: process.env.RDS_USERNAME,
-  password: process.env.RDS_PASSWORD,
-});
-
-/** create user update*/
-const GET_USER_BY_EMAIL = 'SELECT * FROM get_user_by_email($1)';
+const {poolConection} = require('../../../lib/connection-pg.js')
+const DatabaseError  = require('../../../lib/errors/database-error')
 
 
 /** get user
- *  save user active in the table
- * @param {boolean} active - username user
+ *  get user by email
+ * @param {email} active - email
  * @returns {response} Response contains the data of cognito
  */
 
-module.exports.main = async (event) => {
-  // context.callbackWaitsForEmptyEventLoop = false;
-  const {
-    email
-  } = event;
-  const client  = await pool.connect();
+module.exports.handle = async (event) => {
+  const {email} = event.pathParameters
+  console.log(email)
+  const client  = await poolConection.connect();
+  const GET_USER_BY_EMAIL = `SELECT * FROM users where email = '${email}'`;
 
   try {
-    const data = await client.query(GET_USER_BY_EMAIL, [email])
+    const data = await client.query(GET_USER_BY_EMAIL)
     return data.rows[0]
   } catch (error) { 
-    throw JSON.stringify(error);
+    throw new DatabaseError(error);
   }
 }; 

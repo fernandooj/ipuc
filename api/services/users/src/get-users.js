@@ -1,16 +1,7 @@
-const { Pool } = require('pg');
-
-/** RDS Pool */
-const pool = new Pool({
-  host: process.env.RDS_HOSTNAME,
-  database: process.env.RDS_DB,
-  port: process.env.RDS_PORT,
-  user: process.env.RDS_USERNAME,
-  password: process.env.RDS_PASSWORD,
-});
-
+const {poolConection} = require('../../../lib/connection-pg.js')
+const DatabaseError  = require('../../../lib/errors/database-error')
 /** create user update*/
-const GET_USER_BY_EMAIL = 'SELECT * FROM get_users()';
+const GET_USERS = 'SELECT * FROM users';
 
 
 /** get user
@@ -20,16 +11,19 @@ const GET_USER_BY_EMAIL = 'SELECT * FROM get_users()';
  */
 
 module.exports.main = async (event) => {
-  // context.callbackWaitsForEmptyEventLoop = false;
   const {
     email
   } = event;
-  const client  = await pool.connect();
+  const client  = await poolConection.connect();
 
   try {
-    const data = await client.query(GET_USER_BY_EMAIL)
-    return data.rows
+    const data = await client.query(GET_USERS)
+    const total = data.rowCount;
+    return {
+      total,
+      rows:data.rows
+    }
   } catch (error) { 
-    throw JSON.stringify(error);
+    throw new DatabaseError(error);
   }
 }; 

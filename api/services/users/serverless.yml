@@ -1,50 +1,29 @@
-getEventsDate:
-    name: ${self:custom.base}-get-events-date
-    handler: services/events/src/get-events-date.main
-    events:
-      - http:
-          path: events/date
-          method: get
-          cors: true
-          integration: lambda
-          request:
-            parameters:
-              querystrings:
-                order: true
-            headers:
-              Content-Type: "'application/json'"
-            passThrough: WHEN_NO_TEMPLATES
-            template:
-              application/json: |
-                {
-                  "order": "$input.params('order')"
-                }
-          response:
-            headers:
-              Content-Type: "'application/json'"
-            template: $input.json('$')
-            statusCodes:
-              400:
-                pattern: '.*"httpStatus":400.*'
-                template: ${file(error-templates/general-error.yml)}
-                headers:
-                  Content-Type: "'application/json'"
-              422:
-                pattern: '.*"httpStatus":422.*'
-                template: ${file(error-templates/general-error.yml)}
-                headers:
-                  Content-Type: "'application/json'"
-              500:
-                pattern: '.*"httpStatus":500.*'
-                template: ${file(error-templates/general-error.yml)}
-                headers:
-                  Content-Type: "'application/json'"
-              504:
-                pattern: '.* timed out .*'
-                template: ${file(error-templates/gateway-timeout.yml)}
-                headers:
-                  Content-Type: "'application/json'"
-    package:
-      include:
-        - services/events/src/get-events-date.js
-        - lib/errors/database-error.js
+createUser:
+  name: ${self:custom.base}-save-user
+  handler: services/users/src/save-user.main
+  events:
+    - httpApi: 'POST /users'
+  package:
+    include:
+      - services/users/src/save-user.js
+      - lib/errors/database-error.js
+
+getUsers:
+  name: ${self:custom.base}-get-users
+  handler: services/users/src/get-users.main
+  events:
+    - httpApi: 'GET /users'
+  package:
+    include:
+      - services/users/src/get-users.js
+      - lib/errors/database-error.js
+
+getUserByEmail:
+  name: ${self:custom.base}-get-user-by-email
+  handler: services/users/src/get-user-by-email.handle
+  events:
+    - httpApi: 'GET /users/{email}'
+  package:
+    include:
+      - services/users/src/get-user-by-email.js
+      - lib/errors/database-error.js
