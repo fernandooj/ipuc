@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Formik} from 'formik';
 import DatePicker from 'react-native-date-picker';
 import * as Yup from 'yup';
@@ -7,6 +7,8 @@ import {newEventStyled, inputStyles} from './styles';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {ScrollView} from 'react-native';
 import {saveEvent} from '../../services/event';
+import {UserContext} from '../../context/userContext';
+
 const {
   FormContainer,
   StyledTextInput,
@@ -56,9 +58,12 @@ const GooglePlacesInput = ({callback}) => {
   );
 };
 
-const NewEventScreen = () => {
+const NewEventScreen = ({navigation}) => {
   const [date, setDate] = useState(new Date());
   const [openDate, setOpenDate] = useState(false);
+  const {navigate} = navigation;
+  const {user} = useContext(UserContext);
+
   const handleSubmit = values => {
     console.log(values);
     saveEvent(values);
@@ -75,6 +80,14 @@ const NewEventScreen = () => {
     callback(result);
   };
 
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (!user) navigate('Login');
+    });
+
+    return unsubscribe;
+  }, [navigate, navigation, user]);
+  
   return (
     <Formik
       initialValues={{

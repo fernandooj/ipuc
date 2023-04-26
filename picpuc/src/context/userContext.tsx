@@ -7,6 +7,7 @@ export const UserContext = createContext();
 
 const UserProvider = ({children}) => {
   const [user, setUser] = useState();
+  const [initializing, setInitializing] = useState(true);
   const [region, setRegion] = useState<
     | {
         latitude: number;
@@ -16,6 +17,18 @@ const UserProvider = ({children}) => {
       }
     | undefined
   >();
+
+  const onAuthStateChanged = user => {
+    setUser(user);
+    if (initializing) {
+      setInitializing(false);
+    }
+  };
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
 
   useEffect(() => {
     GoogleSignin.configure({
@@ -34,7 +47,7 @@ const UserProvider = ({children}) => {
       setRegion(newRegion);
     });
   }, []);
-  // if (initializing) return null;
+
   const userFlow = {
     user,
     region,
