@@ -4,6 +4,7 @@ import {EventStyled} from './styles';
 import Icon from 'react-native-vector-icons/Fontisto';
 import moment from 'moment';
 import 'moment/locale/es';
+
 const {
   ContainList,
   TextAssistants,
@@ -21,25 +22,47 @@ interface EventType {
   title: string;
   place_name: string;
   event_date: string;
+  image_url: string;
   assistants: number;
-  going: Boolean;
+  going: boolean;
   distance_km: number;
 }
 
-const renderItem = (
-  {title, assistants, place_name, event_date, distance_km}: EventType,
+interface Props {
+  events: EventType[];
+  navigation: any;
+}
+
+const randomAttendees: number = Math.floor(Math.random() * 100);
+
+interface RenderItemType {
+  (item: EventType, index: number, navigation: any): ReactElement;
+}
+
+const renderItem: RenderItemType = (
+  {
+    title,
+    assistants,
+    place_name,
+    event_date,
+    distance_km,
+    image_url,
+  }: EventType,
   index: number,
+  navigation: any,
 ) => (
   <ListCategories
     style={
-      index % 2 == 0
+      index % 2 === 0
         ? {
             borderRightWidth: 1,
             borderRightColor: 'rgba(183, 183, 183, 0.272);',
           }
         : {}
     }>
-    <TextAssistants>{assistants} Personas asistiran</TextAssistants>
+    <TextAssistants>
+      {assistants} {randomAttendees} Personas asistirán
+    </TextAssistants>
     <Title>{title}</Title>
     <DateContent>
       <Icon name="map" size={14} color="#00338D" />
@@ -51,8 +74,19 @@ const renderItem = (
         {moment(event_date).locale('es').format('DD MMMM, HH:mm')}
       </TextDate>
     </DateContent>
-    <BtnAsist distance={distance_km <= 5}>
-      <TextAsist>Estas a: {distance_km && distance_km.toFixed(2)} Km</TextAsist>
+    <BtnAsist
+      distance={distance_km <= 5}
+      onPress={() =>
+        navigation('Map', {
+          title,
+          assistants: randomAttendees,
+          place_name,
+          event_date,
+          distance_km,
+          image_url,
+        })
+      }>
+      <TextAsist>Estás a: {distance_km && distance_km.toFixed(2)} Km</TextAsist>
       <IconArrow>
         <Icon
           name="arrow-right-l"
@@ -65,20 +99,20 @@ const renderItem = (
   </ListCategories>
 );
 
-const EventList = ({events}: {events: EventType[]}) => (
+const EventList: React.FC<Props> = ({navigation, events}) => (
   <ContainList>
-    {events.map((e, index) => (
+    {events.map((e: EventType, index: number) => (
       <Fragment key={index}>
-        <View style={{width: '50%'}}>{renderItem(e, index)}</View>
+        <View style={{width: '50%'}}>{renderItem(e, index, navigation)}</View>
       </Fragment>
     ))}
   </ContainList>
 );
 
-const EventComponent = ({events}: {events: EventType[]}): ReactElement => {
+const EventComponent: React.FC<Props> = ({events, navigation}: Props) => {
   return (
     <ScrollView>
-      <EventList events={events} />
+      <EventList events={events} navigation={navigation} />
     </ScrollView>
   );
 };

@@ -27784,7 +27784,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/react-native-safe-area-context/react-native-safe-area-context-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/react-native-safe-area-context/react-native-safe-area-context-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -27821,7 +27821,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/react-native-safe-area-context/react-native-safe-area-context-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/react-native-safe-area-context/react-native-safe-area-context-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

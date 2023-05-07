@@ -29,29 +29,34 @@ import {useDispatch, useSelector} from 'react-redux';
 import * as Animatable from 'react-native-animatable';
 import {UserContext} from '../../context/userContext';
 
-const HomeScreen = (): ReactElement => {
+const HomeScreen = ({navigation}): ReactElement => {
   const [btnActive, setBtnActive] = useState(1);
   const dispatch = useDispatch();
   const {region} = useContext(UserContext);
   const eventos = useSelector(state => state.events);
   const categories = useSelector(state => state.categories);
 
-  const fetchEvent = async (type: string, query: string | { latitude: any; longitude: any; } | undefined) => {
-    try {
-      const events = await getEvents(type, region, query);
+  const fetchEvent = useCallback(
+    async (
+      type: string,
+      query: string | {latitude: any; longitude: any} | undefined,
+    ) => {
+      try {
+        const events = await getEvents(type, region, query);
 
-      dispatch(getEvent(events));
-    } catch (error) {
-      // Manejo del error
-      console.log(error);
-    }
-  };
+        dispatch(getEvent(events));
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [dispatch, region],
+  );
 
   const fetchCategorie = useCallback(async () => {
     try {
-      const categories = await getCategories();
+      const listCategories = await getCategories();
 
-      dispatch(getCategorie(categories));
+      dispatch(getCategorie(listCategories));
     } catch (error) {
       // Manejo del error
       console.log(error);
@@ -60,7 +65,8 @@ const HomeScreen = (): ReactElement => {
 
   useEffect(() => {
     fetchCategorie();
-  }, [fetchCategorie]);
+    fetchEvent('near', 'asc');
+  }, [fetchCategorie, fetchEvent]);
 
   const onChangeText = () => {};
 
@@ -99,7 +105,8 @@ const HomeScreen = (): ReactElement => {
             <Btn
               isSelected={btnActive === 2}
               onPress={() => {
-                setBtnActive(2), fetchEvent('near', 'asc');
+                setBtnActive(2);
+                fetchEvent('near', 'asc');
               }}>
               <Title isSelected={btnActive === 2}>Cercanos</Title>
             </Btn>
@@ -113,7 +120,8 @@ const HomeScreen = (): ReactElement => {
             <Btn
               isSelected={btnActive === 3}
               onPress={() => {
-                setBtnActive(3), fetchEvent('date', 'asc');
+                setBtnActive(3);
+                fetchEvent('date', 'asc');
               }}>
               <Title isSelected={btnActive === 3}>Proximos</Title>
             </Btn>
@@ -122,7 +130,7 @@ const HomeScreen = (): ReactElement => {
         {btnActive === 1 ? (
           <CategorieComponent data={categories} />
         ) : (
-          <EventComponent events={eventos} />
+          <EventComponent events={eventos} navigation={navigation.navigate} />
         )}
       </View>
     </Fragment>

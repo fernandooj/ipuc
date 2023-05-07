@@ -52,6 +52,7 @@ const UserProvider = ({children}) => {
     user,
     region,
     setUser,
+    setRegion,
     login: async (email: string, password: string) => {
       try {
         auth().signInWithEmailAndPassword(email, password);

@@ -87,7 +87,7 @@ const NewEventScreen = ({navigation}) => {
 
     return unsubscribe;
   }, [navigate, navigation, user]);
-  
+
   return (
     <Formik
       initialValues={{

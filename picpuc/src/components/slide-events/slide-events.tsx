@@ -1,102 +1,47 @@
-import React, {
-  Fragment,
-  ReactElement,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import {Text, TextInput, View, ScrollView} from 'react-native';
-import axios from 'axios';
+import React from 'react';
+import Image from 'react-native-scalable-image';
+import {SCREEN_WIDTH} from '../../utils/constants';
 import {EventStyled} from './styles';
-import LinearGradient from 'react-native-linear-gradient';
-import Icon from 'react-native-vector-icons/Feather';
+import Icon from 'react-native-vector-icons/Fontisto';
+import moment from 'moment';
+import 'moment/locale/es';
 
-// import {events} from "../../../__mocks__/events/event.json"
+const {Contain, ContentImage, Title, Description, Text, Row, ContentIcon} =
+  EventStyled;
 
-const {
-  InputSearch,
-  ListCategories,
-  ListCategoriesText,
-  Contain,
-  Title,
-  InputSearchBox,
-  Gradient,
-} = EventStyled;
-
-
-const Categories = [
-  {
-    id: '1',
-    title: 'Convenciones',
-  },
-  {
-    id: '2',
-    title: 'Campamentos',
-  },
-  {
-    id: '3',
-    title: 'Concierto',
-  },
-  {
-    id: '4',
-    title: 'Congreso',
-  },
-  {
-    id: '5',
-    title: 'Ayuno',
-  },
-  {
-    id: '6',
-    title: 'Vigilia',
-  },
-];
-
-
-
-const events = [
-  {
-    title: 'el mejor evento de todos',
-    eventDate: '29-diciembre',
-    namePlace: 'casa de la moneda',
-    goin: true,
-  },
-  {
-    title: 'el mejor evento de todos',
-    eventDate: '29-diciembre',
-    namePlace: 'casa de la moneda',
-    going: false,
-  },
-  {
-    title: 'el mejor evento de todos',
-    eventDate: '29-diciembre',
-    namePlace: 'casa de la moneda',
-    goin: true,
-  },
-];
-
-const SlideEvents = (): ReactElement => {
-  const renderItem = ({ title }: { title: string }) => (
-    <View style={ListCategories}>
-      <Text style={ListCategoriesText}>{title}aaa</Text>
-    </View>
-  );
-
-  const EventList = () => (
-    <Contain horizontal>
-      {events.map((e, index) => (
-        <Fragment key={index}>{renderItem(e)}</Fragment>
-      ))}
-    </Contain>
-  );
-
+const SlideEvents = ({data}: any) => {
+  const {title, description, image_url, event_date, place_name} = data;
   return (
     <Contain>
-      <LinearGradient colors={['#E5F6FE', '#E7F5FC']} style={Gradient}>
-        <EventList />
-      </LinearGradient>
+      <Title>{title}</Title>
+      <ContentImage>
+        <Image
+          width={SCREEN_WIDTH - 40}
+          source={{uri: image_url}}
+          resizeMode="contain"
+        />
+      </ContentImage>
+      <Row>
+        <ContentIcon>
+          <Icon name="shield" size={16} color="#00338D" />
+        </ContentIcon>
+        <Description>{description}</Description>
+      </Row>
+
+      <Row>
+        <ContentIcon>
+          <Icon name="navigate" size={16} color="#00338D" />
+        </ContentIcon>
+        <Text>{place_name}</Text>
+      </Row>
+      <Row>
+        <ContentIcon>
+          <Icon name="date" size={16} color="#00338D" />
+        </ContentIcon>
+        <Text>{moment(event_date).locale('es').format('DD MMMM, HH:mm')}</Text>
+      </Row>
     </Contain>
   );
 };
 
 export default SlideEvents;
-
